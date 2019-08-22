@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(pc);
     }); 
     const remote = document.getElementById('remote');
+    const btn = document.getElementById('recBtn');
     document.getElementById('consumeBtn').addEventListener('click', async (event) => {
         event.preventDefault();
         const ws = await makeWebSocket({
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await pc.setRemoteDesc(answer);
             })();
         });
+        let recorder = null;
         const pc = new MyPeerConnection(ws, {
             init: (conn) => {
                 conn.addTransceiver('video', {direction: 'recvonly'});
@@ -99,8 +101,38 @@ document.addEventListener('DOMContentLoaded', () => {
             onTrack: (ev) => {
                 console.log(ev);
                 remote.srcObject = ev.streams[0];
+                recorder = new RecordRTC(ev.streams[0], {
+                    type: 'video',
+                    mimeType: 'video/webm',
+                    recorderType: WebAssemblyRecorder,
+                    timeSlice: 1000,
+                    checkForInactiveTracks: true,
+                    videoBitsPerSecond: 512000,
+                    frameInterval: 90,
+                });
             }
         });
         console.log(pc);
+        let rec = false;
+        btn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            if (!recorder) return;
+            if (rec) {
+                btn.querySelector('span#icon').innerHTML = '⚫';
+                recorder.stopRecording(() => {
+                    const blob = recorder.getBlob();
+                    console.log(blob);
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'video.webm';
+                    a.click();
+                });
+            } else {
+                btn.querySelector('span#icon').innerHTML = '🔴';
+                recorder.startRecording();
+            }
+            rec = !rec;
+        });
     });
 });
