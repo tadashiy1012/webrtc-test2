@@ -1,118 +1,7 @@
+import {makeWebSocket, MyPeerConnection} from './util.js';
 
-function makeWebSocket(auth, onMessageListener) {
-    return new Promise((resolve, reject) => {
-        const wsurl = "wss://cloud.achex.ca/signal";
-        const ws = new WebSocket(wsurl);
-        ws.onerror = (err) => console.error(err);
-        ws.onopen = () => {
-            ws.send(JSON.stringify(auth));
-            resolve(ws);
-        };
-        ws.onclose = (ev) => console.log(ev);
-        ws.onmessage = onMessageListener
-        setTimeout(() => {
-            reject(new Error('time out'));
-        }, 30000);
-    });
-}
-class AbstractPeerConnection {
-    constructor() {
-        this.conn = new RTCPeerConnection({
-            iceServers: [
-                {"urls": "stun:stun.l.google.com:19302"}
-            ]
-        });
-    }
-    async createOffer() {
-        return await this.conn.createOffer();
-    }
-    async createAnswer() {
-        return await this.conn.createAnswer();
-    }
-    async setLocalDesc(desc) {
-        await this.conn.setLocalDescription(desc);
-    }
-    async setRemoteDesc(desc) {
-        await this.conn.setRemoteDescription(desc);
-    }
-    addTrack(track, stream) {
-        this.conn.addTrack(track, stream);
-    }
-}
-class ProducePeerConnection extends AbstractPeerConnection {
-    constructor(webSocket) {
-        super();
-        this.ws = webSocket;
-        this.conn.onnegotiationneeded = this.onNegotiationneeded();
-        this.conn.onicecandidate = this.onIcecandidate();
-        this.conn.ontrack = this.onTrack();
-        this.consumers = [];
-    }
-    onNegotiationneeded() {
-        return (ev) =>  console.log(ev);
-    }
-    onIcecandidate() {
-        return (ev) => {
-            console.log(ev);
-            if (ev.candidate === null) {
-                if (this.conn.remoteDescription !== null) {
-                    const to = 'consume@890';
-                    const uuid = uuidv1();
-                    const type = 'produce';
-                    const sdp = this.conn.localDescription.sdp;
-                    const json = { to, uuid, type, sdp };
-                    this.ws.send(JSON.stringify(json));
-                }
-            }
-        };
-    }
-    onTrack() {
-        return (ev) => console.log(ev);
-    }
-}
-class ConsumePeerConnection extends AbstractPeerConnection {
-    constructor(webSocket) {
-        super();
-        this.ws = webSocket;
-        this.conn.onnegotiationneeded = this.onNegotiationneeded();
-        this.conn.onicecandidate = this.onIcecandidate();
-        this.conn.ontrack = this.onTrack();
-        this.conn.addTransceiver('video', {direction: 'recvonly'});
-        this.conn.addTransceiver('audio', {direction: 'recvonly'});
-    }
-    onNegotiationneeded() {
-        return (ev) => {
-            console.log(ev);
-            (async() => {
-                console.log('create and set offer');
-                await this.setLocalDesc(await this.createOffer());
-            })();
-        };
-    }
-    onIcecandidate() {
-        return (ev) => {
-            console.log(ev);
-            if (ev.candidate === null) {
-                const to = 'default@890';
-                const type = 'consume';
-                const sdp = this.conn.localDescription.sdp;
-                const uuid = uuidv1();
-                const json = { to, type, sdp, uuid };
-                this.ws.send(JSON.stringify(json));
-            }
-        };
-    }
-    onTrack() {
-        return (ev) => {
-            console.log(ev);
-            remote.srcObject = ev.streams[0];
-        };
-    }
-}
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('ready');
     const local = document.getElementById('local');
-    const remote = document.getElementById('remote');
     const list = document.getElementById('list');
     document.getElementById('produceBtn').addEventListener('click', async (event) => {
         event.preventDefault();
@@ -144,7 +33,22 @@ document.addEventListener('DOMContentLoaded', () => {
             list.innerHTML = '';
             consumers.forEach(e => list.appendChild(makeList(e)));
         });
-        const pc = new ProducePeerConnection(ws);
+        const pc = new MyPeerConnection(ws, {
+            init: () => {},
+            onNegotiationneeded: (ev) => console.log(ev),
+            onIcecandidate: (ev) => {
+                console.log(ev);
+                if (ev.candidate === null && pc.conn.remoteDescription !== null) {
+                    const to = 'consume@890';
+                    const uuid = uuidv1();
+                    const type = 'produce';
+                    const sdp = pc.conn.localDescription.sdp;
+                    const json = { to, uuid, type, sdp };
+                    pc.ws.send(JSON.stringify(json));
+                }
+            },
+            onTrack: (ev) => console.log(ev)
+        });
         const stream = await navigator.mediaDevices.getUserMedia({
             video: true, audio: false
         });
@@ -152,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         stream.getTracks().forEach(track => pc.addTrack(track, stream));
         console.log(pc);
     }); 
+    const remote = document.getElementById('remote');
     document.getElementById('consumeBtn').addEventListener('click', async (event) => {
         event.preventDefault();
         const ws = await makeWebSocket({
@@ -168,7 +73,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 await pc.setRemoteDesc(answer);
             })();
         });
-        const pc = new ConsumePeerConnection(ws);
+        const pc = new MyPeerConnection(ws, {
+            init: (conn) => {
+                conn.addTransceiver('video', {direction: 'recvonly'});
+                conn.addTransceiver('audio', {direction: 'recvonly'});
+            },
+            onNegotiationneeded: (ev) => {
+                console.log(ev);
+                (async() => {
+                    console.log('create and set offer');
+                    await pc.setLocalDesc(await pc.createOffer());
+                })();
+            },
+            onIcecandidate: (ev) => {
+                console.log(ev);
+                if (ev.candidate === null) {
+                    const to = 'default@890';
+                    const type = 'consume';
+                    const sdp = pc.conn.localDescription.sdp;
+                    const uuid = uuidv1();
+                    const json = { to, type, sdp, uuid };
+                    pc.ws.send(JSON.stringify(json));
+                }
+            },
+            onTrack: (ev) => {
+                console.log(ev);
+                remote.srcObject = ev.streams[0];
+            }
+        });
         console.log(pc);
     });
 });
