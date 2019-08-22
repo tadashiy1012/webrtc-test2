@@ -17,7 +17,11 @@ function makeWebSocket(auth, onMessageListener) {
 }
 class AbstractPeerConnection {
     constructor() {
-        this.conn = new RTCPeerConnection();
+        this.conn = new RTCPeerConnection({
+            iceServers: [
+                {"urls": "stun:stun.l.google.com:19302"}
+            ]
+        });
     }
     async createOffer() {
         return await this.conn.createOffer();
