@@ -31,8 +31,27 @@ function makeList(consumer, onClickListener) {
     return li;
 }
 
+function makeProducePC(ws, destination) { 
+    const _pc = new MyPeerConnection(ws, {
+        onIcecandidate: (ev) => {
+            console.log(ev);
+            if (ev.candidate === null) {
+                if (_pc.conn.remoteDescription !== null) {
+                    console.log('send sdp');
+                    const to = 'consume@890';
+                    const type = 'produce';
+                    const sdp = _pc.conn.localDescription.sdp;
+                    const json = { to, type, destination, sdp };
+                    _pc.ws.send(JSON.stringify(json));
+                }
+            }
+        }
+    });
+    return _pc;
+}
+
 function makeConsumePC(ws, recorder, remake = false) {
-    console.log(recorder);
+    console.log(recorder, remake);
     const _pc = new MyPeerConnection(ws, {
         onNegotiationneeded: (ev) => {
             console.log(ev);
@@ -49,7 +68,7 @@ function makeConsumePC(ws, recorder, remake = false) {
                 const to = 'default@890';
                 const type = 'consume';
                 const sdp = _pc.conn.localDescription.sdp;
-                const uuid = uuidv1();
+                const uuid = _pc.id;
                 const json = { to, type, sdp, uuid };
                 _pc.ws.send(JSON.stringify(json));
             }
@@ -57,7 +76,6 @@ function makeConsumePC(ws, recorder, remake = false) {
         onTrack: (ev) => {
             console.log(ev);
             remote.srcObject = ev.streams[0];
-            console.log(recorder);
             recorder.instance = new RecordRTC(ev.streams[0], {
                 type: 'video',
                 mimeType: 'video/webm',
@@ -74,7 +92,7 @@ function makeConsumePC(ws, recorder, remake = false) {
     return _pc;
 }
 
-function switchStreams(pc, streamA, streamB) {
+function switchStreams(pcls, streamA, streamB) {
     if (streamB) {
         streamB.getTracks().forEach(track => {
             track.enabled = !track.enabled;
@@ -82,13 +100,15 @@ function switchStreams(pc, streamA, streamB) {
             streamB.removeTrack(track);
         });
     }
-    const senders = pc.conn.getSenders();
-    streamA.getTracks().forEach(track => {
-        if (senders.length > 0) {
-            senders[0].replaceTrack(track);
-        } else {
-            pc.addTrack(track, streamA);
-        }
+    pcls.forEach((pc) => {
+        const senders = pc.conn.getSenders();
+        streamA.getTracks().forEach(track => {
+            if (senders.length > 0) {
+                senders[0].replaceTrack(track);
+            } else {
+                pc.addTrack(track, streamA);
+            }
+        });
     });
 }
 
@@ -98,6 +118,7 @@ class MyPeerConnection {
         onIcecandidate = (ev) => console.log(ev),
         onTrack = (ev) => console.log(ev)
     }) {
+        this.id = uuidv1();
         this.ws = webSocket;
         this.conn = new RTCPeerConnection({
             iceServers: [
@@ -128,6 +149,7 @@ class MyPeerConnection {
 export {
     makeWebSocket,
     makeList,
+    makeProducePC,
     makeConsumePC,
     switchStreams,
     MyPeerConnection

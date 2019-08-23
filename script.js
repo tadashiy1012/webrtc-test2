@@ -1,9 +1,9 @@
 import {
     makeWebSocket,
     makeList,
+    makeProducePC,
     makeConsumePC,
-    switchStreams,
-    MyPeerConnection
+    switchStreams
 } from './util.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,9 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const produceBtn = document.getElementById('produceBtn');
     const cameraBtn = document.getElementById('cameraBtn');
     const displayBtn = document.getElementById('displayBtn');
+    const recBtn = document.getElementById('recBtn');
     produceBtn.addEventListener('click', async (event) => {
         event.preventDefault();
-        const uuid = uuidv1();
+        let pcls = [];
         let consumers = [];
         let stream2;
         let stream3;
@@ -32,39 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 list.innerHTML = '';
                 consumers.forEach(e => list.appendChild(makeList(e, async (evt) => {
                     evt.preventDefault();
+                    const pc = makeProducePC(ws, e.uuid);
+                    pcls.push(pc);
                     const offer = new RTCSessionDescription({
                         type: 'offer', sdp: e.sdp
                     });
+                    switchStreams([pc], stream2, stream3);
                     await pc.setRemoteDesc(offer);
                     await pc.setLocalDesc(await pc.createAnswer());
                 })));
             }
-        });
-        const pc = new MyPeerConnection(ws, {
-            onNegotiationneeded: (ev) => {
-                console.log(ev);
-                if (pc.conn.remoteDescription !== null) {
-                    console.log('send sdp');
-                    const to = 'consume@890';
-                    const type = 'produce';
-                    const sdp = pc.conn.localDescription.sdp;
-                    const json = { to, uuid, type, sdp };
-                    pc.ws.send(JSON.stringify(json));
-                }
-            },
-            onIcecandidate: (ev) => {
-                console.log(ev);
-                if (ev.candidate === null) {
-                    if (pc.conn.remoteDescription !== null) {
-                        console.log('send sdp');
-                        const to = 'consume@890';
-                        const type = 'produce';
-                        const sdp = pc.conn.localDescription.sdp;
-                        const json = { to, uuid, type, sdp };
-                        pc.ws.send(JSON.stringify(json));
-                    }
-                }
-            },
         });
         cameraBtn.addEventListener('click', async (ev) => {
             ev.preventDefault();
@@ -72,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 video: true, audio: false
             });
             local.srcObject = stream2;
-            switchStreams(pc, stream2, stream3);
+            switchStreams(pcls, stream2, stream3);
         });
         displayBtn.addEventListener('click', async (ev) => {
             ev.preventDefault();
@@ -80,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 video: true
             });
             local.srcObject = stream3;
-            switchStreams(pc, stream3, stream2);
+            switchStreams(pcls, stream3, stream2);
         });
         cameraBtn.click();
     }); 
@@ -93,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(ev);
                 const json = JSON.parse(ev.data);
                 console.log(json);
-                if (json.type !== 'produce') return;
+                if (json.type !== 'produce' || pc.id !== json.destination) return;
+                console.log('my message');
                 const recievedAnswer = new RTCSessionDescription({
                     type: 'answer', sdp: json.sdp
                 });
@@ -110,16 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let recorder = {instance: null};
         let pc = makeConsumePC(ws, recorder, false);
         let rec = false;
-        const recBtn = document.getElementById('recBtn');
         recBtn.addEventListener('click', (ev) => {
             ev.preventDefault();
-            console.log(recorder);
             if (!recorder.instance) return;
             if (rec) {
                 recBtn.querySelector('span#icon').innerHTML = '⚫';
                 recorder.instance.stopRecording(() => {
                     const blob = recorder.instance.getBlob();
-                    console.log(blob);
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
