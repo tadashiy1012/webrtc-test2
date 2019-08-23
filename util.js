@@ -1,26 +1,102 @@
-function makeWebSocket(auth, onMessageListener) {
+function makeWebSocket(auth, {
+    onMessage = (ev) => console.log(ev),
+    onOpen = (ev) => console.log(ev),
+    onClose = (ev) => console.log(ev),
+    onError = (err) => console.error(err)
+}) {
     return new Promise((resolve, reject) => {
         const wsurl = "wss://cloud.achex.ca/signal";
         const ws = new WebSocket(wsurl);
-        ws.onerror = (err) => console.error(err);
-        ws.onopen = () => {
+        ws.onerror = onError;
+        ws.onopen = (ev) => {
             ws.send(JSON.stringify(auth));
+            onOpen(ev);
             resolve(ws);
         };
-        ws.onclose = (ev) => console.log(ev);
-        ws.onmessage = onMessageListener
+        ws.onclose = onClose;
+        ws.onmessage = onMessage;
         setTimeout(() => {
             reject(new Error('time out'));
         }, 30000);
     });
 }
 
+function makeList(consumer, onClickListener) {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.innerHTML = consumer.uuid;
+    a.href = '#';
+    a.onclick = onClickListener;
+    li.appendChild(a);
+    return li;
+}
+
+function makeConsumePC(ws, recorder, remake = false) {
+    console.log(recorder);
+    const _pc = new MyPeerConnection(ws, {
+        onNegotiationneeded: (ev) => {
+            console.log(ev);
+            (async() => {
+                if (!remake) {
+                    console.log('create and set offer');
+                    await _pc.setLocalDesc(await _pc.createOffer());
+                }
+            })();
+        },
+        onIcecandidate: (ev) => {
+            console.log(ev);
+            if (ev.candidate === null && !remake) {
+                const to = 'default@890';
+                const type = 'consume';
+                const sdp = _pc.conn.localDescription.sdp;
+                const uuid = uuidv1();
+                const json = { to, type, sdp, uuid };
+                _pc.ws.send(JSON.stringify(json));
+            }
+        },
+        onTrack: (ev) => {
+            console.log(ev);
+            remote.srcObject = ev.streams[0];
+            console.log(recorder);
+            recorder.instance = new RecordRTC(ev.streams[0], {
+                type: 'video',
+                mimeType: 'video/webm',
+                recorderType: WebAssemblyRecorder,
+                timeSlice: 1000,
+                checkForInactiveTracks: true,
+                videoBitsPerSecond: 512000,
+                frameInterval: 90,
+            });
+        }
+    });
+    _pc.conn.addTransceiver('video', {direction: 'recvonly'});
+    _pc.conn.addTransceiver('audio', {direction: 'recvonly'});
+    return _pc;
+}
+
+function switchStreams(pc, streamA, streamB) {
+    if (streamB) {
+        streamB.getTracks().forEach(track => {
+            track.enabled = !track.enabled;
+            track.stop();
+            streamB.removeTrack(track);
+        });
+    }
+    const senders = pc.conn.getSenders();
+    streamA.getTracks().forEach(track => {
+        if (senders.length > 0) {
+            senders[0].replaceTrack(track);
+        } else {
+            pc.addTrack(track, streamA);
+        }
+    });
+}
+
 class MyPeerConnection {
     constructor(webSocket, {
-        init,
-        onNegotiationneeded,
-        onIcecandidate,
-        onTrack
+        onNegotiationneeded = (ev) => console.log(ev),
+        onIcecandidate = (ev) => console.log(ev),
+        onTrack = (ev) => console.log(ev)
     }) {
         this.ws = webSocket;
         this.conn = new RTCPeerConnection({
@@ -31,7 +107,6 @@ class MyPeerConnection {
         this.conn.onnegotiationneeded = onNegotiationneeded;
         this.conn.onicecandidate = onIcecandidate;
         this.conn.ontrack = onTrack;
-        init(this.conn);
     }
     async createOffer() {
         return await this.conn.createOffer();
@@ -52,5 +127,8 @@ class MyPeerConnection {
 
 export {
     makeWebSocket,
+    makeList,
+    makeConsumePC,
+    switchStreams,
     MyPeerConnection
 }
