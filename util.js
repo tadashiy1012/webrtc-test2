@@ -46,7 +46,7 @@ class MyPeerConnection {
         await this.conn.setRemoteDescription(desc);
     }
     addTrack(track, stream) {
-        this.conn.addTrack(track, stream);
+        return this.conn.addTrack(track, stream);
     }
 }
 
