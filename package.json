@@ -1,0 +1,42 @@
+{
+  "name": "webrtc-test2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --mode development",
+    "watch": "webpack --watch --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tadashiy1012/webrtc-test2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tadashiy1012/webrtc-test2/issues"
+  },
+  "homepage": "https://github.com/tadashiy1012/webrtc-test2#readme",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.16",
+    "mobx": "^5.13.0",
+    "mobx-react": "^6.1.3",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "recordrtc": "^5.5.8",
+    "uuid": "^3.3.3"
+  }
+}
