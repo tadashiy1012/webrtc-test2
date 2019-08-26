@@ -19,20 +19,23 @@ export default class ProduceStore {
     setWsOnMessageHandler(handler) {
         this.ws.onmessage = handler;
     }
+    
     @action 
     addPeerConnection(pc) {
         this.pcs.push(pc);
     }
+    
     @action
     clearPeerConnections() {
         this.pcs = [];
     }
+
     @action
     setPCsTrack() {
         this.pcs.forEach(pc => {
             const senders = pc.conn.getSenders();
             this.currentStream.getTracks().forEach(track => {
-                if (senders > 0) {
+                if (senders.length > 0) {
                     senders[0].replaceTrack(track);
                 } else {
                     pc.addTrack(track, this.currentStream);
@@ -40,14 +43,17 @@ export default class ProduceStore {
             });
         });
     }
+    
     @action
     addConsumers(consumer) {
         this.consumers.push(consumer);
     }
+    
     @action
     clearConsumers() {
         this.consumers = [];
     }
+
     @action
     toggleVideoMode() {
         if (this.videoMode === 'camera') {
@@ -56,11 +62,12 @@ export default class ProduceStore {
             this.videoMode = 'camera';
         }
     }
+
     @action
     setCurrentStream(stream) {
         if (this.currentStream !== null) {
             this.currentStream.getTracks().forEach(track => {
-                track.enabled = false;
+                track.enabled = !track.enabled;
                 track.stop();
                 this.currentStream.removeTrack(track);
             });

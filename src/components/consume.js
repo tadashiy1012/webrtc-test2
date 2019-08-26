@@ -20,7 +20,6 @@ export default class Consume extends React.Component {
         this.props.consume.setPC(makeConsumePC(this.props.consume.ws));
         this.props.consume.setPcOnTrackHandler((ev) => {
             console.log(ev);
-            console.log(this.props.consume.target);
             this.props.consume.target.srcObject = ev.streams[0];
         });
     }
@@ -32,7 +31,6 @@ export default class Consume extends React.Component {
         return <Fragment>
             <div>
                 <video ref={(video) => {
-                    console.log(video);
                     if (video) {
                         this.props.consume.setTarget(video);
                     }

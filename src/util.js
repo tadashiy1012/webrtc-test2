@@ -45,7 +45,7 @@ function makeConsumePC(ws, remake = false) {
             console.log(ev);
             (async() => {
                 if (!remake) {
-                    console.log('create and set offer');
+                    console.log('create offer');
                     await _pc.setLocalDesc(await _pc.createOffer());
                 }
             })();
@@ -60,7 +60,6 @@ function makeConsumePC(ws, remake = false) {
                 const json = { to, type, sdp, uuid };
                 let count = 0;
                 const id = setInterval(function() {
-                    console.log(_pc.ws.readyState);
                     if (_pc.ws.readyState === WebSocket.OPEN) {
                         _pc.ws.send(JSON.stringify(json));
                         clearInterval(id);

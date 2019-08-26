@@ -23,6 +23,7 @@ export default class ConsumeStore {
     setPC(pc) {
         this.pc = pc;
     }
+    
     @action
     setRecievedAnswer(sdp) {
         const recievedAnswer = new RTCSessionDescription({
@@ -37,6 +38,7 @@ export default class ConsumeStore {
             await this.pc.setRemoteDesc(recievedAnswer);
         })();
     }
+
     @action
     setPcOnTrackHandler(handler) {
         this.pc.conn.ontrack = handler;
