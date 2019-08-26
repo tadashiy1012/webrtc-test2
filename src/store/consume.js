@@ -1,4 +1,6 @@
 import {observable, action} from 'mobx';
+import {WebAssemblyRecorder} from 'recordrtc'
+import * as RecordRTC from 'recordrtc/RecordRTC';
 import {makeWebSocket, makeConsumePC} from '../util';
 
 export default class ConsumeStore {
@@ -7,6 +9,8 @@ export default class ConsumeStore {
     @observable pc = null;
     @observable target = null;
     @observable stream = null;
+    @observable recorder = null;
+    @observable rec = false;
 
     constructor() {
         this.ws = makeWebSocket({
@@ -52,6 +56,24 @@ export default class ConsumeStore {
     @action
     setStream(stream) {
         this.stream = stream;
+    }
+    
+    @action
+    setRecorder(stream) {
+        this.recorder = new RecordRTC(stream, {
+            type: 'video',
+            mimeType: 'video/webm',
+            recorderType: WebAssemblyRecorder,
+            timeSlice: 1000,
+            checkForInactiveTracks: true,
+            videoBitsPerSecond: 512000,
+            frameInterval: 90,
+        });
+    }
+
+    @action
+    toggleRec() {
+        this.rec = !this.rec;
     }
 
 }
