@@ -38585,7 +38585,6 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
     this.props.consume.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumePC"])(this.props.consume.ws));
     this.props.consume.setPcOnTrackHandler(ev => {
       console.log(ev);
-      console.log(this.props.consume.target);
       this.props.consume.target.srcObject = ev.streams[0];
     });
   }
@@ -38598,8 +38597,6 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
       ref: video => {
-        console.log(video);
-
         if (video) {
           this.props.consume.setTarget(video);
         }
@@ -38651,7 +38648,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
-var _dec, _class, _dec2, _class2;
+var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4;
 
 
 
@@ -38691,30 +38688,29 @@ let ConsumerList = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["injec
   }
 
 }) || _class) || _class);
-let Produce = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'produce'), _dec2(_class2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class2 = class Produce extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
-  constructor(props) {
-    super(props);
-    this.props.root.setMode('produce');
-    this.props.produce.setWsOnMessageHandler(ev => {
-      console.log(ev);
-      const json = JSON.parse(ev.data);
-      console.log(json);
-      if (json.type !== 'consume') return;
-      this.props.produce.addConsumers(json);
-    });
-  }
-
-  componentWillUnmount() {
-    this.props.produce.setCurrentStream(null);
-    this.props.produce.setWsOnMessageHandler(() => {});
-    this.props.produce.clearPeerConnections();
-    this.props.produce.clearConsumers();
-  }
-
+let VideoModeRadio = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec2(_class2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class2 = class VideoModeRadio extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   onVideoModeChange() {
     this.props.produce.toggleVideoMode();
   }
 
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "radio",
+      name: "videoMode",
+      value: "camera",
+      checked: this.props.produce.videoMode === 'camera',
+      onChange: () => this.onVideoModeChange()
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "camera")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "radio",
+      name: "videoMode",
+      value: "display",
+      checked: this.props.produce.videoMode === 'display',
+      onChange: () => this.onVideoModeChange()
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "display")));
+  }
+
+}) || _class2) || _class2);
+let VideoView = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec3(_class3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class3 = class VideoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   onCamera(video) {
     (async () => {
       const newStream = await navigator.mediaDevices.getUserMedia({
@@ -38739,7 +38735,7 @@ let Produce = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
       width: "400",
       height: "300",
       autoPlay: true,
@@ -38752,22 +38748,35 @@ let Produce = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
           }
         }
       }
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "camera"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "radio",
-      name: "videoMode",
-      value: "camera",
-      checked: this.props.produce.videoMode === 'camera',
-      onChange: () => this.onVideoModeChange()
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "display"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "radio",
-      name: "videoMode",
-      value: "display",
-      checked: this.props.produce.videoMode === 'display',
-      onChange: () => this.onVideoModeChange()
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ConsumerList, null));
+    }));
   }
 
-}) || _class2) || _class2);
+}) || _class3) || _class3);
+let Produce = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class Produce extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.props.root.setMode('produce');
+    this.props.produce.setWsOnMessageHandler(ev => {
+      console.log(ev);
+      const json = JSON.parse(ev.data);
+      console.log(json);
+      if (json.type !== 'consume') return;
+      this.props.produce.addConsumers(json);
+    });
+  }
+
+  componentWillUnmount() {
+    this.props.produce.setCurrentStream(null);
+    this.props.produce.setWsOnMessageHandler(() => {});
+    this.props.produce.clearPeerConnections();
+    this.props.produce.clearConsumers();
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoView, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoModeRadio, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ConsumerList, null));
+  }
+
+}) || _class4) || _class4);
 
 
 /***/ }),
@@ -39004,7 +39013,7 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     this.pcs.forEach(pc => {
       const senders = pc.conn.getSenders();
       this.currentStream.getTracks().forEach(track => {
-        if (senders > 0) {
+        if (senders.length > 0) {
           senders[0].replaceTrack(track);
         } else {
           pc.addTrack(track, this.currentStream);
@@ -39032,7 +39041,7 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
   setCurrentStream(stream) {
     if (this.currentStream !== null) {
       this.currentStream.getTracks().forEach(track => {
-        track.enabled = false;
+        track.enabled = !track.enabled;
         track.stop();
         this.currentStream.removeTrack(track);
       });
@@ -39195,7 +39204,7 @@ function makeConsumePC(ws, remake = false) {
 
       (async () => {
         if (!remake) {
-          console.log('create and set offer');
+          console.log('create offer');
           await _pc.setLocalDesc((await _pc.createOffer()));
         }
       })();
@@ -39216,8 +39225,6 @@ function makeConsumePC(ws, remake = false) {
         };
         let count = 0;
         const id = setInterval(function () {
-          console.log(_pc.ws.readyState);
-
           if (_pc.ws.readyState === WebSocket.OPEN) {
             _pc.ws.send(JSON.stringify(json));
 
