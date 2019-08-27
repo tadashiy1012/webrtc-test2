@@ -1,9 +1,12 @@
 import React, {Fragment} from 'react';
 import ReactDOM from 'react-dom';
 import {HashRouter as Router, Route, Link} from 'react-router-dom';
-import {observer, inject, Provider} from 'mobx-react';
+import {Provider} from 'mobx-react';
+import {jsx, css} from '@emotion/core';
 import {RootStore, ProduceStore, ConsumeStore} from './store';
 import {Produce, Consume} from './components';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap';
 
 const App = () => (
     <Provider 
@@ -12,17 +15,23 @@ const App = () => (
         consume={new ConsumeStore()}
     >
         <Router>
-            <Fragment>
-                <h1>webrtc-test2</h1>
-                <div>
-                    <Link to='/produce'>produce</Link>
-                    <Route path='/produce/' component={Produce} />
+            <div className='container'>
+                <div className='row'>
+                    <div className='col'><h1>webrtc-test2</h1></div>
                 </div>
-                <div>
-                    <Link to='/consume'>consume</Link>
-                    <Route path='/consume/' component={Consume} />
+                <div className='row'>
+                    <div className='col'>
+                        <Link to='/produce'>produce</Link>
+                        <Route path='/produce/' component={Produce} />
+                    </div>
                 </div>
-            </Fragment>
+                <div className='row'>
+                    <div className='col'>
+                        <Link to='/consume'>consume</Link>
+                        <Route path='/consume/' component={Consume} />
+                    </div>
+                </div>
+            </div>
         </Router>
     </Provider>
 );
