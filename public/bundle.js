@@ -65002,8 +65002,26 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
 
   onCamera(video) {
     (async () => {
+      this.props.produce.setCurrentStream(null);
       const newStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: {
+          facingMode: 'user'
+        },
+        audio: false
+      });
+      this.props.produce.setCurrentStream(newStream);
+      this.props.produce.setPCsTrack();
+      video.srcObject = newStream;
+    })();
+  }
+
+  onCamera2(video) {
+    (async () => {
+      this.props.produce.setCurrentStream(null);
+      const newStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'environment'
+        },
         audio: false
       });
       this.props.produce.setCurrentStream(newStream);
@@ -65014,6 +65032,7 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
 
   onDisplay(video) {
     (async () => {
+      this.props.produce.setCurrentStream(null);
       const newStream = await navigator.mediaDevices.getDisplayMedia({
         video: true
       });
@@ -65028,6 +65047,8 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
 
     if (value === 'camera') {
       this.onCamera(this.videoRef.current);
+    } else if (value === 'camera2') {
+      this.onCamera2(this.videoRef.current);
     } else if (value === 'display') {
       this.onDisplay(this.videoRef.current);
     }
@@ -65035,7 +65056,7 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
 
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
-      width: "400",
+      width: "100%",
       height: "300",
       autoPlay: true,
       ref: this.videoRef
@@ -65046,6 +65067,12 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
       checked: this.props.produce.videoMode === 'camera',
       onChange: ev => this.onVideoModeChange(ev.target.value)
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "camera")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "radio",
+      name: "videoMode",
+      value: "camera2",
+      checked: this.props.produce.videoMode === 'camera2',
+      onChange: ev => this.onVideoModeChange(ev.target.value)
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "camera2")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "radio",
       name: "videoMode",
       value: "display",

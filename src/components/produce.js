@@ -42,8 +42,24 @@ class VideoView extends React.Component {
     }
     onCamera(video) {
         (async () => {
+            this.props.produce.setCurrentStream(null);
             const newStream = await navigator.mediaDevices.getUserMedia({
-                video: true, audio: false
+                video: {
+                    facingMode: 'user'
+                }, audio: false
+            });
+            this.props.produce.setCurrentStream(newStream);
+            this.props.produce.setPCsTrack();
+            video.srcObject = newStream;
+        })();
+    }
+    onCamera2(video) {
+        (async () => {
+            this.props.produce.setCurrentStream(null);
+            const newStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment'
+                }, audio: false
             });
             this.props.produce.setCurrentStream(newStream);
             this.props.produce.setPCsTrack();
@@ -52,6 +68,7 @@ class VideoView extends React.Component {
     }
     onDisplay(video) {
         (async () => {
+            this.props.produce.setCurrentStream(null);
             const newStream = await navigator.mediaDevices.getDisplayMedia({
                 video: true
             });
@@ -64,6 +81,8 @@ class VideoView extends React.Component {
         this.props.produce.setVideoMode(value);
         if (value === 'camera') {
             this.onCamera(this.videoRef.current);
+        } else if (value === 'camera2') {
+            this.onCamera2(this.videoRef.current);
         } else if (value === 'display') {
             this.onDisplay(this.videoRef.current);
         }
@@ -71,7 +90,7 @@ class VideoView extends React.Component {
     render() {
         return <Fragment>
             <div>
-                <video width="400" height="300" autoPlay ref={this.videoRef}></video>
+                <video width="100%" height="300" autoPlay ref={this.videoRef}></video>
             </div>
             <div>
                 <label>
@@ -79,6 +98,12 @@ class VideoView extends React.Component {
                         this.props.produce.videoMode === 'camera'
                     } onChange={(ev) => this.onVideoModeChange(ev.target.value)} />
                     <span>camera</span>
+                </label>
+                <label>
+                    <input type='radio' name='videoMode' value='camera2' checked={
+                        this.props.produce.videoMode === 'camera2'
+                    } onChange={(ev) => this.onVideoModeChange(ev.target.value)} />
+                    <span>camera2</span>
                 </label>
                 <label>
                     <input type='radio' name='videoMode' value='display' checked={
