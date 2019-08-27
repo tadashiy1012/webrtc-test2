@@ -7,22 +7,25 @@ import {makeConsumePC, makeConsumeDataChPC} from '../util';
 class Chat extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.cchat);
-        const ws = this.props.consume.ws;
-        const pc = makeConsumeDataChPC(ws);
-        this.props.cchat.setPC(pc);
+        this.textRef = React.createRef();
+    }
+    handleSendClick() {
+        this.props.consume.addSay('[me]', this.textRef.current.value);
+        this.props.consume.dcPc.send(this.textRef.current.value);
     }
     render() {
-        const child = this.props.cchat.say.map(e => {
-            <li>{e}</li>
-        });
-        return <div>
-            <input type='text' onChange={(e) => {console.log(e.target.value)}} />
-            <button>send</button>
+        const children = this.props.consume.says.map((e, idx) => {
+            return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
+        }).reverse();
+        return <Fragment>
             <div>
-                <ul>{child}</ul>
+                <input type='text' ref={this.textRef} />
+                <button onClick={() => {this.handleSendClick()}}>send</button>
             </div>
-        </div>
+            <ul>
+                {children}
+            </ul>
+        </Fragment>
     }
 }
 
@@ -36,10 +39,20 @@ export default class Consume extends React.Component {
             console.log(ev);
             const json = JSON.parse(ev.data);
             console.log(json);
-            if (json.type !== 'produce') return;
-            if (this.pc === null && this.pc.id !== json.destination) return;
-            console.log('message to me');
-            this.props.consume.setRecievedAnswer(json.sdp);
+            if (json.type === 'produce') {
+                if (this.props.consume.pc !== null 
+                        && this.props.consume.id === json.destination) {
+                    console.log('message to me (pc)');
+                    this.props.consume.setRecievedAnswer(json.sdp);
+                }
+            } else if (json.type === 'produce_dc') {
+                console.log(json.destination, this.props.consume.id, json.destination === this.props.consume.id);
+                if (this.props.consume.dcPc !== null
+                        && this.props.consume.id === json.destination) {
+                    console.log('message to me (dcPc)');
+                    this.props.consume.setDcRecievedAnswer(json.sdp);
+                }
+            }
         });
         this.props.consume.setPC(makeConsumePC(
             this.props.consume.id, this.props.consume.ws));
@@ -48,8 +61,18 @@ export default class Consume extends React.Component {
             this.props.consume.setRecorder(ev.streams[0]);
             this.props.consume.target.srcObject = ev.streams[0];
         });
+        this.props.consume.setDcPC(makeConsumeDataChPC(
+            this.props.consume.id, this.props.consume.ws
+        ));
+        this.props.consume.dcPc.createDataCh((ev) => {
+            console.log(ev);
+            const json = JSON.parse(ev.data);
+            console.log(json);
+            this.props.consume.addSay(json.id, json.message);
+        });
     }
     componentWillUnmount() {
+        console.log('consume component unmount');
         this.props.consume.setWsOnMessageHandler(() => {});
         this.props.consume.setPC(null);
     }

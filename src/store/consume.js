@@ -1,7 +1,7 @@
 import {observable, action} from 'mobx';
 import {WebAssemblyRecorder} from 'recordrtc'
 import * as RecordRTC from 'recordrtc/RecordRTC';
-import {makeWebSocket, makeConsumePC} from '../util';
+import {makeWebSocket, makeConsumePC, makeConsumeDataChPC} from '../util';
 import * as uuid from 'uuid/v1';
 
 export default class ConsumeStore {
@@ -14,6 +14,7 @@ export default class ConsumeStore {
     @observable stream = null;
     @observable recorder = null;
     @observable rec = false;
+    @observable says = [];
 
     constructor() {
         this.ws = makeWebSocket({
@@ -52,6 +53,26 @@ export default class ConsumeStore {
     }
 
     @action
+    setDcPC(dcPc) {
+        this.dcPc = dcPc;
+    }
+
+    @action
+    setDcRecievedAnswer(sdp) {
+        const recievedAnswer = new RTCSessionDescription({
+            type: 'answer', sdp
+        });
+        (async () => {
+            if (this.dcPc.conn.remoteDescription !== null 
+                    && this.dcPc.conn.remoteDescription !== recievedAnswer) {
+                this.setDcPC(makeConsumeDataChPC(this.id, this.ws, true));
+                await this.dcPc.setLocalDesc(await this.dcPc.createOffer());
+            }
+            await this.dcPc.setRemoteDesc(recievedAnswer);
+        })();
+    }
+
+    @action
     setTarget(tgt) {
         this.target = tgt;
     }
@@ -77,6 +98,12 @@ export default class ConsumeStore {
     @action
     toggleRec() {
         this.rec = !this.rec;
+    }
+
+    @action
+    addSay(id, say) {
+        const time = Date.now();
+        this.says.push({id, time, say});
     }
 
 }

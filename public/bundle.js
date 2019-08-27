@@ -44750,22 +44750,28 @@ var _dec, _class, _dec2, _class2;
 let Chat = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('consume'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class Chat extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.cchat);
-    const ws = this.props.consume.ws;
-    const pc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumeDataChPC"])(ws);
-    this.props.cchat.setPC(pc);
+    this.textRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
+  }
+
+  handleSendClick() {
+    this.props.consume.addSay('[me]', this.textRef.current.value);
+    this.props.consume.dcPc.send(this.textRef.current.value);
   }
 
   render() {
-    const child = this.props.cchat.say.map(e => {
-      react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, e);
-    });
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    const children = this.props.consume.says.map((e, idx) => {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        key: idx
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " : ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.say));
+    }).reverse();
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "text",
-      onChange: e => {
-        console.log(e.target.value);
+      ref: this.textRef
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: () => {
+        this.handleSendClick();
       }
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "send"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, child)));
+    }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, children));
   }
 
 }) || _class) || _class);
@@ -44777,10 +44783,20 @@ let Consume = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
       console.log(ev);
       const json = JSON.parse(ev.data);
       console.log(json);
-      if (json.type !== 'produce') return;
-      if (this.pc === null && this.pc.id !== json.destination) return;
-      console.log('message to me');
-      this.props.consume.setRecievedAnswer(json.sdp);
+
+      if (json.type === 'produce') {
+        if (this.props.consume.pc !== null && this.props.consume.id === json.destination) {
+          console.log('message to me (pc)');
+          this.props.consume.setRecievedAnswer(json.sdp);
+        }
+      } else if (json.type === 'produce_dc') {
+        console.log(json.destination, this.props.consume.id, json.destination === this.props.consume.id);
+
+        if (this.props.consume.dcPc !== null && this.props.consume.id === json.destination) {
+          console.log('message to me (dcPc)');
+          this.props.consume.setDcRecievedAnswer(json.sdp);
+        }
+      }
     });
     this.props.consume.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumePC"])(this.props.consume.id, this.props.consume.ws));
     this.props.consume.setPcOnTrackHandler(ev => {
@@ -44788,9 +44804,17 @@ let Consume = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
       this.props.consume.setRecorder(ev.streams[0]);
       this.props.consume.target.srcObject = ev.streams[0];
     });
+    this.props.consume.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumeDataChPC"])(this.props.consume.id, this.props.consume.ws));
+    this.props.consume.dcPc.createDataCh(ev => {
+      console.log(ev);
+      const json = JSON.parse(ev.data);
+      console.log(json);
+      this.props.consume.addSay(json.id, json.message);
+    });
   }
 
   componentWillUnmount() {
+    console.log('consume component unmount');
     this.props.consume.setWsOnMessageHandler(() => {});
     this.props.consume.setPC(null);
   }
@@ -44871,7 +44895,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
-var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5;
+var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4;
 
 
 
@@ -44911,29 +44935,12 @@ let ConsumerList = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["injec
   }
 
 }) || _class) || _class);
-let VideoModeRadio = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec2(_class2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class2 = class VideoModeRadio extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
-  onVideoModeChange() {
-    this.props.produce.toggleVideoMode();
+let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec2(_class2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class2 = class VideoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
   }
 
-  render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "radio",
-      name: "videoMode",
-      value: "camera",
-      checked: this.props.produce.videoMode === 'camera',
-      onChange: () => this.onVideoModeChange()
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "camera")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "radio",
-      name: "videoMode",
-      value: "display",
-      checked: this.props.produce.videoMode === 'display',
-      onChange: () => this.onVideoModeChange()
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "display")));
-  }
-
-}) || _class2) || _class2);
-let VideoView = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec3(_class3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class3 = class VideoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   onCamera(video) {
     (async () => {
       const newStream = await navigator.mediaDevices.getUserMedia({
@@ -44957,47 +44964,75 @@ let VideoView = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
     })();
   }
 
+  onVideoModeChange(value) {
+    this.props.produce.setVideoMode(value);
+
+    if (value === 'camera') {
+      this.onCamera(this.videoRef.current);
+    } else if (value === 'display') {
+      this.onDisplay(this.videoRef.current);
+    }
+  }
+
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
       width: "400",
       height: "300",
       autoPlay: true,
-      ref: video => {
-        if (video !== null) {
-          if (this.props.produce.videoMode === 'camera') {
-            this.onCamera(video);
-          } else if (this.props.produce.videoMode === 'display') {
-            this.onDisplay(video);
-          }
-        }
-      }
-    }));
+      ref: this.videoRef
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "radio",
+      name: "videoMode",
+      value: "camera",
+      checked: this.props.produce.videoMode === 'camera',
+      onChange: ev => this.onVideoModeChange(ev.target.value)
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "camera")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "radio",
+      name: "videoMode",
+      value: "display",
+      checked: this.props.produce.videoMode === 'display',
+      onChange: ev => this.onVideoModeChange(ev.target.value)
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "display"))));
   }
 
-}) || _class3) || _class3);
-let Chat = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class Chat extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  componentDidMount() {
+    this.onCamera(this.videoRef.current);
+  }
+
+}) || _class2) || _class2);
+let Chat = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec3(_class3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class3 = class Chat extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
+    this.textRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
   }
 
-  componentWillUnmount() {
-    this.props.produce.clearDataChPeerConnections();
+  handleSendClick() {
+    this.props.produce.addSay('[me]', this.textRef.current.value);
+    this.props.produce.dcPCs.forEach(dcpc => {
+      console.log(dcpc);
+      dcpc.send(this.textRef.current.value);
+    });
   }
 
   render() {
-    const child = this.props.produce.says.map(e => {
-      react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, e);
-    });
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    console.log(this.props.produce.dcPCs);
+    const children = this.props.produce.says.map((e, idx) => {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        key: idx
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " : ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.say));
+    }).reverse();
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "text",
-      onChange: e => {
-        console.log(e.target.value);
+      ref: this.textRef
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: () => {
+        this.handleSendClick();
       }
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "send"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, child)));
+    }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, children));
   }
 
-}) || _class4) || _class4);
-let Produce = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'produce'), _dec5(_class5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class5 = class Produce extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+}) || _class3) || _class3);
+let Produce = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class Produce extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.props.root.setMode('produce');
@@ -45009,7 +45044,14 @@ let Produce = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
       if (json.type === 'consume') {
         this.props.produce.addConsumers(json);
       } else if (json.type === 'consume_dc') {
-        const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.ws, json.uuid);
+        console.log('dc');
+        const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.id, this.props.produce.ws, json.uuid);
+        dcpc.setOnMessageHandler(ev => {
+          console.log(ev);
+          const json = JSON.parse(ev.data);
+          console.log(json);
+          this.props.produce.addSay(json.id, json.message);
+        });
         this.props.produce.addDataChPeerConnection(dcpc);
         const offer = new RTCSessionDescription({
           type: 'offer',
@@ -45018,24 +45060,26 @@ let Produce = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
 
         (async () => {
           await dcpc.setRemoteDesc(offer);
-          await dcpc.setLocalDesc((await pc.createAnswer()));
+          await dcpc.setLocalDesc((await dcpc.createAnswer()));
         })();
       }
     });
   }
 
   componentWillUnmount() {
+    console.log('produce component unmount');
     this.props.produce.setCurrentStream(null);
     this.props.produce.setWsOnMessageHandler(() => {});
     this.props.produce.clearPeerConnections();
+    this.props.produce.clearDataChPeerConnections();
     this.props.produce.clearConsumers();
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoView, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoModeRadio, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ConsumerList, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Chat, null));
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoView, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ConsumerList, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Chat, null));
   }
 
-}) || _class5) || _class5);
+}) || _class4) || _class4);
 
 
 /***/ }),
@@ -45100,7 +45144,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_3__);
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _temp;
+var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _temp;
 
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
@@ -45130,6 +45174,8 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
     _initializerDefineProperty(this, "recorder", _descriptor7, this);
 
     _initializerDefineProperty(this, "rec", _descriptor8, this);
+
+    _initializerDefineProperty(this, "says", _descriptor9, this);
 
     this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeWebSocket"])({
       auth: 'consume@890',
@@ -45165,6 +45211,26 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
     this.pc.conn.ontrack = handler;
   }
 
+  setDcPC(dcPc) {
+    this.dcPc = dcPc;
+  }
+
+  setDcRecievedAnswer(sdp) {
+    const recievedAnswer = new RTCSessionDescription({
+      type: 'answer',
+      sdp
+    });
+
+    (async () => {
+      if (this.dcPc.conn.remoteDescription !== null && this.dcPc.conn.remoteDescription !== recievedAnswer) {
+        this.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumeDataChPC"])(this.id, this.ws, true));
+        await this.dcPc.setLocalDesc((await this.dcPc.createOffer()));
+      }
+
+      await this.dcPc.setRemoteDesc(recievedAnswer);
+    })();
+  }
+
   setTarget(tgt) {
     this.target = tgt;
   }
@@ -45187,6 +45253,15 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
 
   toggleRec() {
     this.rec = !this.rec;
+  }
+
+  addSay(id, say) {
+    const time = Date.now();
+    this.says.push({
+      id,
+      time,
+      say
+    });
   }
 
 }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
@@ -45245,7 +45320,14 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
   initializer: function () {
     return false;
   }
-}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPcOnTrackHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPcOnTrackHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTarget", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTarget"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleRec", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleRec"), _class.prototype)), _class);
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "says", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return [];
+  }
+}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPcOnTrackHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPcOnTrackHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTarget", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTarget"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleRec", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleRec"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype)), _class);
 
 
 /***/ }),
@@ -45365,12 +45447,8 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     this.consumers = [];
   }
 
-  toggleVideoMode() {
-    if (this.videoMode === 'camera') {
-      this.videoMode = 'display';
-    } else {
-      this.videoMode = 'camera';
-    }
+  setVideoMode(videoMode) {
+    this.videoMode = videoMode;
   }
 
   setCurrentStream(stream) {
@@ -45385,8 +45463,13 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     this.currentStream = stream;
   }
 
-  addSay(say) {
-    this.says.push(say);
+  addSay(id, say) {
+    const time = Date.now();
+    this.says.push({
+      id,
+      time,
+      say
+    });
   }
 
   clearSays() {
@@ -45449,7 +45532,7 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
   initializer: function () {
     return [];
   }
-}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype)), _class);
+}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype)), _class);
 
 
 /***/ }),
@@ -45584,6 +45667,7 @@ function makeConsumePC(id, ws, remake = false) {
       console.log(ev);
 
       if (ev.candidate === null && !remake) {
+        console.log('send sdp');
         const to = 'default@890';
         const type = 'consume';
         const sdp = _pc.conn.localDescription.sdp;
@@ -45658,7 +45742,7 @@ class MyPeerConnection {
 
 }
 
-function makeProduceDataChPC(ws, destination) {
+function makeProduceDataChPC(id, ws, destination) {
   const _pc = new MyDataChPeerConnection(ws, {
     onIcecandidate: ev => {
       console.log(ev);
@@ -45681,6 +45765,8 @@ function makeProduceDataChPC(ws, destination) {
       }
     }
   });
+
+  _pc.overriteId(id);
 
   return _pc;
 }
@@ -45744,6 +45830,13 @@ class MyDataChPeerConnection {
     });
     this.conn.onnegotiationneeded = onNegotiationneeded;
     this.conn.onicecandidate = onIcecandidate;
+
+    this.conn.ondatachannel = ev => {
+      if (this.dc === null) {
+        this.dc = ev.channel;
+      }
+    };
+
     this.dc = null;
   }
 
@@ -45763,7 +45856,11 @@ class MyDataChPeerConnection {
     await this.conn.setRemoteDescription(desc);
   }
 
-  createDataChannel(onMessage = ev => console.log(ev)) {
+  overriteId(id) {
+    this.id = id;
+  }
+
+  createDataCh(onMessage = ev => console.log(ev)) {
     this.dc = this.conn.createDataChannel('chat');
     this.dc.onmessage = onMessage;
 
@@ -45774,8 +45871,30 @@ class MyDataChPeerConnection {
     this.dc.onerror = err => console.error(err);
   }
 
+  setOnMessageHandler(handler = ev => console.log(ev)) {
+    const self = this;
+    let count = 0;
+    const id = setInterval(function () {
+      if (self.dc !== null) {
+        self.dc.onmessage = handler;
+        clearInterval(id);
+      }
+
+      if (count >= 10) {
+        clearInterval(id);
+        throw new Error('time out');
+      }
+
+      count += 1;
+    }, 1000);
+  }
+
   send(msg) {
-    this.dc.send(msg);
+    const json = {
+      id: this.id,
+      message: msg
+    };
+    this.dc.send(JSON.stringify(json));
   }
 
 }

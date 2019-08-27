@@ -35,31 +35,11 @@ class ConsumerList extends React.Component {
 
 @inject('produce')
 @observer
-class VideoModeRadio extends React.Component {
-    onVideoModeChange() {
-        this.props.produce.toggleVideoMode();
-    }
-    render() {
-        return <div>
-            <label>
-                <input type='radio' name='videoMode' value='camera' checked={
-                    this.props.produce.videoMode === 'camera'
-                } onChange={() => this.onVideoModeChange()} />
-                <span>camera</span>
-            </label>
-            <label>
-                <input type='radio' name='videoMode' value='display' checked={
-                    this.props.produce.videoMode === 'display'
-                } onChange={() => this.onVideoModeChange()} />
-                <span>display</span>
-            </label>
-        </div>
-    }
-}
-
-@inject('produce')
-@observer
 class VideoView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.videoRef = React.createRef();
+    }
     onCamera(video) {
         (async () => {
             const newStream = await navigator.mediaDevices.getUserMedia({
@@ -80,18 +60,37 @@ class VideoView extends React.Component {
             video.srcObject = newStream;
         })();
     }
+    onVideoModeChange(value) {
+        this.props.produce.setVideoMode(value);
+        if (value === 'camera') {
+            this.onCamera(this.videoRef.current);
+        } else if (value === 'display') {
+            this.onDisplay(this.videoRef.current);
+        }
+    }
     render() {
-        return <div>
-            <video width="400" height="300" autoPlay ref={(video) => {
-                if (video !== null) {
-                    if (this.props.produce.videoMode === 'camera') {
-                        this.onCamera(video);
-                    } else if (this.props.produce.videoMode === 'display') {
-                        this.onDisplay(video);
-                    }
-                }
-            }}></video>
-        </div>
+        return <Fragment>
+            <div>
+                <video width="400" height="300" autoPlay ref={this.videoRef}></video>
+            </div>
+            <div>
+                <label>
+                    <input type='radio' name='videoMode' value='camera' checked={
+                        this.props.produce.videoMode === 'camera'
+                    } onChange={(ev) => this.onVideoModeChange(ev.target.value)} />
+                    <span>camera</span>
+                </label>
+                <label>
+                    <input type='radio' name='videoMode' value='display' checked={
+                        this.props.produce.videoMode === 'display'
+                    } onChange={(ev) => this.onVideoModeChange(ev.target.value)} />
+                    <span>display</span>
+                </label>
+            </div>
+        </Fragment> 
+    }
+    componentDidMount() {
+        this.onCamera(this.videoRef.current);
     }
 }
 
@@ -100,21 +99,29 @@ class VideoView extends React.Component {
 class Chat extends React.Component {
     constructor(props) {
         super(props);
+        this.textRef = React.createRef();
     }
-    componentWillUnmount() {
-        this.props.produce.clearDataChPeerConnections();
+    handleSendClick() {
+        this.props.produce.addSay('[me]', this.textRef.current.value);
+        this.props.produce.dcPCs.forEach((dcpc) => {
+            console.log(dcpc);
+            dcpc.send(this.textRef.current.value);
+        });
     }
     render() {
-        const child = this.props.produce.says.map(e => {
-            <li>{e}</li>
-        });
-        return <div>
-            <input type='text' onChange={(e) => {console.log(e.target.value)}} />
-            <button>send</button>
+        console.log(this.props.produce.dcPCs);
+        const children = this.props.produce.says.map((e, idx) => {
+            return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
+        }).reverse();
+        return <Fragment>
             <div>
-                <ul>{child}</ul>
+                <input type='text' ref={this.textRef} />
+                <button onClick={() => {this.handleSendClick()}}>send</button>
             </div>
-        </div>
+            <ul>
+                {children}
+            </ul>
+        </Fragment>
     }
 }
 
@@ -131,29 +138,37 @@ export default class Produce extends React.Component {
             if (json.type === 'consume') {
                 this.props.produce.addConsumers(json);
             } else if (json.type === 'consume_dc') {
+                console.log('dc');
                 const dcpc = makeProduceDataChPC(
-                    this.props.produce.ws, json.uuid);
+                    this.props.produce.id, this.props.produce.ws, json.uuid);
+                dcpc.setOnMessageHandler((ev) => {
+                    console.log(ev);
+                    const json = JSON.parse(ev.data);
+                    console.log(json);
+                    this.props.produce.addSay(json.id, json.message);
+                });
                 this.props.produce.addDataChPeerConnection(dcpc);
                 const offer = new RTCSessionDescription({
                     type: 'offer', sdp: json.sdp
                 });
                 (async () => {
                     await dcpc.setRemoteDesc(offer);
-                    await dcpc.setLocalDesc(await pc.createAnswer());
+                    await dcpc.setLocalDesc(await dcpc.createAnswer());
                 })();
             }
         });
     }
     componentWillUnmount() {
+        console.log('produce component unmount');
         this.props.produce.setCurrentStream(null);
         this.props.produce.setWsOnMessageHandler(() => {});
         this.props.produce.clearPeerConnections();
+        this.props.produce.clearDataChPeerConnections();
         this.props.produce.clearConsumers();
     }
     render() {
         return <Fragment>
             <VideoView />
-            <VideoModeRadio />
             <ConsumerList />
             <Chat />
         </Fragment>

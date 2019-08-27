@@ -57,6 +57,7 @@ function makeConsumePC(id, ws, remake = false) {
         onIcecandidate: (ev) => {
             console.log(ev);
             if (ev.candidate === null && !remake) {
+                console.log('send sdp');
                 const to = 'default@890';
                 const type = 'consume';
                 const sdp = _pc.conn.localDescription.sdp;
@@ -109,7 +110,7 @@ class MyPeerConnection {
     }
 }
 
-function makeProduceDataChPC(ws, destination) {
+function makeProduceDataChPC(id, ws, destination) {
     const _pc = new MyDataChPeerConnection(ws, {
         onIcecandidate: (ev) => {
             console.log(ev);
@@ -125,6 +126,7 @@ function makeProduceDataChPC(ws, destination) {
             }
         }
     });
+    _pc.overriteId(id);
     return _pc;
 }
 
@@ -174,6 +176,11 @@ class MyDataChPeerConnection {
         this.conn = new RTCPeerConnection({ iceServers });
         this.conn.onnegotiationneeded = onNegotiationneeded;
         this.conn.onicecandidate = onIcecandidate;
+        this.conn.ondatachannel = (ev) => {
+            if (this.dc === null) {
+                this.dc = ev.channel;
+            }
+        };
         this.dc = null;
     }
     async createOffer() {
@@ -188,15 +195,34 @@ class MyDataChPeerConnection {
     async setRemoteDesc(desc) {
         await this.conn.setRemoteDescription(desc);
     }
-    createDataChannel(onMessage = (ev) => console.log(ev)) {
+    overriteId(id) {
+        this.id = id;
+    }
+    createDataCh(onMessage = (ev) => console.log(ev)) {
         this.dc = this.conn.createDataChannel('chat');
         this.dc.onmessage = onMessage;
         this.dc.onopen = (ev) => console.log(ev);
         this.dc.onclose = (ev) => console.log(ev);
         this.dc.onerror = (err) => console.error(err);
     }
+    setOnMessageHandler(handler = (ev) => console.log(ev)) {
+        const self = this;
+        let count = 0;
+        const id = setInterval(function() {
+            if (self.dc !== null) {
+                self.dc.onmessage = handler;
+                clearInterval(id);
+            }
+            if (count >= 10) { 
+                clearInterval(id);
+                throw new Error('time out');
+            }
+            count += 1;
+        }, 1000);
+    }
     send(msg) {
-        this.dc.send(msg);
+        const json = {id: this.id, message: msg};
+        this.dc.send(JSON.stringify(json));
     }
 }
 

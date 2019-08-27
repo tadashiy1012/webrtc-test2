@@ -69,12 +69,8 @@ export default class ProduceStore {
     }
 
     @action
-    toggleVideoMode() {
-        if (this.videoMode === 'camera') {
-            this.videoMode = 'display';
-        } else {
-            this.videoMode = 'camera';
-        }
+    setVideoMode(videoMode) {
+        this.videoMode = videoMode;
     }
 
     @action
@@ -90,8 +86,9 @@ export default class ProduceStore {
     }
 
     @action
-    addSay(say) {
-        this.says.push(say);
+    addSay(id, say) {
+        const time = Date.now();
+        this.says.push({id, time, say});
     }
 
     @action
