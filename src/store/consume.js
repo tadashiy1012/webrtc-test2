@@ -2,11 +2,14 @@ import {observable, action} from 'mobx';
 import {WebAssemblyRecorder} from 'recordrtc'
 import * as RecordRTC from 'recordrtc/RecordRTC';
 import {makeWebSocket, makeConsumePC} from '../util';
+import * as uuid from 'uuid/v1';
 
 export default class ConsumeStore {
 
+    @observable id = uuid();
     @observable ws = null;
     @observable pc = null;
+    @observable dcPc = null;
     @observable target = null;
     @observable stream = null;
     @observable recorder = null;
@@ -36,7 +39,7 @@ export default class ConsumeStore {
         (async () => {
             if (this.pc.conn.remoteDescription !== null 
                     && this.pc.conn.remoteDescription !== recievedAnswer) {
-                this.setPC(makeConsumePC(this.ws, true));
+                this.setPC(makeConsumePC(this.id, this.ws, true));
                 await this.pc.setLocalDesc(await this.pc.createOffer());
             }
             await this.pc.setRemoteDesc(recievedAnswer);

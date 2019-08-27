@@ -44742,12 +44742,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
-var _dec, _class;
+var _dec, _class, _dec2, _class2;
 
 
 
 
-let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'consume'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class Consume extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+let Chat = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('consume'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class Chat extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    console.log(this.props.cchat);
+    const ws = this.props.consume.ws;
+    const pc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumeDataChPC"])(ws);
+    this.props.cchat.setPC(pc);
+  }
+
+  render() {
+    const child = this.props.cchat.say.map(e => {
+      react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, e);
+    });
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "text",
+      onChange: e => {
+        console.log(e.target.value);
+      }
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "send"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, child)));
+  }
+
+}) || _class) || _class);
+let Consume = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'consume'), _dec2(_class2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class2 = class Consume extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.props.root.setMode('consume');
@@ -44760,7 +44782,7 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
       console.log('message to me');
       this.props.consume.setRecievedAnswer(json.sdp);
     });
-    this.props.consume.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumePC"])(this.props.consume.ws));
+    this.props.consume.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumePC"])(this.props.consume.id, this.props.consume.ws));
     this.props.consume.setPcOnTrackHandler(ev => {
       console.log(ev);
       this.props.consume.setRecorder(ev.streams[0]);
@@ -44806,10 +44828,10 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
       onClick: () => {
         this.onClickRec();
       }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, icon), "rec")));
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, icon), "rec")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Chat, null));
   }
 
-}) || _class) || _class);
+}) || _class2) || _class2);
 
 
 /***/ }),
@@ -44849,7 +44871,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
-var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4;
+var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5;
 
 
 
@@ -44953,7 +44975,29 @@ let VideoView = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
   }
 
 }) || _class3) || _class3);
-let Produce = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class Produce extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+let Chat = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class Chat extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentWillUnmount() {
+    this.props.produce.clearDataChPeerConnections();
+  }
+
+  render() {
+    const child = this.props.produce.says.map(e => {
+      react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, e);
+    });
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "text",
+      onChange: e => {
+        console.log(e.target.value);
+      }
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "send"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, child)));
+  }
+
+}) || _class4) || _class4);
+let Produce = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'produce'), _dec5(_class5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class5 = class Produce extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.props.root.setMode('produce');
@@ -44961,8 +45005,22 @@ let Produce = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
       console.log(ev);
       const json = JSON.parse(ev.data);
       console.log(json);
-      if (json.type !== 'consume') return;
-      this.props.produce.addConsumers(json);
+
+      if (json.type === 'consume') {
+        this.props.produce.addConsumers(json);
+      } else if (json.type === 'consume_dc') {
+        const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.ws, json.uuid);
+        this.props.produce.addDataChPeerConnection(dcpc);
+        const offer = new RTCSessionDescription({
+          type: 'offer',
+          sdp: json.sdp
+        });
+
+        (async () => {
+          await dcpc.setRemoteDesc(offer);
+          await dcpc.setLocalDesc((await pc.createAnswer()));
+        })();
+      }
     });
   }
 
@@ -44974,10 +45032,10 @@ let Produce = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoView, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoModeRadio, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ConsumerList, null));
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoView, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoModeRadio, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ConsumerList, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Chat, null));
   }
 
-}) || _class4) || _class4);
+}) || _class5) || _class5);
 
 
 /***/ }),
@@ -45040,7 +45098,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var recordrtc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! recordrtc */ "./node_modules/recordrtc/RecordRTC.js");
 /* harmony import */ var recordrtc__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(recordrtc__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _temp;
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_3__);
+var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _temp;
 
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
@@ -45052,19 +45112,24 @@ function _initializerWarningHelper(descriptor, context) { throw new Error('Decor
 
 
 
+
 let ConsumeStore = (_class = (_temp = class ConsumeStore {
   constructor() {
-    _initializerDefineProperty(this, "ws", _descriptor, this);
+    _initializerDefineProperty(this, "id", _descriptor, this);
 
-    _initializerDefineProperty(this, "pc", _descriptor2, this);
+    _initializerDefineProperty(this, "ws", _descriptor2, this);
 
-    _initializerDefineProperty(this, "target", _descriptor3, this);
+    _initializerDefineProperty(this, "pc", _descriptor3, this);
 
-    _initializerDefineProperty(this, "stream", _descriptor4, this);
+    _initializerDefineProperty(this, "dcPc", _descriptor4, this);
 
-    _initializerDefineProperty(this, "recorder", _descriptor5, this);
+    _initializerDefineProperty(this, "target", _descriptor5, this);
 
-    _initializerDefineProperty(this, "rec", _descriptor6, this);
+    _initializerDefineProperty(this, "stream", _descriptor6, this);
+
+    _initializerDefineProperty(this, "recorder", _descriptor7, this);
+
+    _initializerDefineProperty(this, "rec", _descriptor8, this);
 
     this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeWebSocket"])({
       auth: 'consume@890',
@@ -45088,7 +45153,7 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
 
     (async () => {
       if (this.pc.conn.remoteDescription !== null && this.pc.conn.remoteDescription !== recievedAnswer) {
-        this.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumePC"])(this.ws, true));
+        this.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumePC"])(this.id, this.ws, true));
         await this.pc.setLocalDesc((await this.pc.createOffer()));
       }
 
@@ -45124,42 +45189,56 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
     this.rec = !this.rec;
   }
 
-}, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "ws", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return uuid_v1__WEBPACK_IMPORTED_MODULE_3__();
+  }
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "ws", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return null;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "pc", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "pc", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return null;
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "target", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "dcPc", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return null;
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "stream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "target", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return null;
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "recorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "stream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return null;
   }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "rec", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "recorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return null;
+  }
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "rec", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
@@ -45208,7 +45287,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProduceStore; });
 /* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util.js");
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _temp;
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
+var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _temp;
 
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
@@ -45218,17 +45299,24 @@ function _initializerWarningHelper(descriptor, context) { throw new Error('Decor
 
 
 
+
 let ProduceStore = (_class = (_temp = class ProduceStore {
   constructor() {
-    _initializerDefineProperty(this, "ws", _descriptor, this);
+    _initializerDefineProperty(this, "id", _descriptor, this);
 
-    _initializerDefineProperty(this, "pcs", _descriptor2, this);
+    _initializerDefineProperty(this, "ws", _descriptor2, this);
 
-    _initializerDefineProperty(this, "consumers", _descriptor3, this);
+    _initializerDefineProperty(this, "pcs", _descriptor3, this);
 
-    _initializerDefineProperty(this, "videoMode", _descriptor4, this);
+    _initializerDefineProperty(this, "dcPCs", _descriptor4, this);
 
-    _initializerDefineProperty(this, "currentStream", _descriptor5, this);
+    _initializerDefineProperty(this, "consumers", _descriptor5, this);
+
+    _initializerDefineProperty(this, "videoMode", _descriptor6, this);
+
+    _initializerDefineProperty(this, "currentStream", _descriptor7, this);
+
+    _initializerDefineProperty(this, "says", _descriptor8, this);
 
     this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_1__["makeWebSocket"])({
       auth: 'default@890',
@@ -45246,6 +45334,14 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
 
   clearPeerConnections() {
     this.pcs = [];
+  }
+
+  addDataChPeerConnection(dcpc) {
+    this.dcPCs.push(dcpc);
+  }
+
+  clearDataChPeerConnections() {
+    this.dcPCs = [];
   }
 
   setPCsTrack() {
@@ -45289,42 +45385,71 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     this.currentStream = stream;
   }
 
-}, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "ws", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  addSay(say) {
+    this.says.push(say);
+  }
+
+  clearSays() {
+    this.says = [];
+  }
+
+}, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
+  }
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "ws", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return null;
   }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "pcs", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "pcs", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return [];
   }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "consumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "dcPCs", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return [];
   }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "videoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "consumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return [];
+  }
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "videoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return 'camera';
   }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "currentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "currentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return null;
   }
-}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype)), _class);
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "says", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return [];
+  }
+}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype)), _class);
 
 
 /***/ }),
@@ -45374,7 +45499,7 @@ let RootStore = (_class = (_temp = class RootStore {
 /*!*********************!*\
   !*** ./src/util.js ***!
   \*********************/
-/*! exports provided: makeWebSocket, makeProducePC, makeConsumePC */
+/*! exports provided: makeWebSocket, makeProducePC, makeConsumePC, MyPeerConnection, MyDataChPeerConnection, makeProduceDataChPC, makeConsumeDataChPC */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45382,9 +45507,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeWebSocket", function() { return makeWebSocket; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeProducePC", function() { return makeProducePC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeConsumePC", function() { return makeConsumePC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MyPeerConnection", function() { return MyPeerConnection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MyDataChPeerConnection", function() { return MyDataChPeerConnection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeProduceDataChPC", function() { return makeProduceDataChPC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeConsumeDataChPC", function() { return makeConsumeDataChPC; });
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_0__);
 
+const iceServers = [{
+  "urls": "stun:stun.l.google.com:19302"
+}];
 
 function makeWebSocket(auth, {
   onMessage = ev => console.log(ev),
@@ -45434,7 +45566,7 @@ function makeProducePC(ws, destination) {
   return _pc;
 }
 
-function makeConsumePC(ws, remake = false) {
+function makeConsumePC(id, ws, remake = false) {
   console.log('remake:' + remake);
 
   const _pc = new MyPeerConnection(ws, {
@@ -45455,7 +45587,7 @@ function makeConsumePC(ws, remake = false) {
         const to = 'default@890';
         const type = 'consume';
         const sdp = _pc.conn.localDescription.sdp;
-        const uuid = _pc.id;
+        const uuid = id;
         const json = {
           to,
           type,
@@ -45463,14 +45595,14 @@ function makeConsumePC(ws, remake = false) {
           uuid
         };
         let count = 0;
-        const id = setInterval(function () {
+        const iid = setInterval(function () {
           if (_pc.ws.readyState === WebSocket.OPEN) {
             _pc.ws.send(JSON.stringify(json));
 
-            clearInterval(id);
+            clearInterval(iid);
           }
 
-          if (count >= 10) clearInterval(id);
+          if (count >= 10) clearInterval(iid);
           count += 1;
         }, 1000);
       }
@@ -45497,9 +45629,7 @@ class MyPeerConnection {
     this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_0__();
     this.ws = webSocket;
     this.conn = new RTCPeerConnection({
-      iceServers: [{
-        "urls": "stun:stun.l.google.com:19302"
-      }]
+      iceServers
     });
     this.conn.onnegotiationneeded = onNegotiationneeded;
     this.conn.onicecandidate = onIcecandidate;
@@ -45524,6 +45654,128 @@ class MyPeerConnection {
 
   addTrack(track, stream) {
     return this.conn.addTrack(track, stream);
+  }
+
+}
+
+function makeProduceDataChPC(ws, destination) {
+  const _pc = new MyDataChPeerConnection(ws, {
+    onIcecandidate: ev => {
+      console.log(ev);
+
+      if (ev.candidate === null) {
+        if (_pc.conn.remoteDescription !== null) {
+          console.log('send dc sdp');
+          const to = 'consume@890';
+          const type = 'produce_dc';
+          const sdp = _pc.conn.localDescription.sdp;
+          const json = {
+            to,
+            type,
+            sdp,
+            destination
+          };
+
+          _pc.ws.send(JSON.stringify(json));
+        }
+      }
+    }
+  });
+
+  return _pc;
+}
+
+function makeConsumeDataChPC(id, ws, remake = false) {
+  console.log('remake:' + remake);
+
+  const _pc = new MyDataChPeerConnection(ws, {
+    onNegotiationneeded: ev => {
+      console.log(ev);
+
+      (async () => {
+        if (!remake) {
+          console.log('create offer');
+          await _pc.setLocalDesc((await _pc.createOffer()));
+        }
+      })();
+    },
+    onIcecandidate: ev => {
+      console.log(ev);
+
+      if (ev.candidate === null && !remake) {
+        console.log('send dc sdp');
+        const to = 'default@890';
+        const type = 'consume_dc';
+        const sdp = _pc.conn.localDescription.sdp;
+        const uuid = id;
+        const json = {
+          to,
+          type,
+          sdp,
+          uuid
+        };
+        let count = 0;
+        const iid = setInterval(function () {
+          if (_pc.ws.readyState === WebSocket.OPEN) {
+            _pc.ws.send(JSON.stringify(json));
+
+            clearInterval(iid);
+          }
+
+          if (count >= 10) clearInterval(iid);
+          count += 1;
+        }, 1000);
+      }
+    }
+  });
+
+  return _pc;
+}
+
+class MyDataChPeerConnection {
+  constructor(webSocket, {
+    onNegotiationneeded = ev => console.log(ev),
+    onIcecandidate = ev => console.log(ev)
+  }) {
+    this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_0__();
+    this.ws = webSocket;
+    this.conn = new RTCPeerConnection({
+      iceServers
+    });
+    this.conn.onnegotiationneeded = onNegotiationneeded;
+    this.conn.onicecandidate = onIcecandidate;
+    this.dc = null;
+  }
+
+  async createOffer() {
+    return await this.conn.createOffer();
+  }
+
+  async createAnswer() {
+    return await this.conn.createAnswer();
+  }
+
+  async setLocalDesc(desc) {
+    await this.conn.setLocalDescription(desc);
+  }
+
+  async setRemoteDesc(desc) {
+    await this.conn.setRemoteDescription(desc);
+  }
+
+  createDataChannel(onMessage = ev => console.log(ev)) {
+    this.dc = this.conn.createDataChannel('chat');
+    this.dc.onmessage = onMessage;
+
+    this.dc.onopen = ev => console.log(ev);
+
+    this.dc.onclose = ev => console.log(ev);
+
+    this.dc.onerror = err => console.error(err);
+  }
+
+  send(msg) {
+    this.dc.send(msg);
   }
 
 }

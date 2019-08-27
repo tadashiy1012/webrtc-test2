@@ -1,5 +1,9 @@
 import * as uuidv1 from 'uuid/v1';
 
+const iceServers = [
+    {"urls": "stun:stun.l.google.com:19302"}
+];
+
 function makeWebSocket(auth, {
     onMessage = (ev) => console.log(ev),
     onOpen = (ev) => console.log(ev),
@@ -38,7 +42,7 @@ function makeProducePC(ws, destination) {
     return _pc;
 }
 
-function makeConsumePC(ws, remake = false) {
+function makeConsumePC(id, ws, remake = false) {
     console.log('remake:' + remake);
     const _pc = new MyPeerConnection(ws, {
         onNegotiationneeded: (ev) => {
@@ -56,15 +60,15 @@ function makeConsumePC(ws, remake = false) {
                 const to = 'default@890';
                 const type = 'consume';
                 const sdp = _pc.conn.localDescription.sdp;
-                const uuid = _pc.id;
+                const uuid = id;
                 const json = { to, type, sdp, uuid };
                 let count = 0;
-                const id = setInterval(function() {
+                const iid = setInterval(function() {
                     if (_pc.ws.readyState === WebSocket.OPEN) {
                         _pc.ws.send(JSON.stringify(json));
-                        clearInterval(id);
+                        clearInterval(iid);
                     }
-                    if (count >= 10) clearInterval(id);
+                    if (count >= 10) clearInterval(iid);
                     count += 1
                 }, 1000);
             }
@@ -83,11 +87,7 @@ class MyPeerConnection {
     }) {
         this.id = uuidv1();
         this.ws = webSocket;
-        this.conn = new RTCPeerConnection({
-            iceServers: [
-                {"urls": "stun:stun.l.google.com:19302"}
-            ]
-        });
+        this.conn = new RTCPeerConnection({ iceServers });
         this.conn.onnegotiationneeded = onNegotiationneeded;
         this.conn.onicecandidate = onIcecandidate;
         this.conn.ontrack = onTrack;
@@ -109,8 +109,103 @@ class MyPeerConnection {
     }
 }
 
+function makeProduceDataChPC(ws, destination) {
+    const _pc = new MyDataChPeerConnection(ws, {
+        onIcecandidate: (ev) => {
+            console.log(ev);
+            if (ev.candidate === null) {
+                if (_pc.conn.remoteDescription !== null) {
+                    console.log('send dc sdp');
+                    const to = 'consume@890';
+                    const type = 'produce_dc';
+                    const sdp = _pc.conn.localDescription.sdp;
+                    const json = {to, type, sdp, destination};
+                    _pc.ws.send(JSON.stringify(json));
+                }
+            }
+        }
+    });
+    return _pc;
+}
+
+function makeConsumeDataChPC(id, ws, remake = false) {
+    console.log('remake:' + remake);
+    const _pc = new MyDataChPeerConnection(ws, {
+        onNegotiationneeded: (ev) => {
+            console.log(ev);
+            (async () => {
+                if (!remake) {
+                    console.log('create offer');
+                    await _pc.setLocalDesc(await _pc.createOffer());
+                }
+            })();
+        },
+        onIcecandidate: (ev) => {
+            console.log(ev);
+            if (ev.candidate === null && !remake) {
+                console.log('send dc sdp');
+                const to = 'default@890';
+                const type = 'consume_dc';
+                const sdp = _pc.conn.localDescription.sdp;
+                const uuid = id;
+                const json = {to, type, sdp, uuid};
+                let count = 0;
+                const iid = setInterval(function() {
+                    if (_pc.ws.readyState === WebSocket.OPEN) {
+                        _pc.ws.send(JSON.stringify(json));
+                        clearInterval(iid);
+                    }
+                    if (count >= 10) clearInterval(iid);
+                    count += 1;
+                }, 1000);
+            }
+        }
+    });
+    return _pc;
+}
+
+class MyDataChPeerConnection {
+    constructor(webSocket, {
+        onNegotiationneeded = (ev) => console.log(ev),
+        onIcecandidate = (ev) => console.log(ev)
+    }) {
+        this.id = uuidv1();
+        this.ws = webSocket;
+        this.conn = new RTCPeerConnection({ iceServers });
+        this.conn.onnegotiationneeded = onNegotiationneeded;
+        this.conn.onicecandidate = onIcecandidate;
+        this.dc = null;
+    }
+    async createOffer() {
+        return await this.conn.createOffer();
+    }
+    async createAnswer() {
+        return await this.conn.createAnswer();
+    }
+    async setLocalDesc(desc) {
+        await this.conn.setLocalDescription(desc);
+    }
+    async setRemoteDesc(desc) {
+        await this.conn.setRemoteDescription(desc);
+    }
+    createDataChannel(onMessage = (ev) => console.log(ev)) {
+        this.dc = this.conn.createDataChannel('chat');
+        this.dc.onmessage = onMessage;
+        this.dc.onopen = (ev) => console.log(ev);
+        this.dc.onclose = (ev) => console.log(ev);
+        this.dc.onerror = (err) => console.error(err);
+    }
+    send(msg) {
+        this.dc.send(msg);
+    }
+}
+
 export {
     makeWebSocket,
     makeProducePC,
-    makeConsumePC
+    makeConsumePC,
+    MyPeerConnection,
+    MyDataChPeerConnection,
+    makeProduceDataChPC,
+    makeConsumeDataChPC
 }

@@ -1,13 +1,17 @@
 import {observable, action} from 'mobx';
 import {makeWebSocket} from '../util';
+import * as uuid from 'uuid/v1';
 
 export default class ProduceStore {
 
+    @observable id = uuid();
     @observable ws = null;
     @observable pcs = [];
+    @observable dcPCs = [];
     @observable consumers = [];
     @observable videoMode = 'camera';
     @observable currentStream = null;
+    @observable says = [];
 
     constructor() {
         this.ws = makeWebSocket({
@@ -28,6 +32,16 @@ export default class ProduceStore {
     @action
     clearPeerConnections() {
         this.pcs = [];
+    }
+
+    @action
+    addDataChPeerConnection(dcpc) {
+        this.dcPCs.push(dcpc);
+    }
+
+    @action
+    clearDataChPeerConnections() {
+        this.dcPCs = [];
     }
 
     @action
@@ -73,6 +87,16 @@ export default class ProduceStore {
             });
         }
         this.currentStream = stream;
+    }
+
+    @action
+    addSay(say) {
+        this.says.push(say);
+    }
+
+    @action
+    clearSays() {
+        this.says = [];
     }
 
 }

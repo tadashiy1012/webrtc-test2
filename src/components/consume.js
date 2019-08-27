@@ -1,6 +1,30 @@
 import React, {Fragment} from 'react';
 import {observer, inject} from 'mobx-react';
-import {makeConsumePC} from '../util';
+import {makeConsumePC, makeConsumeDataChPC} from '../util';
+
+@inject('consume')
+@observer
+class Chat extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log(this.props.cchat);
+        const ws = this.props.consume.ws;
+        const pc = makeConsumeDataChPC(ws);
+        this.props.cchat.setPC(pc);
+    }
+    render() {
+        const child = this.props.cchat.say.map(e => {
+            <li>{e}</li>
+        });
+        return <div>
+            <input type='text' onChange={(e) => {console.log(e.target.value)}} />
+            <button>send</button>
+            <div>
+                <ul>{child}</ul>
+            </div>
+        </div>
+    }
+}
 
 @inject('root', 'consume')
 @observer
@@ -17,7 +41,8 @@ export default class Consume extends React.Component {
             console.log('message to me');
             this.props.consume.setRecievedAnswer(json.sdp);
         });
-        this.props.consume.setPC(makeConsumePC(this.props.consume.ws));
+        this.props.consume.setPC(makeConsumePC(
+            this.props.consume.id, this.props.consume.ws));
         this.props.consume.setPcOnTrackHandler((ev) => {
             console.log(ev);
             this.props.consume.setRecorder(ev.streams[0]);
@@ -59,6 +84,7 @@ export default class Consume extends React.Component {
                     rec
                 </button>
             </div>
+            <Chat />
         </Fragment>
     }
 }

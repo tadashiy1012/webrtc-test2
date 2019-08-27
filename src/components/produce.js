@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import {observer, inject} from 'mobx-react';
-import {makeProducePC} from '../util';
+import {makeProducePC, makeProduceDataChPC} from '../util';
 
 const Consumer = (props) => (
     <li><span onClick={props.handleClick}>{props.uuid}</span></li>
@@ -95,6 +95,29 @@ class VideoView extends React.Component {
     }
 }
 
+@inject('produce')
+@observer
+class Chat extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    componentWillUnmount() {
+        this.props.produce.clearDataChPeerConnections();
+    }
+    render() {
+        const child = this.props.produce.says.map(e => {
+            <li>{e}</li>
+        });
+        return <div>
+            <input type='text' onChange={(e) => {console.log(e.target.value)}} />
+            <button>send</button>
+            <div>
+                <ul>{child}</ul>
+            </div>
+        </div>
+    }
+}
+
 @inject('root', 'produce')
 @observer
 export default class Produce extends React.Component {
@@ -105,8 +128,20 @@ export default class Produce extends React.Component {
             console.log(ev);
             const json = JSON.parse(ev.data);
             console.log(json);
-            if (json.type !== 'consume') return;
-            this.props.produce.addConsumers(json);
+            if (json.type === 'consume') {
+                this.props.produce.addConsumers(json);
+            } else if (json.type === 'consume_dc') {
+                const dcpc = makeProduceDataChPC(
+                    this.props.produce.ws, json.uuid);
+                this.props.produce.addDataChPeerConnection(dcpc);
+                const offer = new RTCSessionDescription({
+                    type: 'offer', sdp: json.sdp
+                });
+                (async () => {
+                    await dcpc.setRemoteDesc(offer);
+                    await dcpc.setLocalDesc(await pc.createAnswer());
+                })();
+            }
         });
     }
     componentWillUnmount() {
@@ -120,6 +155,7 @@ export default class Produce extends React.Component {
             <VideoView />
             <VideoModeRadio />
             <ConsumerList />
+            <Chat />
         </Fragment>
     }
 }

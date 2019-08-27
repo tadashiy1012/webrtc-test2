@@ -6,7 +6,11 @@ import {RootStore, ProduceStore, ConsumeStore} from './store';
 import {Produce, Consume} from './components';
 
 const App = () => (
-    <Provider root={new RootStore()} produce={new ProduceStore()} consume={new ConsumeStore()}>
+    <Provider 
+        root={new RootStore()} 
+        produce={new ProduceStore()} 
+        consume={new ConsumeStore()}
+    >
         <Router>
             <Fragment>
                 <h1>webrtc-test2</h1>
