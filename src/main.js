@@ -7,6 +7,9 @@ import {RootStore, ProduceStore, ConsumeStore} from './store';
 import {Produce, Consume} from './components';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap';
+import pdfjs from 'pdfjs-dist';
+
+pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.bundle.js';
 
 const App = () => (
     <Provider 

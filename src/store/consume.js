@@ -1,7 +1,7 @@
 import {observable, action} from 'mobx';
 import {WebAssemblyRecorder} from 'recordrtc'
 import * as RecordRTC from 'recordrtc/RecordRTC';
-import {makeWebSocket, makeConsumePC, makeConsumeDataChPC} from '../util';
+import {makeWebSocket, makeConsumePC, makeConsumeDataChPC, tArray2String, getDoc} from '../util';
 import * as uuid from 'uuid/v1';
 
 export default class ConsumeStore {
@@ -15,6 +15,7 @@ export default class ConsumeStore {
     @observable recorder = null;
     @observable rec = false;
     @observable says = [];
+    @observable objects = [];
 
     constructor() {
         this.ws = makeWebSocket({
@@ -58,17 +59,46 @@ export default class ConsumeStore {
     }
 
     @action
+    setDcOnMessage() {
+        this.dcPc.setOnMessageHandler((ev) => {
+            console.log(ev);
+            if (typeof ev.data === 'string') {
+                const json = JSON.parse(ev.data);
+                this.addSay(json.id, json.message);
+            } else {
+                if (ev.data instanceof ArrayBuffer) {
+                    const tary = new Uint16Array(ev.data);
+                    const header = tary.slice(0, 100);
+                    const id = header.slice(0, 36);
+                    const type = header.slice(36);
+                    const file = tary.slice(100);
+                    const typeStr = tArray2String(type.slice(0, type.indexOf(0)));
+                    console.log(typeStr);
+                    const blob = new Blob([file], {type: typeStr});
+                    console.log(blob);
+                    this.addObj(tArray2String(id), blob);
+                }
+            }
+        });
+    }
+
+    @action
     setDcRecievedAnswer(sdp) {
         const recievedAnswer = new RTCSessionDescription({
             type: 'answer', sdp
         });
+        console.log(recievedAnswer);
         (async () => {
-            if (this.dcPc.conn.remoteDescription !== null 
-                    && this.dcPc.conn.remoteDescription !== recievedAnswer) {
-                this.setDcPC(makeConsumeDataChPC(this.id, this.ws, true));
-                await this.dcPc.setLocalDesc(await this.dcPc.createOffer());
+            if (this.dcPc.conn.remoteDescription !== null) {
+                if (this.dcPc.conn.remoteDescription !== recievedAnswer) {
+                    this.setDcPC(makeConsumeDataChPC(this.id, this.ws, true));
+                    this.setDcOnMessage();
+                    await this.dcPc.setLocalDesc(await this.dcPc.createOffer());
+                    await this.dcPc.setRemoteDesc(recievedAnswer);
+                }
+            } else {
+                await this.dcPc.setRemoteDesc(recievedAnswer);
             }
-            await this.dcPc.setRemoteDesc(recievedAnswer);
         })();
     }
 
@@ -105,5 +135,22 @@ export default class ConsumeStore {
         const time = Date.now();
         this.says.push({id, time, say});
     }
+
+    @action
+    addObj(id, obj) {
+        const time = Date.now();
+        const tgt = {id, time, obj, pdf: null};
+        this.objects.push(tgt);
+    }
+
+    @action
+    readPdf(object) {
+        const target = this.objects.find(e => e.time === object.time);
+        getDoc(object.obj).then((result) => {
+            console.log(result);
+            target.pdf = result;
+        });
+    }
+
 
 }

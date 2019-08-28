@@ -134,7 +134,6 @@ class Chat extends React.Component {
         });
     }
     render() {
-        console.log(this.props.produce.dcPCs);
         const children = this.props.produce.says.map((e, idx) => {
             return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
         }).reverse();
@@ -146,6 +145,31 @@ class Chat extends React.Component {
             <ul>
                 {children}
             </ul>
+        </Fragment>
+    }
+}
+
+@inject('produce')
+@observer
+class File extends React.Component {
+    constructor(props) {
+        super(props)
+        this.fileRef = React.createRef();
+    }
+    handleSendClick() {
+        console.log(this.fileRef.current);
+        console.log(this.fileRef.current.files);
+        this.props.produce.dcPCs.forEach((dcpc) => {
+            console.log(dcpc);
+            dcpc.sendBlob(this.fileRef.current.files[0]);
+        });
+    }
+    render() {
+        return <Fragment>
+            <div>
+                <input type='file' ref={this.fileRef} accept='.jpg,.png,.pdf'/>
+                <button onClick={() => {this.handleSendClick()}}>send</button>
+            </div>
         </Fragment>
     }
 }
@@ -196,6 +220,7 @@ export default class Produce extends React.Component {
             <VideoView />
             <ConsumerList />
             <Chat />
+            <File />
         </Fragment>
     }
 }

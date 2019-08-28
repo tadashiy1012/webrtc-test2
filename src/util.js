@@ -1,4 +1,5 @@
 import * as uuidv1 from 'uuid/v1';
+import pdfjs from 'pdfjs-dist';
 
 const iceServers = [
     {"urls": "stun:stun.l.google.com:19302"}
@@ -198,9 +199,9 @@ class MyDataChPeerConnection {
     overriteId(id) {
         this.id = id;
     }
-    createDataCh(onMessage = (ev) => console.log(ev)) {
+    createDataCh() {
         this.dc = this.conn.createDataChannel('chat');
-        this.dc.onmessage = onMessage;
+        this.dc.onmessage = (ev) => console.log(ev);
         this.dc.onopen = (ev) => console.log(ev);
         this.dc.onclose = (ev) => console.log(ev);
         this.dc.onerror = (err) => console.error(err);
@@ -224,7 +225,68 @@ class MyDataChPeerConnection {
         const json = {id: this.id, message: msg};
         this.dc.send(JSON.stringify(json));
     }
+    sendBlob(blob) {
+        const fr = new FileReader()
+        fr.onload = (ev) => {
+            console.log(ev);
+            const file = new Uint16Array(fr.result);
+            const id = string2TypedArray(this.id);
+            const type = string2TypedArray(blob.type);
+            const header = new Uint16Array(100);
+            header.set(id);
+            header.set(type, id.length);
+            let tary = new Uint16Array(header.length + file.length);
+            tary.set(header);
+            tary.set(file, header.length);
+            this.dc.send(tary);
+        };
+        fr.readAsArrayBuffer(blob);
+    }
 }
+
+function string2TypedArray(str) {
+    return (new Uint16Array([].map.call(str, (c) => c.charCodeAt(0))));
+}
+
+function tArray2String(ary) {
+    return String.fromCharCode.apply("", ary);
+}
+
+const getDoc = (file) => {
+    return new Promise((resolve, reject) => {
+        const fr = new FileReader();
+        fr.addEventListener('load', async (ev) => {
+            const buf = ev.target.result;
+            try {
+                const task = pdfjs.getDocument(new Uint8Array(buf));
+                task.promise.then((doc) => {
+                    resolve(doc);
+                });
+            } catch (err) {
+                reject(err);
+            }
+        });
+        fr.readAsArrayBuffer(file);
+    });
+}
+
+const makeThumbnail = (doc) => {
+    return new Promise(async (resolve, reject) => {
+        const page = await doc.getPage(1);
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const viewport = page.getViewport(0.3);
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        await page.render({
+            canvasContext: ctx,
+            viewport: viewport
+        });
+        canvas.toBlob((resp) => {
+            resolve(resp);
+        }, 'image/png');
+    });
+};
 
 export {
     makeWebSocket,
@@ -233,5 +295,8 @@ export {
     MyPeerConnection,
     MyDataChPeerConnection,
     makeProduceDataChPC,
-    makeConsumeDataChPC
+    makeConsumeDataChPC,
+    tArray2String,
+    getDoc,
+    makeThumbnail
 }

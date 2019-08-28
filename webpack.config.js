@@ -6,10 +6,13 @@ const dist = path.resolve(__dirname, 'public');
 
 module.exports = {
     mode: 'development',
-    entry: src + '/main.js',
+    entry: {
+        'main': src + '/main.js',
+        'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry'
+    },
     output: {
         path: dist,
-        filename: 'bundle.js'
+        filename: '[name].bundle.js'
     },
     module: {
         rules: [

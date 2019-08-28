@@ -4,6 +4,37 @@ import {makeConsumePC, makeConsumeDataChPC} from '../util';
 
 @inject('consume')
 @observer
+class PDFView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.pdfRef = React.createRef();
+        this.props.consume.readPdf(this.props.tgt);
+    }
+    render() {
+        const tgt = this.props.consume.objects.find(e => e.time === this.props.tgt.time);
+        if (tgt.pdf !== null) {
+            console.log('pdf not null');
+            tgt.pdf.getPage(1).then((page) => {
+                const scale = 0.7;
+                const view = page.getViewport({scale});
+                const canvas = this.pdfRef.current;
+                const ctx = canvas.getContext('2d');
+                canvas.height = view.height;
+                canvas.width = view.width;
+                page.render({
+                    canvasContext: ctx,
+                    viewport: view
+                });
+            });
+        } else {
+            console.log('pdf null');
+        }
+        return <canvas ref={this.pdfRef}></canvas>
+    }
+}
+
+@inject('consume')
+@observer
 class Chat extends React.Component {
     constructor(props) {
         super(props);
@@ -14,8 +45,35 @@ class Chat extends React.Component {
         this.props.consume.dcPc.send(this.textRef.current.value);
     }
     render() {
-        const children = this.props.consume.says.map((e, idx) => {
-            return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
+        const ary = [...this.props.consume.says, ...this.props.consume.objects].sort((a, b) => a.time - b.time);
+        const children = ary.map((e, idx) => {
+            if (e.say) {
+                return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
+            } else {
+                console.log(e);
+                if (e.obj.type === 'image/jpeg') {
+                    return <li key={idx}>
+                        <span>{e.id.substring(0, 5)}</span> : 
+                        <br />
+                        <img src={URL.createObjectURL(e.obj)} />
+                        <br />
+                        <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                    </li>
+                } else if (e.obj.type === 'application/pdf') {
+                    return <li key={idx}>
+                        <span>{e.id.substring(0, 5)}</span> : 
+                        <br />
+                        <PDFView tgt={e} />
+                        <br />
+                        <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                    </li>
+                } else {
+                    return <li key={idx}>
+                        <span>{e.id.substring(0, 5)}</span> : 
+                        <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                    </li>
+                }
+            }
         }).reverse();
         return <Fragment>
             <div>
@@ -64,12 +122,8 @@ export default class Consume extends React.Component {
         this.props.consume.setDcPC(makeConsumeDataChPC(
             this.props.consume.id, this.props.consume.ws
         ));
-        this.props.consume.dcPc.createDataCh((ev) => {
-            console.log(ev);
-            const json = JSON.parse(ev.data);
-            console.log(json);
-            this.props.consume.addSay(json.id, json.message);
-        });
+        this.props.consume.dcPc.createDataCh();
+        this.props.consume.setDcOnMessage();
     }
     componentWillUnmount() {
         console.log('consume component unmount');
