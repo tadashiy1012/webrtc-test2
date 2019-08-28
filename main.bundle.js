@@ -92157,7 +92157,6 @@ let PDFView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
     const tgt = this.props.consume.objects.find(e => e.time === this.props.tgt.time);
 
     if (tgt.pdf !== null) {
-      console.log('pdf not null');
       tgt.pdf.getPage(1).then(page => {
         const scale = 0.7;
         const view = page.getViewport({
@@ -92172,12 +92171,11 @@ let PDFView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
           viewport: view
         });
       });
-    } else {
-      console.log('pdf null');
     }
 
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("canvas", {
-      ref: this.pdfRef
+      ref: this.pdfRef,
+      className: "rounded mx-auto d-block"
     });
   }
 
@@ -92206,21 +92204,32 @@ let Chat = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('c
         if (e.obj.type === 'image/jpeg') {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
             key: idx
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " :", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-            src: URL.createObjectURL(e.obj)
-          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " :", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "card",
+            css: {
+              padding: '22px'
+            }
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+            src: URL.createObjectURL(e.obj),
+            className: "rounded mx-auto d-block"
+          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
             href: URL.createObjectURL(e.obj),
             download: "file"
-          }, "download"));
+          }, "download")));
         } else if (e.obj.type === 'application/pdf') {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
             key: idx
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " :", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PDFView, {
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " :", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "card",
+            css: {
+              padding: '22px'
+            }
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PDFView, {
             tgt: e
-          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
             href: URL.createObjectURL(e.obj),
             download: "file"
-          }, "download"));
+          }, "download")));
         } else {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
             key: idx
@@ -92359,7 +92368,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
 /* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
-var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5;
+var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5, _dec6, _class6;
 
 /** @jsx jsx */
 
@@ -92367,7 +92376,8 @@ var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5
 
 
 
-const Consumer = props => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", {
+const Consumer = props => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+  href: "#",
   onClick: props.handleClick
 }, props.uuid));
 
@@ -92392,12 +92402,17 @@ let ConsumerList = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["injec
       return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Consumer, {
         key: idx,
         uuid: e.uuid,
-        handleClick: () => {
+        handleClick: evt => {
+          evt.preventDefault();
           this.onConsumerClick(e.uuid, e.sdp);
         }
       });
     });
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h3", null, "consumer list"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, childs));
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "card"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "card-body"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h3", null, "consumer list"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, childs)));
   }
 
 }) || _class) || _class);
@@ -92499,7 +92514,41 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
   }
 
 }) || _class2) || _class2);
-let Chat = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec3(_class3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class3 = class Chat extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+let PDFView = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec3(_class3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class3 = class PDFView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.pdfRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
+    this.props.produce.readPdf(this.props.tgt);
+  }
+
+  render() {
+    const tgt = this.props.produce.objects.find(e => e.time === this.props.tgt.time);
+
+    if (tgt.pdf !== null) {
+      tgt.pdf.getPage(1).then(page => {
+        const scale = 0.7;
+        const view = page.getViewport({
+          scale
+        });
+        const canvas = this.pdfRef.current;
+        const ctx = canvas.getContext('2d');
+        canvas.height = view.height;
+        canvas.width = view.width;
+        page.render({
+          canvasContext: ctx,
+          viewport: view
+        });
+      });
+    }
+
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("canvas", {
+      ref: this.pdfRef,
+      className: "rounded mx-auto d-block"
+    });
+  }
+
+}) || _class3) || _class3);
+let Chat = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class Chat extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.textRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
@@ -92514,23 +92563,79 @@ let Chat = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('p
   }
 
   render() {
-    const children = this.props.produce.says.map((e, idx) => {
-      return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
-        key: idx
-      }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " : ", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.say));
+    const ary = [...this.props.produce.says, ...this.props.produce.objects].sort((a, b) => a.time - b.time);
+    const children = ary.map((e, idx) => {
+      if (e.say) {
+        return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
+          key: idx
+        }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " : ", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.say));
+      } else {
+        console.log(e);
+
+        if (e.obj.type === 'image/jpeg') {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
+            key: idx
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+            className: "card",
+            css: {
+              padding: '22px'
+            }
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("img", {
+            src: URL.createObjectURL(e.obj),
+            className: "rounded mx-auto d-block"
+          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+            href: URL.createObjectURL(e.obj),
+            download: "file"
+          }, "download")));
+        } else if (e.obj.type === 'application/pdf') {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
+            key: idx
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+            className: "card",
+            css: {
+              padding: '22px'
+            }
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(PDFView, {
+            tgt: e
+          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+            href: URL.createObjectURL(e.obj),
+            download: "file"
+          }, "download")));
+        } else {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
+            key: idx
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+            href: URL.createObjectURL(e.obj),
+            download: "file"
+          }, "download"));
+        }
+      }
     }).reverse();
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col-md-6"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      css: {
+        padding: '8px 0px'
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
       type: "text",
-      ref: this.textRef
-    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
+      ref: this.textRef,
+      placeholder: "message",
+      className: "form-control"
+    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
       onClick: () => {
         this.handleSendClick();
-      }
-    }, "send")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(FileSelector, null), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, children));
+      },
+      className: "btn btn-primary btn-block"
+    }, "send message")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col-md-6"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(FileSelector, null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("br", null), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, children));
   }
 
-}) || _class3) || _class3);
-let FileSelector = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class FileSelector extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+}) || _class4) || _class4);
+let FileSelector = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec5(_class5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class5 = class FileSelector extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.fileRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
@@ -92539,6 +92644,7 @@ let FileSelector = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
   handleSendClick() {
     console.log(this.fileRef.current);
     console.log(this.fileRef.current.files);
+    this.props.produce.addObj('[me]', this.fileRef.current.files[0]);
     this.props.produce.dcPCs.forEach(dcpc => {
       console.log(dcpc);
       dcpc.sendBlob(this.fileRef.current.files[0]);
@@ -92546,19 +92652,25 @@ let FileSelector = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
   }
 
   render() {
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      css: {
+        padding: '12px 0px;'
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
       type: "file",
       ref: this.fileRef,
-      accept: ".jpg,.png,.pdf"
-    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
+      accept: ".jpg,.png,.pdf",
+      className: "form-control-file"
+    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
       onClick: () => {
         this.handleSendClick();
-      }
-    }, "send"));
+      },
+      className: "btn btn-primary btn-block"
+    }, "send file"));
   }
 
-}) || _class4) || _class4);
-let Produce = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'produce'), _dec5(_class5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class5 = class Produce extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+}) || _class5) || _class5);
+let Produce = (_dec6 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('root', 'produce'), _dec6(_class6 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class6 = class Produce extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.props.root.setMode('produce');
@@ -92605,7 +92717,10 @@ let Produce = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "container"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "row"
+      className: "row",
+      css: {
+        paddingTop: '8px'
+      }
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "col-md-7"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(VideoView, null)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
@@ -92613,7 +92728,7 @@ let Produce = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(ConsumerList, null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Chat, null));
   }
 
-}) || _class5) || _class5);
+}) || _class6) || _class6);
 
 
 /***/ }),
@@ -92670,16 +92785,23 @@ const App = () => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(mobx
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "col"
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
-  to: "/produce"
+  to: "/produce",
+  className: "btn btn-primary",
+  role: "button"
 }, "produce"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
   path: "/produce/",
   component: _components__WEBPACK_IMPORTED_MODULE_6__["Produce"]
 }))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
-  className: "row"
+  className: "row",
+  css: {
+    marginTop: '8px'
+  }
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "col"
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
-  to: "/consume"
+  to: "/consume",
+  className: "btn btn-primary",
+  role: "button"
 }, "consume"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
   path: "/consume/",
   component: _components__WEBPACK_IMPORTED_MODULE_6__["Consume"]
@@ -92991,7 +93113,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _temp;
+var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _temp;
 
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
@@ -93019,6 +93141,8 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     _initializerDefineProperty(this, "currentStream", _descriptor7, this);
 
     _initializerDefineProperty(this, "says", _descriptor8, this);
+
+    _initializerDefineProperty(this, "objects", _descriptor9, this);
 
     this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_1__["makeWebSocket"])({
       auth: 'default@890',
@@ -93096,6 +93220,26 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     this.says = [];
   }
 
+  addObj(id, obj) {
+    console.log(obj);
+    const time = Date.now();
+    const tgt = {
+      id,
+      time,
+      obj,
+      pdf: null
+    };
+    this.objects.push(tgt);
+  }
+
+  readPdf(object) {
+    const target = this.objects.find(e => e.time === object.time);
+    Object(_util__WEBPACK_IMPORTED_MODULE_1__["getDoc"])(object.obj).then(result => {
+      console.log(result);
+      target.pdf = result;
+    });
+  }
+
 }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
@@ -93152,7 +93296,14 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
   initializer: function () {
     return [];
   }
-}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype)), _class);
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "objects", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return [];
+  }
+}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class);
 
 
 /***/ }),
@@ -93219,8 +93370,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeThumbnail", function() { return makeThumbnail; });
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! pdfjs-dist */ "./node_modules/pdfjs-dist/build/pdf.js");
-/* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pdfjs_dist__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pdfjs-dist */ "./node_modules/pdfjs-dist/build/pdf.js");
+/* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pdfjs_dist__WEBPACK_IMPORTED_MODULE_2__);
 
 
 const iceServers = [{
@@ -93561,7 +93712,7 @@ const getDoc = file => {
       const buf = ev.target.result;
 
       try {
-        const task = pdfjs_dist__WEBPACK_IMPORTED_MODULE_1___default.a.getDocument(new Uint8Array(buf));
+        const task = pdfjs_dist__WEBPACK_IMPORTED_MODULE_2___default.a.getDocument(new Uint8Array(buf));
         task.promise.then(doc => {
           resolve(doc);
         });
