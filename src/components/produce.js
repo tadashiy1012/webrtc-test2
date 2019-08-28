@@ -1,6 +1,8 @@
+/** @jsx jsx */
 import React, {Fragment} from 'react';
 import {observer, inject} from 'mobx-react';
 import {makeProducePC, makeProduceDataChPC} from '../util';
+import {jsx, css} from '@emotion/core';
 
 const Consumer = (props) => (
     <li><span onClick={props.handleClick}>{props.uuid}</span></li>
@@ -29,7 +31,10 @@ class ConsumerList extends React.Component {
                 this.onConsumerClick(e.uuid, e.sdp);
             }} />
         });
-        return <ul>{childs}</ul>
+        return <div>
+            <h3>consumer list</h3>
+            <ul>{childs}</ul>
+        </div>
     }
 }
 
@@ -92,7 +97,7 @@ class VideoView extends React.Component {
             <div>
                 <video width="100%" height="300" autoPlay ref={this.videoRef}></video>
             </div>
-            <div>
+            <div css={{display:'grid', gridTemplateColumns:'repeat(auto-fit, 100px)', justifyContent:'center'}}>
                 <label>
                     <input type='radio' name='videoMode' value='camera' checked={
                         this.props.produce.videoMode === 'camera'
@@ -142,6 +147,7 @@ class Chat extends React.Component {
                 <input type='text' ref={this.textRef} />
                 <button onClick={() => {this.handleSendClick()}}>send</button>
             </div>
+            <FileSelector />
             <ul>
                 {children}
             </ul>
@@ -151,7 +157,7 @@ class Chat extends React.Component {
 
 @inject('produce')
 @observer
-class File extends React.Component {
+class FileSelector extends React.Component {
     constructor(props) {
         super(props)
         this.fileRef = React.createRef();
@@ -165,12 +171,10 @@ class File extends React.Component {
         });
     }
     render() {
-        return <Fragment>
-            <div>
-                <input type='file' ref={this.fileRef} accept='.jpg,.png,.pdf'/>
-                <button onClick={() => {this.handleSendClick()}}>send</button>
-            </div>
-        </Fragment>
+        return <div>
+            <input type='file' ref={this.fileRef} accept='.jpg,.png,.pdf'/>
+            <button onClick={() => {this.handleSendClick()}}>send</button>
+        </div>
     }
 }
 
@@ -216,11 +220,16 @@ export default class Produce extends React.Component {
         this.props.produce.clearConsumers();
     }
     render() {
-        return <Fragment>
-            <VideoView />
-            <ConsumerList />
+        return <div className='container'>
+            <div className='row'>
+                <div className='col-md-7'>
+                    <VideoView />
+                </div>
+                <div className='col-md-5'>
+                    <ConsumerList />
+                </div>
+            </div>
             <Chat />
-            <File />
-        </Fragment>
+        </div>
     }
 }

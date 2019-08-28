@@ -92358,13 +92358,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
+/* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
 var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5;
 
+/** @jsx jsx */
 
 
 
 
-const Consumer = props => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+
+const Consumer = props => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", {
   onClick: props.handleClick
 }, props.uuid));
 
@@ -92386,7 +92389,7 @@ let ConsumerList = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["injec
 
   render() {
     const childs = this.props.produce.consumers.map((e, idx) => {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Consumer, {
+      return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Consumer, {
         key: idx,
         uuid: e.uuid,
         handleClick: () => {
@@ -92394,7 +92397,7 @@ let ConsumerList = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["injec
         }
       });
     });
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, childs);
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h3", null, "consumer list"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, childs));
   }
 
 }) || _class) || _class);
@@ -92459,30 +92462,36 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("video", {
       width: "100%",
       height: "300",
       autoPlay: true,
       ref: this.videoRef
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      css: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, 100px)',
+        justifyContent: 'center'
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("label", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
       type: "radio",
       name: "videoMode",
       value: "camera",
       checked: this.props.produce.videoMode === 'camera',
       onChange: ev => this.onVideoModeChange(ev.target.value)
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "camera")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, "camera")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("label", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
       type: "radio",
       name: "videoMode",
       value: "camera2",
       checked: this.props.produce.videoMode === 'camera2',
       onChange: ev => this.onVideoModeChange(ev.target.value)
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "camera2")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, "camera2")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("label", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
       type: "radio",
       name: "videoMode",
       value: "display",
       checked: this.props.produce.videoMode === 'display',
       onChange: ev => this.onVideoModeChange(ev.target.value)
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "display"))));
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, "display"))));
   }
 
   componentDidMount() {
@@ -92506,22 +92515,22 @@ let Chat = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('p
 
   render() {
     const children = this.props.produce.says.map((e, idx) => {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
         key: idx
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " : ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.say));
+      }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " : ", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.say));
     }).reverse();
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
       type: "text",
       ref: this.textRef
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
       onClick: () => {
         this.handleSendClick();
       }
-    }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, children));
+    }, "send")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(FileSelector, null), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, children));
   }
 
 }) || _class3) || _class3);
-let File = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class File extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+let FileSelector = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec4(_class4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class4 = class FileSelector extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.fileRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
@@ -92537,15 +92546,15 @@ let File = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('p
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
       type: "file",
       ref: this.fileRef,
       accept: ".jpg,.png,.pdf"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
       onClick: () => {
         this.handleSendClick();
       }
-    }, "send")));
+    }, "send"));
   }
 
 }) || _class4) || _class4);
@@ -92593,7 +92602,15 @@ let Produce = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(VideoView, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ConsumerList, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Chat, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(File, null));
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "container"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col-md-7"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(VideoView, null)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col-md-5"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(ConsumerList, null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Chat, null));
   }
 
 }) || _class5) || _class5);
@@ -92625,6 +92642,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(bootstrap__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! pdfjs-dist */ "./node_modules/pdfjs-dist/build/pdf.js");
 /* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(pdfjs_dist__WEBPACK_IMPORTED_MODULE_9__);
+/** @jsx jsx */
 
 
 
@@ -92637,37 +92655,37 @@ __webpack_require__.r(__webpack_exports__);
 
 pdfjs_dist__WEBPACK_IMPORTED_MODULE_9___default.a.GlobalWorkerOptions.workerSrc = 'pdf.worker.bundle.js';
 
-const App = () => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(mobx_react__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
+const App = () => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(mobx_react__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
   root: new _store__WEBPACK_IMPORTED_MODULE_5__["RootStore"](),
   produce: new _store__WEBPACK_IMPORTED_MODULE_5__["ProduceStore"](),
   consume: new _store__WEBPACK_IMPORTED_MODULE_5__["ConsumeStore"]()
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["HashRouter"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["HashRouter"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "container"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "row"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "col"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "webrtc-test2"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("h1", null, "webrtc-test2"))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "row"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "col"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
   to: "/produce"
-}, "produce"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+}, "produce"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
   path: "/produce/",
   component: _components__WEBPACK_IMPORTED_MODULE_6__["Produce"]
-}))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+}))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "row"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
   className: "col"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
   to: "/consume"
-}, "consume"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+}, "consume"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
   path: "/consume/",
   component: _components__WEBPACK_IMPORTED_MODULE_6__["Consume"]
 }))))));
 
-react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(App, null), document.getElementById('app'));
+react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(App, null), document.getElementById('app'));
 
 /***/ }),
 
