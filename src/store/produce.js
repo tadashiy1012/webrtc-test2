@@ -1,5 +1,5 @@
 import {observable, action} from 'mobx';
-import {makeWebSocket} from '../util';
+import {makeWebSocket, getDoc} from '../util';
 import * as uuid from 'uuid/v1';
 
 export default class ProduceStore {
@@ -12,6 +12,7 @@ export default class ProduceStore {
     @observable videoMode = 'camera';
     @observable currentStream = null;
     @observable says = [];
+    @observable objects = [];
 
     constructor() {
         this.ws = makeWebSocket({
@@ -94,6 +95,23 @@ export default class ProduceStore {
     @action
     clearSays() {
         this.says = [];
+    }
+
+    @action
+    addObj(id, obj) {
+        console.log(obj);
+        const time = Date.now();
+        const tgt = {id, time, obj, pdf: null};
+        this.objects.push(tgt);
+    }
+
+    @action
+    readPdf(object) {
+        const target = this.objects.find(e => e.time === object.time);
+        getDoc(object.obj).then((result) => {
+            console.log(result);
+            target.pdf = result;
+        });
     }
 
 }

@@ -13,7 +13,6 @@ class PDFView extends React.Component {
     render() {
         const tgt = this.props.consume.objects.find(e => e.time === this.props.tgt.time);
         if (tgt.pdf !== null) {
-            console.log('pdf not null');
             tgt.pdf.getPage(1).then((page) => {
                 const scale = 0.7;
                 const view = page.getViewport({scale});
@@ -26,10 +25,8 @@ class PDFView extends React.Component {
                     viewport: view
                 });
             });
-        } else {
-            console.log('pdf null');
         }
-        return <canvas ref={this.pdfRef}></canvas>
+        return <canvas ref={this.pdfRef} className='rounded mx-auto d-block'></canvas>
     }
 }
 
@@ -54,18 +51,18 @@ class Chat extends React.Component {
                 if (e.obj.type === 'image/jpeg') {
                     return <li key={idx}>
                         <span>{e.id.substring(0, 5)}</span> : 
-                        <br />
-                        <img src={URL.createObjectURL(e.obj)} />
-                        <br />
-                        <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                        <div className='card' css={{padding:'22px'}}>
+                            <img src={URL.createObjectURL(e.obj)} className='rounded mx-auto d-block' />
+                            <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                        </div>
                     </li>
                 } else if (e.obj.type === 'application/pdf') {
                     return <li key={idx}>
                         <span>{e.id.substring(0, 5)}</span> : 
-                        <br />
-                        <PDFView tgt={e} />
-                        <br />
-                        <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                        <div className='card' css={{padding:'22px'}}>
+                            <PDFView tgt={e} />
+                            <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                        </div>
                     </li>
                 } else {
                     return <li key={idx}>

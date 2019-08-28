@@ -5,7 +5,7 @@ import {makeProducePC, makeProduceDataChPC} from '../util';
 import {jsx, css} from '@emotion/core';
 
 const Consumer = (props) => (
-    <li><span onClick={props.handleClick}>{props.uuid}</span></li>
+    <li><a href='#' onClick={props.handleClick}>{props.uuid}</a></li>
 );
 
 @inject('produce')
@@ -27,13 +27,16 @@ class ConsumerList extends React.Component {
     }
     render() {
         const childs = this.props.produce.consumers.map((e, idx) => {
-            return <Consumer key={idx} uuid={e.uuid} handleClick={() => {
+            return <Consumer key={idx} uuid={e.uuid} handleClick={(evt) => {
+                evt.preventDefault();
                 this.onConsumerClick(e.uuid, e.sdp);
             }} />
         });
-        return <div>
-            <h3>consumer list</h3>
-            <ul>{childs}</ul>
+        return <div className='card'>
+            <div className='card-body'>
+                <h3>consumer list</h3>
+                <ul>{childs}</ul>
+            </div>
         </div>
     }
 }
@@ -126,6 +129,34 @@ class VideoView extends React.Component {
 
 @inject('produce')
 @observer
+class PDFView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.pdfRef = React.createRef();
+        this.props.produce.readPdf(this.props.tgt);
+    }
+    render() {
+        const tgt = this.props.produce.objects.find(e => e.time === this.props.tgt.time);
+        if (tgt.pdf !== null) {
+            tgt.pdf.getPage(1).then((page) => {
+                const scale = 0.7;
+                const view = page.getViewport({scale});
+                const canvas = this.pdfRef.current;
+                const ctx = canvas.getContext('2d');
+                canvas.height = view.height;
+                canvas.width = view.width;
+                page.render({
+                    canvasContext: ctx,
+                    viewport: view
+                });
+            });
+        }
+        return <canvas ref={this.pdfRef} className='rounded mx-auto d-block'></canvas>
+    }
+}
+
+@inject('produce')
+@observer
 class Chat extends React.Component {
     constructor(props) {
         super(props);
@@ -139,15 +170,49 @@ class Chat extends React.Component {
         });
     }
     render() {
-        const children = this.props.produce.says.map((e, idx) => {
-            return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
+        const ary = [...this.props.produce.says, ...this.props.produce.objects].sort((a, b) => a.time - b.time);
+        const children = ary.map((e, idx) => {
+            if (e.say) {
+                return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
+            } else {
+                console.log(e);
+                if (e.obj.type === 'image/jpeg') {
+                    return <li key={idx}>
+                        <span>{e.id.substring(0, 5)}</span> : 
+                        <div className='card' css={{padding:'22px'}}>
+                            <img src={URL.createObjectURL(e.obj)} className='rounded mx-auto d-block' />
+                            <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                        </div>
+                    </li>
+                } else if (e.obj.type === 'application/pdf') {
+                    return <li key={idx}>
+                        <span>{e.id.substring(0, 5)}</span> : 
+                        <div className='card' css={{padding:'22px'}}>
+                            <PDFView tgt={e} />
+                            <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                        </div>
+                    </li>
+                } else {
+                    return <li key={idx}>
+                        <span>{e.id.substring(0, 5)}</span> : 
+                        <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
+                    </li>
+                }
+            }
         }).reverse();
         return <Fragment>
-            <div>
-                <input type='text' ref={this.textRef} />
-                <button onClick={() => {this.handleSendClick()}}>send</button>
+            <div className='row'>
+                <div className='col-md-6'>
+                    <div css={{padding:'8px 0px'}}>
+                        <input type='text' ref={this.textRef} placeholder='message' className='form-control' />
+                    </div>
+                    <button onClick={() => {this.handleSendClick()}} className='btn btn-primary btn-block'>send message</button>
+                </div>
+                <div className='col-md-6'>
+                    <FileSelector />
+                </div>
             </div>
-            <FileSelector />
+            <br />
             <ul>
                 {children}
             </ul>
@@ -165,6 +230,7 @@ class FileSelector extends React.Component {
     handleSendClick() {
         console.log(this.fileRef.current);
         console.log(this.fileRef.current.files);
+        this.props.produce.addObj('[me]', this.fileRef.current.files[0]);
         this.props.produce.dcPCs.forEach((dcpc) => {
             console.log(dcpc);
             dcpc.sendBlob(this.fileRef.current.files[0]);
@@ -172,8 +238,10 @@ class FileSelector extends React.Component {
     }
     render() {
         return <div>
-            <input type='file' ref={this.fileRef} accept='.jpg,.png,.pdf'/>
-            <button onClick={() => {this.handleSendClick()}}>send</button>
+            <div css={{padding:'12px 0px;'}}>
+                <input type='file' ref={this.fileRef} accept='.jpg,.png,.pdf' className='form-control-file' />
+            </div>
+            <button onClick={() => {this.handleSendClick()}} className='btn btn-primary btn-block'>send file</button>
         </div>
     }
 }
@@ -221,7 +289,7 @@ export default class Produce extends React.Component {
     }
     render() {
         return <div className='container'>
-            <div className='row'>
+            <div className='row' css={{paddingTop:'8px'}}>
                 <div className='col-md-7'>
                     <VideoView />
                 </div>

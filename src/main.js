@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, {Fragment} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import {HashRouter as Router, Route, Link} from 'react-router-dom';
 import {Provider} from 'mobx-react';
@@ -25,13 +25,13 @@ const App = () => (
                 </div>
                 <div className='row'>
                     <div className='col'>
-                        <Link to='/produce'>produce</Link>
+                        <Link to='/produce' className="btn btn-primary" role="button">produce</Link>
                         <Route path='/produce/' component={Produce} />
                     </div>
                 </div>
-                <div className='row'>
+                <div className='row' css={{marginTop:'8px'}}>
                     <div className='col'>
-                        <Link to='/consume'>consume</Link>
+                        <Link to='/consume' className="btn btn-primary" role="button">consume</Link>
                         <Route path='/consume/' component={Consume} />
                     </div>
                 </div>
