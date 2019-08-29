@@ -1,4 +1,4 @@
-import {observable, action} from 'mobx';
+import {observable, action, computed} from 'mobx';
 import {makeWebSocket, getDoc} from '../util';
 import * as uuid from 'uuid/v1';
 
@@ -26,10 +26,31 @@ export default class ProduceStore {
     }
     
     @action 
-    addPeerConnection(pc) {
-        this.pcs.push(pc);
+    addPeerConnection(pc, destination) {
+        this.pcs.push({pc, destination, status: false});
     }
     
+    @action
+    findPeerConnection(destination) {
+        return this.pcs.find(e => e.destination === destination);
+    }
+
+    @action
+    pcIndexOf(tgt) {
+        return this.pcs.indexOf(tgt);
+    }
+
+    @action
+    removePeerConnection(idx) {
+        this.pcs.splice(idx, 1);
+    }
+
+    @action
+    setPeerConnectionStatus(idx, status) {
+        this.pcs[idx].status = status;
+        this.pcs = Object.assign([], this.pcs);
+    }
+
     @action
     clearPeerConnections() {
         this.pcs = [];
@@ -47,7 +68,7 @@ export default class ProduceStore {
 
     @action
     setPCsTrack() {
-        this.pcs.forEach(pc => {
+        this.pcs.map(e => e.pc).forEach(pc => {
             const senders = pc.conn.getSenders();
             this.currentStream.getTracks().forEach(track => {
                 if (senders.length > 0) {
@@ -65,8 +86,23 @@ export default class ProduceStore {
     }
     
     @action
+    removeConsumer(idx) {
+        this.consumers.splice(idx, 1);
+    }
+
+    @action
     clearConsumers() {
         this.consumers = [];
+    }
+
+    @action
+    findConsumer(uuid) {
+        return this.consumers.find(e => e.uuid === uuid);
+    }
+
+    @action
+    consumerIndexOf(tgt) {
+        return this.consumers.indexOf(tgt);
     }
 
     @action

@@ -5,7 +5,19 @@ import {makeProducePC, makeProduceDataChPC} from '../util';
 import {jsx, css} from '@emotion/core';
 
 const Consumer = (props) => (
-    <li><a href='#' onClick={props.handleClick}>{props.uuid}</a></li>
+    <li>
+        <div className='row align-items-center no-gutters'>
+            <div className='col-md-10'>
+                <span>{props.status ? '✔️':'✖️'} </span>
+                <a href='#' onClick={props.handleClick}>{props.uuid} </a>
+            </div>
+            <div className='col-md-2'>
+                <button onClick={props.handleCloseClick}
+                    disabled={props.status ? false:true} 
+                    className='btn btn-danger btn-sm'>close</button>
+            </div>
+        </div>
+    </li>
 );
 
 @inject('produce')
@@ -15,7 +27,11 @@ class ConsumerList extends React.Component {
         const pc = makeProducePC(
             this.props.produce.ws, dest
         );
-        this.props.produce.addPeerConnection(pc);
+        this.props.produce.addPeerConnection(pc, dest);
+        const tgt = this.props.produce.findPeerConnection(dest);
+        this.props.produce.setPeerConnectionStatus(
+            this.props.produce.pcIndexOf(tgt), true
+        );
         this.props.produce.setPCsTrack();
         const offer = new RTCSessionDescription({
             type: 'offer', sdp
@@ -25,17 +41,39 @@ class ConsumerList extends React.Component {
             await pc.setLocalDesc(await pc.createAnswer());
         })();
     }
+    onCloseClick(dest) {
+        const tgt = this.props.produce.findPeerConnection(dest);
+        tgt.pc.conn.close();
+        this.props.produce.setPeerConnectionStatus(
+            this.props.produce.pcIndexOf(tgt), false
+        );
+        setTimeout(() => {
+            this.props.produce.removePeerConnection(
+                this.props.produce.pcIndexOf(tgt)
+            );
+            const ctgt = this.props.produce.findConsumer(tgt.destination);
+            this.props.produce.removeConsumer(
+                this.props.produce.consumerIndexOf(ctgt));
+        }, 500);
+    }
     render() {
         const childs = this.props.produce.consumers.map((e, idx) => {
-            return <Consumer key={idx} uuid={e.uuid} handleClick={(evt) => {
+            const tgtPc = this.props.produce.findPeerConnection(e.uuid);
+            const status = tgtPc ? tgtPc.status : false;
+            return <Consumer key={idx} uuid={e.uuid} status={status} handleClick={(evt) => {
                 evt.preventDefault();
-                this.onConsumerClick(e.uuid, e.sdp);
+                if (!status) {
+                    this.onConsumerClick(e.uuid, e.sdp);
+                }
+            }} handleCloseClick={(evt) => {
+                evt.preventDefault();
+                this.onCloseClick(e.uuid);
             }} />
         });
         return <div className='card'>
             <div className='card-body'>
-                <h3>consumer list</h3>
-                <ul>{childs}</ul>
+                <h3 css={{fontSize:'18px'}}>consumer list</h3>
+                <ul css={{listStyleType:'none', paddingLeft:'0px'}}>{childs}</ul>
             </div>
         </div>
     }
@@ -165,7 +203,6 @@ class Chat extends React.Component {
     handleSendClick() {
         this.props.produce.addSay('[me]', this.textRef.current.value);
         this.props.produce.dcPCs.forEach((dcpc) => {
-            console.log(dcpc);
             dcpc.send(this.textRef.current.value);
         });
     }
@@ -201,21 +238,21 @@ class Chat extends React.Component {
             }
         }).reverse();
         return <Fragment>
-            <div className='row'>
-                <div className='col-md-6'>
-                    <div css={{padding:'8px 0px'}}>
-                        <input type='text' ref={this.textRef} placeholder='message' className='form-control' />
-                    </div>
-                    <button onClick={() => {this.handleSendClick()}} className='btn btn-primary btn-block'>send message</button>
+            <div className='col-md-6'>
+                <div css={{padding:'8px 0px'}}>
+                    <input type='text' ref={this.textRef} placeholder='message' className='form-control' />
                 </div>
-                <div className='col-md-6'>
-                    <FileSelector />
-                </div>
+                <button onClick={() => {this.handleSendClick()}} className='btn btn-primary btn-block'>send message</button>
             </div>
-            <br />
-            <ul>
-                {children}
-            </ul>
+            <div className='col-md-6'>
+                <FileSelector />
+            </div>
+            <div className="w-100"></div>
+            <div className='col'>
+                <ul>
+                    {children}
+                </ul>
+            </div>
         </Fragment>
     }
 }
@@ -228,11 +265,9 @@ class FileSelector extends React.Component {
         this.fileRef = React.createRef();
     }
     handleSendClick() {
-        console.log(this.fileRef.current);
         console.log(this.fileRef.current.files);
         this.props.produce.addObj('[me]', this.fileRef.current.files[0]);
         this.props.produce.dcPCs.forEach((dcpc) => {
-            console.log(dcpc);
             dcpc.sendBlob(this.fileRef.current.files[0]);
         });
     }
@@ -259,7 +294,6 @@ export default class Produce extends React.Component {
             if (json.type === 'consume') {
                 this.props.produce.addConsumers(json);
             } else if (json.type === 'consume_dc') {
-                console.log('dc');
                 const dcpc = makeProduceDataChPC(
                     this.props.produce.id, this.props.produce.ws, json.uuid);
                 dcpc.setOnMessageHandler((ev) => {
@@ -297,7 +331,7 @@ export default class Produce extends React.Component {
                     <ConsumerList />
                 </div>
             </div>
-            <Chat />
+            <div className='row'><Chat /></div>
         </div>
     }
 }

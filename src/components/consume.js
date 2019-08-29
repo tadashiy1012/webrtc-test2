@@ -1,5 +1,7 @@
+/** @jsx jsx */
 import React, {Fragment} from 'react';
 import {observer, inject} from 'mobx-react';
+import {jsx, css} from '@emotion/core';
 import {makeConsumePC, makeConsumeDataChPC} from '../util';
 
 @inject('consume')
@@ -73,9 +75,13 @@ class Chat extends React.Component {
             }
         }).reverse();
         return <Fragment>
-            <div>
-                <input type='text' ref={this.textRef} />
-                <button onClick={() => {this.handleSendClick()}}>send</button>
+            <div className='row'>
+                <div className='col-md-9'>
+                    <input type='text' ref={this.textRef} placeholder='message' className='form-control' />
+                </div>
+                <div className='col-md-3'>
+                    <button onClick={() => {this.handleSendClick()}} className='btn btn-primary btn-block'>send message</button>
+                </div>
             </div>
             <ul>
                 {children}
@@ -145,15 +151,15 @@ export default class Consume extends React.Component {
     render() {
         const icon = this.props.consume.rec ? '🔴':'⚫';
         return <Fragment>
-            <div>
+            <div css={{marginTop:'12px'}}>
                 <video ref={(video) => {
                     if (video) {
                         this.props.consume.setTarget(video);
                     }
-                }} autoPlay controls width='400' height='300'/>
+                }} autoPlay controls className='mx-auto d-block' css={{minWidth:'400px', width:'90%', minHeight:'300px'}} />
             </div>
-            <div>
-                <button onClick={() => {this.onClickRec()}}>
+            <div css={{margin:'8px 0px'}}>
+                <button onClick={() => {this.onClickRec()}} className='mx-auto d-block btn btn-outline-primary'>
                     <span>{icon}</span>
                     rec
                 </button>
