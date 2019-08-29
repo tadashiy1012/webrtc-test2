@@ -92140,8 +92140,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util.js");
+/* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util */ "./src/util.js");
 var _dec, _class, _dec2, _class2, _dec3, _class3;
+
+/** @jsx jsx */
 
 
 
@@ -92173,7 +92176,7 @@ let PDFView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
       });
     }
 
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("canvas", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("canvas", {
       ref: this.pdfRef,
       className: "rounded mx-auto d-block"
     });
@@ -92195,59 +92198,68 @@ let Chat = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('c
     const ary = [...this.props.consume.says, ...this.props.consume.objects].sort((a, b) => a.time - b.time);
     const children = ary.map((e, idx) => {
       if (e.say) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("li", {
           key: idx
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " : ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.say));
+        }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, e.id.substring(0, 5)), " : ", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, e.say));
       } else {
         console.log(e);
 
         if (e.obj.type === 'image/jpeg') {
-          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("li", {
             key: idx
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " :", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
             className: "card",
             css: {
               padding: '22px'
             }
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("img", {
             src: URL.createObjectURL(e.obj),
             className: "rounded mx-auto d-block"
-          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("a", {
             href: URL.createObjectURL(e.obj),
             download: "file"
           }, "download")));
         } else if (e.obj.type === 'application/pdf') {
-          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("li", {
             key: idx
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " :", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
             className: "card",
             css: {
               padding: '22px'
             }
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(PDFView, {
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(PDFView, {
             tgt: e
-          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("a", {
             href: URL.createObjectURL(e.obj),
             download: "file"
           }, "download")));
         } else {
-          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("li", {
             key: idx
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, e.id.substring(0, 5)), " :", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("a", {
             href: URL.createObjectURL(e.obj),
             download: "file"
           }, "download"));
         }
       }
     }).reverse();
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
+      className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
+      className: "col-md-9"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("input", {
       type: "text",
-      ref: this.textRef
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      ref: this.textRef,
+      placeholder: "message",
+      className: "form-control"
+    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
+      className: "col-md-3"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("button", {
       onClick: () => {
         this.handleSendClick();
-      }
-    }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, children));
+      },
+      className: "btn btn-primary btn-block"
+    }, "send message"))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("ul", null, children));
   }
 
 }) || _class2) || _class2);
@@ -92274,13 +92286,13 @@ let Consume = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
         }
       }
     });
-    this.props.consume.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumePC"])(this.props.consume.id, this.props.consume.ws));
+    this.props.consume.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeConsumePC"])(this.props.consume.id, this.props.consume.ws));
     this.props.consume.setPcOnTrackHandler(ev => {
       console.log(ev);
       this.props.consume.setRecorder(ev.streams[0]);
       this.props.consume.target.srcObject = ev.streams[0];
     });
-    this.props.consume.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeConsumeDataChPC"])(this.props.consume.id, this.props.consume.ws));
+    this.props.consume.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeConsumeDataChPC"])(this.props.consume.id, this.props.consume.ws));
     this.props.consume.dcPc.createDataCh();
     this.props.consume.setDcOnMessage();
   }
@@ -92310,7 +92322,11 @@ let Consume = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
 
   render() {
     const icon = this.props.consume.rec ? '🔴' : '⚫';
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
+      css: {
+        marginTop: '12px'
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("video", {
       ref: video => {
         if (video) {
           this.props.consume.setTarget(video);
@@ -92318,13 +92334,22 @@ let Consume = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
       },
       autoPlay: true,
       controls: true,
-      width: "400",
-      height: "300"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "mx-auto d-block",
+      css: {
+        minWidth: '400px',
+        width: '90%',
+        minHeight: '300px'
+      }
+    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
+      css: {
+        margin: '8px 0px'
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("button", {
       onClick: () => {
         this.onClickRec();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, icon), "rec")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Chat, null));
+      },
+      className: "mx-auto d-block btn btn-outline-primary"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, icon), "rec")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(Chat, null));
   }
 
 }) || _class3) || _class3);
@@ -92376,15 +92401,27 @@ var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5
 
 
 
-const Consumer = props => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+const Consumer = props => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+  className: "row align-items-center no-gutters"
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+  className: "col-md-10"
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, props.status ? '✔️' : '✖️', " "), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
   href: "#",
   onClick: props.handleClick
-}, props.uuid));
+}, props.uuid, " ")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+  className: "col-md-2"
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
+  onClick: props.handleCloseClick,
+  disabled: props.status ? false : true,
+  className: "btn btn-danger btn-sm"
+}, "close"))));
 
 let ConsumerList = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class ConsumerList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   onConsumerClick(dest, sdp) {
     const pc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProducePC"])(this.props.produce.ws, dest);
-    this.props.produce.addPeerConnection(pc);
+    this.props.produce.addPeerConnection(pc, dest);
+    const tgt = this.props.produce.findPeerConnection(dest);
+    this.props.produce.setPeerConnectionStatus(this.props.produce.pcIndexOf(tgt), true);
     this.props.produce.setPCsTrack();
     const offer = new RTCSessionDescription({
       type: 'offer',
@@ -92397,14 +92434,35 @@ let ConsumerList = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["injec
     })();
   }
 
+  onCloseClick(dest) {
+    const tgt = this.props.produce.findPeerConnection(dest);
+    tgt.pc.conn.close();
+    this.props.produce.setPeerConnectionStatus(this.props.produce.pcIndexOf(tgt), false);
+    setTimeout(() => {
+      this.props.produce.removePeerConnection(this.props.produce.pcIndexOf(tgt));
+      const ctgt = this.props.produce.findConsumer(tgt.destination);
+      this.props.produce.removeConsumer(this.props.produce.consumerIndexOf(ctgt));
+    }, 500);
+  }
+
   render() {
     const childs = this.props.produce.consumers.map((e, idx) => {
+      const tgtPc = this.props.produce.findPeerConnection(e.uuid);
+      const status = tgtPc ? tgtPc.status : false;
       return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Consumer, {
         key: idx,
         uuid: e.uuid,
+        status: status,
         handleClick: evt => {
           evt.preventDefault();
-          this.onConsumerClick(e.uuid, e.sdp);
+
+          if (!status) {
+            this.onConsumerClick(e.uuid, e.sdp);
+          }
+        },
+        handleCloseClick: evt => {
+          evt.preventDefault();
+          this.onCloseClick(e.uuid);
         }
       });
     });
@@ -92412,7 +92470,16 @@ let ConsumerList = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["injec
       className: "card"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "card-body"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h3", null, "consumer list"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, childs)));
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h3", {
+      css: {
+        fontSize: '18px'
+      }
+    }, "consumer list"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", {
+      css: {
+        listStyleType: 'none',
+        paddingLeft: '0px'
+      }
+    }, childs)));
   }
 
 }) || _class) || _class);
@@ -92557,7 +92624,6 @@ let Chat = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('p
   handleSendClick() {
     this.props.produce.addSay('[me]', this.textRef.current.value);
     this.props.produce.dcPCs.forEach(dcpc => {
-      console.log(dcpc);
       dcpc.send(this.textRef.current.value);
     });
   }
@@ -92612,8 +92678,6 @@ let Chat = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('p
       }
     }).reverse();
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "row"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "col-md-6"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       css: {
@@ -92631,7 +92695,11 @@ let Chat = (_dec4 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('p
       className: "btn btn-primary btn-block"
     }, "send message")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "col-md-6"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(FileSelector, null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("br", null), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, children));
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(FileSelector, null)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "w-100"
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, children)));
   }
 
 }) || _class4) || _class4);
@@ -92642,11 +92710,9 @@ let FileSelector = (_dec5 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
   }
 
   handleSendClick() {
-    console.log(this.fileRef.current);
     console.log(this.fileRef.current.files);
     this.props.produce.addObj('[me]', this.fileRef.current.files[0]);
     this.props.produce.dcPCs.forEach(dcpc => {
-      console.log(dcpc);
       dcpc.sendBlob(this.fileRef.current.files[0]);
     });
   }
@@ -92682,7 +92748,6 @@ let Produce = (_dec6 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
       if (json.type === 'consume') {
         this.props.produce.addConsumers(json);
       } else if (json.type === 'consume_dc') {
-        console.log('dc');
         const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.id, this.props.produce.ws, json.uuid);
         dcpc.setOnMessageHandler(ev => {
           console.log(ev);
@@ -92725,7 +92790,9 @@ let Produce = (_dec6 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
       className: "col-md-7"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(VideoView, null)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "col-md-5"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(ConsumerList, null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Chat, null));
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(ConsumerList, null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Chat, null)));
   }
 
 }) || _class6) || _class6);
@@ -93154,8 +93221,29 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     this.ws.onmessage = handler;
   }
 
-  addPeerConnection(pc) {
-    this.pcs.push(pc);
+  addPeerConnection(pc, destination) {
+    this.pcs.push({
+      pc,
+      destination,
+      status: false
+    });
+  }
+
+  findPeerConnection(destination) {
+    return this.pcs.find(e => e.destination === destination);
+  }
+
+  pcIndexOf(tgt) {
+    return this.pcs.indexOf(tgt);
+  }
+
+  removePeerConnection(idx) {
+    this.pcs.splice(idx, 1);
+  }
+
+  setPeerConnectionStatus(idx, status) {
+    this.pcs[idx].status = status;
+    this.pcs = Object.assign([], this.pcs);
   }
 
   clearPeerConnections() {
@@ -93171,7 +93259,7 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
   }
 
   setPCsTrack() {
-    this.pcs.forEach(pc => {
+    this.pcs.map(e => e.pc).forEach(pc => {
       const senders = pc.conn.getSenders();
       this.currentStream.getTracks().forEach(track => {
         if (senders.length > 0) {
@@ -93187,8 +93275,20 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     this.consumers.push(consumer);
   }
 
+  removeConsumer(idx) {
+    this.consumers.splice(idx, 1);
+  }
+
   clearConsumers() {
     this.consumers = [];
+  }
+
+  findConsumer(uuid) {
+    return this.consumers.find(e => e.uuid === uuid);
+  }
+
+  consumerIndexOf(tgt) {
+    return this.consumers.indexOf(tgt);
   }
 
   setVideoMode(videoMode) {
@@ -93303,7 +93403,7 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
   initializer: function () {
     return [];
   }
-}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class);
+}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "pcIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "pcIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removePeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removePeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPeerConnectionStatus", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPeerConnectionStatus"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removeConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removeConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "consumerIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "consumerIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class);
 
 
 /***/ }),
@@ -93370,8 +93470,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeThumbnail", function() { return makeThumbnail; });
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pdfjs-dist */ "./node_modules/pdfjs-dist/build/pdf.js");
-/* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pdfjs_dist__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! pdfjs-dist */ "./node_modules/pdfjs-dist/build/pdf.js");
+/* harmony import */ var pdfjs_dist__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pdfjs_dist__WEBPACK_IMPORTED_MODULE_1__);
 
 
 const iceServers = [{
@@ -93712,7 +93812,7 @@ const getDoc = file => {
       const buf = ev.target.result;
 
       try {
-        const task = pdfjs_dist__WEBPACK_IMPORTED_MODULE_2___default.a.getDocument(new Uint8Array(buf));
+        const task = pdfjs_dist__WEBPACK_IMPORTED_MODULE_1___default.a.getDocument(new Uint8Array(buf));
         task.promise.then(doc => {
           resolve(doc);
         });
