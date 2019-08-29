@@ -10,6 +10,7 @@ export default class ProduceStore {
     @observable dcPCs = [];
     @observable consumers = [];
     @observable videoMode = 'camera';
+    @observable micMode = false;
     @observable currentStream = null;
     @observable says = [];
     @observable objects = [];
@@ -108,6 +109,11 @@ export default class ProduceStore {
     @action
     setVideoMode(videoMode) {
         this.videoMode = videoMode;
+    }
+
+    @action
+    setMicMode(mode) {
+        this.micMode = mode;
     }
 
     @action

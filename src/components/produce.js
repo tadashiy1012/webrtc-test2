@@ -92,7 +92,7 @@ class VideoView extends React.Component {
             const newStream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     facingMode: 'user'
-                }, audio: false
+                }, audio: this.props.produce.micMode
             });
             this.props.produce.setCurrentStream(newStream);
             this.props.produce.setPCsTrack();
@@ -105,7 +105,7 @@ class VideoView extends React.Component {
             const newStream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     facingMode: 'environment'
-                }, audio: false
+                }, audio: this.props.produce.micMode
             });
             this.props.produce.setCurrentStream(newStream);
             this.props.produce.setPCsTrack();
@@ -133,12 +133,23 @@ class VideoView extends React.Component {
             this.onDisplay(this.videoRef.current);
         }
     }
+    onMicModeChange() {
+        this.props.produce.setMicMode(!this.props.produce.micMode);
+        const videoMode = this.props.produce.videoMode;
+        if (videoMode === 'camera') {
+            this.onCamera(this.videoRef.current);
+        } else if (videoMode === 'camera2') {
+            this.onCamera2(this.videoRef.current);
+        } else if (videoMode === 'display') {
+            this.onDisplay(this.videoRef.current);
+        }
+    }
     render() {
         return <Fragment>
             <div>
                 <video width="100%" height="300" autoPlay ref={this.videoRef}></video>
             </div>
-            <div css={{display:'grid', gridTemplateColumns:'repeat(auto-fit, 100px)', justifyContent:'center'}}>
+            <div css={{display:'grid', gridTemplateColumns:'repeat(auto-fit, 90px)', justifyContent:'center'}}>
                 <label>
                     <input type='radio' name='videoMode' value='camera' checked={
                         this.props.produce.videoMode === 'camera'
@@ -156,6 +167,12 @@ class VideoView extends React.Component {
                         this.props.produce.videoMode === 'display'
                     } onChange={(ev) => this.onVideoModeChange(ev.target.value)} />
                     <span>display</span>
+                </label>
+                <label>
+                    <input type='checkbox' name='mic' 
+                        checked={this.props.produce.micMode} 
+                        onChange={() => this.onMicModeChange()} />
+                    <span>mic</span>
                 </label>
             </div>
         </Fragment> 
