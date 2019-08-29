@@ -92496,7 +92496,7 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
         video: {
           facingMode: 'user'
         },
-        audio: false
+        audio: this.props.produce.micMode
       });
       this.props.produce.setCurrentStream(newStream);
       this.props.produce.setPCsTrack();
@@ -92511,7 +92511,7 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
         video: {
           facingMode: 'environment'
         },
-        audio: false
+        audio: this.props.produce.micMode
       });
       this.props.produce.setCurrentStream(newStream);
       this.props.produce.setPCsTrack();
@@ -92543,6 +92543,19 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
     }
   }
 
+  onMicModeChange() {
+    this.props.produce.setMicMode(!this.props.produce.micMode);
+    const videoMode = this.props.produce.videoMode;
+
+    if (videoMode === 'camera') {
+      this.onCamera(this.videoRef.current);
+    } else if (videoMode === 'camera2') {
+      this.onCamera2(this.videoRef.current);
+    } else if (videoMode === 'display') {
+      this.onDisplay(this.videoRef.current);
+    }
+  }
+
   render() {
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("video", {
       width: "100%",
@@ -92552,7 +92565,7 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
     })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       css: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, 100px)',
+        gridTemplateColumns: 'repeat(auto-fit, 90px)',
         justifyContent: 'center'
       }
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("label", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
@@ -92573,7 +92586,12 @@ let VideoView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"
       value: "display",
       checked: this.props.produce.videoMode === 'display',
       onChange: ev => this.onVideoModeChange(ev.target.value)
-    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, "display"))));
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, "display")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("label", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
+      type: "checkbox",
+      name: "mic",
+      checked: this.props.produce.micMode,
+      onChange: () => this.onMicModeChange()
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, "mic"))));
   }
 
   componentDidMount() {
@@ -93180,7 +93198,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _temp;
+var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _temp;
 
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
@@ -93205,11 +93223,13 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
 
     _initializerDefineProperty(this, "videoMode", _descriptor6, this);
 
-    _initializerDefineProperty(this, "currentStream", _descriptor7, this);
+    _initializerDefineProperty(this, "micMode", _descriptor7, this);
 
-    _initializerDefineProperty(this, "says", _descriptor8, this);
+    _initializerDefineProperty(this, "currentStream", _descriptor8, this);
 
-    _initializerDefineProperty(this, "objects", _descriptor9, this);
+    _initializerDefineProperty(this, "says", _descriptor9, this);
+
+    _initializerDefineProperty(this, "objects", _descriptor10, this);
 
     this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_1__["makeWebSocket"])({
       auth: 'default@890',
@@ -93293,6 +93313,10 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
 
   setVideoMode(videoMode) {
     this.videoMode = videoMode;
+  }
+
+  setMicMode(mode) {
+    this.micMode = mode;
   }
 
   setCurrentStream(stream) {
@@ -93382,28 +93406,35 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
   initializer: function () {
     return 'camera';
   }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "currentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "micMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return false;
+  }
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "currentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return null;
   }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "says", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "says", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return [];
   }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "objects", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "objects", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
   writable: true,
   initializer: function () {
     return [];
   }
-}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "pcIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "pcIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removePeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removePeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPeerConnectionStatus", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPeerConnectionStatus"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removeConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removeConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "consumerIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "consumerIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class);
+}), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "pcIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "pcIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removePeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removePeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPeerConnectionStatus", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPeerConnectionStatus"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removeConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removeConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "consumerIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "consumerIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class);
 
 
 /***/ }),
