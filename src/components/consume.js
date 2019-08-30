@@ -173,7 +173,7 @@ export default class Consume extends React.Component {
                             if (video) {
                                 this.props.consume.setTarget(video);
                             }
-                        }} autoPlay controls className='mx-auto d-block' css={{minWidth:'400px', width:'90%', minHeight:'300px'}} />
+                        }} autoPlay webkit-playsinline playsinline controls className='mx-auto d-block' css={{minWidth:'400px', width:'90%', minHeight:'300px'}} />
                         <div css={{margin:'8px 0px'}}>
                             <button onClick={() => {this.onClickRec()}} className='mx-auto d-block btn btn-outline-primary'>
                                 <span>{icon}</span>
@@ -182,7 +182,8 @@ export default class Consume extends React.Component {
                         </div>
                     </div>
                     <div className='col-md-3 align-self-center'>
-                        <video ref={this.selfVideoRef} autoPlay className='mx-auto d-block' css={{width:'90%', height: '200px', backgroundColor:'black'}} />
+                        <video ref={this.selfVideoRef} autoPlay webkit-playsinline playsinline 
+                            className='mx-auto d-block' css={{width:'90%', height: '200px', backgroundColor:'black'}} />
                         <div css={{display:'grid', gridTemplateColumns:'repeat(100px)', justifyContent:'center'}}>
                             <label>
                                 <input type='checkbox' name='micMode' checked={this.props.consume.micMode} onChange={() => {

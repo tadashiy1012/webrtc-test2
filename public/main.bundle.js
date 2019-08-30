@@ -79674,7 +79674,7 @@ if (false) {} else {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext, BrowserRouter, HashRouter, Link, NavLink */
+/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92355,6 +92355,8 @@ let Consume = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
         }
       },
       autoPlay: true,
+      "webkit-playsinline": true,
+      playsinline: true,
       controls: true,
       className: "mx-auto d-block",
       css: {
@@ -92376,6 +92378,8 @@ let Consume = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("video", {
       ref: this.selfVideoRef,
       autoPlay: true,
+      "webkit-playsinline": true,
+      playsinline: true,
       className: "mx-auto d-block",
       css: {
         width: '90%',
