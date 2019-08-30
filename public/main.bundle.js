@@ -92355,8 +92355,8 @@ let Consume = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
         }
       },
       autoPlay: true,
-      "webkit-playsinline": true,
-      playsinline: true,
+      "webkit-playsinline": "true",
+      playsInline: true,
       controls: true,
       className: "mx-auto d-block",
       css: {
