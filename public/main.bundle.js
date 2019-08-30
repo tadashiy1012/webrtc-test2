@@ -62001,7 +62001,7 @@ if (false) {} else {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext */
+/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext, BrowserRouter, HashRouter, Link, NavLink */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -74454,124 +74454,6 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./src/components/ChatVIew.js":
-/*!************************************!*\
-  !*** ./src/components/ChatVIew.js ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ChatView; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
-/* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
-/* harmony import */ var _FileSelector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FileSelector */ "./src/components/FileSelector.js");
-/* harmony import */ var _PdfView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./PdfView */ "./src/components/PdfView.js");
-var _dec, _class;
-
-/** @jsx jsx */
-
-
-
-
-
-
-let ChatView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class ChatView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
-  constructor(props) {
-    super(props);
-    this.textRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
-  }
-
-  handleSendClick() {
-    this.props.produce.addSay('[me]', this.textRef.current.value);
-    this.props.produce.dcPCs.forEach(dcpc => {
-      dcpc.send(this.textRef.current.value);
-    });
-  }
-
-  render() {
-    const ary = [...this.props.produce.says, ...this.props.produce.objects].sort((a, b) => a.time - b.time);
-    const children = ary.map((e, idx) => {
-      if (e.say) {
-        return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
-          key: idx
-        }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " : ", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.say));
-      } else {
-        console.log(e);
-
-        if (e.obj.type === 'image/jpeg') {
-          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
-            key: idx
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-            className: "card",
-            css: {
-              padding: '22px'
-            }
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("img", {
-            src: URL.createObjectURL(e.obj),
-            className: "rounded mx-auto d-block"
-          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
-            href: URL.createObjectURL(e.obj),
-            download: "file"
-          }, "download")));
-        } else if (e.obj.type === 'application/pdf') {
-          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
-            key: idx
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-            className: "card",
-            css: {
-              padding: '22px'
-            }
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_PdfView__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            tgt: e
-          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
-            href: URL.createObjectURL(e.obj),
-            download: "file"
-          }, "download")));
-        } else {
-          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
-            key: idx
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
-            href: URL.createObjectURL(e.obj),
-            download: "file"
-          }, "download"));
-        }
-      }
-    }).reverse();
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "col-md-6"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      css: {
-        padding: '8px 0px'
-      }
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
-      type: "text",
-      ref: this.textRef,
-      placeholder: "message",
-      className: "form-control"
-    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
-      onClick: () => {
-        this.handleSendClick();
-      },
-      className: "btn btn-primary btn-block"
-    }, "send message")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "col-md-6"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_FileSelector__WEBPACK_IMPORTED_MODULE_4__["default"], null)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "w-100"
-    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "col"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, children)));
-  }
-
-}) || _class) || _class);
-
-
-/***/ }),
-
 /***/ "./src/components/Consume.js":
 /*!***********************************!*\
   !*** ./src/components/Consume.js ***!
@@ -74604,6 +74486,9 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
   constructor(props) {
     super(props);
     this.props.root.setMode('consume');
+    const params = new URL(document.location).searchParams;
+    const key = params.get('key') || 'default';
+    this.props.consume.setKey(key);
     this.props.consume.setWsOnMessageHandler(ev => {
       console.log(ev);
       const json = JSON.parse(ev.data);
@@ -74621,13 +74506,13 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
         }
       }
     });
-    this.props.consume.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeConsumePC"])(this.props.consume.id, this.props.consume.ws));
+    this.props.consume.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeConsumePC"])(this.props.consume.id, this.props.consume.ws, this.props.consume.key));
     this.props.consume.setPcOnTrackHandler(ev => {
       console.log(ev);
       this.props.consume.setRecorder(ev.streams[0]);
       this.props.consume.target.srcObject = ev.streams[0];
     });
-    this.props.consume.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeConsumeDataChPC"])(this.props.consume.id, this.props.consume.ws));
+    this.props.consume.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeConsumeDataChPC"])(this.props.consume.id, this.props.consume.ws, this.props.consume.key));
     this.props.consume.dcPc.createDataCh();
     this.props.consume.setDcOnMessage();
   }
@@ -74918,20 +74803,52 @@ let ConsumerList = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
         }
       });
     });
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "card"
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "card",
+      css: {
+        display: this.props.produce.setting ? 'none' : 'block'
+      }
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "card-body"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h3", {
       css: {
         fontSize: '18px'
       }
-    }, "consumer list"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", {
+    }, "consumers"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", {
       css: {
         listStyleType: 'none',
         paddingLeft: '0px'
       }
-    }, childs)));
+    }, childs))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "card",
+      css: {
+        display: this.props.produce.setting ? 'block' : 'none'
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "card-body"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h3", {
+      css: {
+        fontSize: '18px'
+      }
+    }, "settings"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("label", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, "room key"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
+      type: "text",
+      className: "form-control",
+      onChange: ev => {
+        this.props.produce.setKey(ev.target.value);
+      },
+      value: this.props.produce.key
+    })))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      css: {
+        marginTop: '4px',
+        display: 'grid',
+        justifyContent: 'end'
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
+      onClick: () => {
+        this.props.produce.toggleSetting();
+      },
+      className: "btn btn-secondary btn-sm"
+    }, this.props.produce.setting ? 'consumers' : 'settings')));
   }
 
 }) || _class2) || _class2);
@@ -75073,7 +74990,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
 /* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
-/* harmony import */ var _ChatVIew__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ChatVIew */ "./src/components/ChatVIew.js");
+/* harmony import */ var _ProduceChatVIew__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProduceChatVIew */ "./src/components/ProduceChatVIew.js");
 /* harmony import */ var _ConsumerList__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ConsumerList */ "./src/components/ConsumerList.js");
 /* harmony import */ var _VideoView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./VideoView */ "./src/components/VideoView.js");
 var _dec, _class;
@@ -75095,26 +75012,28 @@ let Produce = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
       const json = JSON.parse(ev.data);
       console.log(json);
 
-      if (json.type === 'consume') {
-        this.props.produce.addConsumers(json);
-      } else if (json.type === 'consume_dc') {
-        const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.id, this.props.produce.ws, json.uuid);
-        dcpc.setOnMessageHandler(ev => {
-          console.log(ev);
-          const json = JSON.parse(ev.data);
-          console.log(json);
-          this.props.produce.addSay(json.id, json.message);
-        });
-        this.props.produce.addDataChPeerConnection(dcpc);
-        const offer = new RTCSessionDescription({
-          type: 'offer',
-          sdp: json.sdp
-        });
+      if (json.key === this.props.produce.key) {
+        if (json.type === 'consume') {
+          this.props.produce.addConsumers(json);
+        } else if (json.type === 'consume_dc') {
+          const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.id, this.props.produce.ws, json.uuid);
+          dcpc.setOnMessageHandler(ev => {
+            console.log(ev);
+            const json = JSON.parse(ev.data);
+            console.log(json);
+            this.props.produce.addSay(json.id, json.message);
+          });
+          this.props.produce.addDataChPeerConnection(dcpc);
+          const offer = new RTCSessionDescription({
+            type: 'offer',
+            sdp: json.sdp
+          });
 
-        (async () => {
-          await dcpc.setRemoteDesc(offer);
-          await dcpc.setLocalDesc((await dcpc.createAnswer()));
-        })();
+          (async () => {
+            await dcpc.setRemoteDesc(offer);
+            await dcpc.setLocalDesc((await dcpc.createAnswer()));
+          })();
+        }
       }
     });
   }
@@ -75146,7 +75065,125 @@ let Produce = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
       className: "col-md-5"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_ConsumerList__WEBPACK_IMPORTED_MODULE_5__["default"], null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "row"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_ChatVIew__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_ProduceChatVIew__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
+  }
+
+}) || _class) || _class);
+
+
+/***/ }),
+
+/***/ "./src/components/ProduceChatVIew.js":
+/*!*******************************************!*\
+  !*** ./src/components/ProduceChatVIew.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProduceChatView; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
+/* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
+/* harmony import */ var _FileSelector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FileSelector */ "./src/components/FileSelector.js");
+/* harmony import */ var _PdfView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./PdfView */ "./src/components/PdfView.js");
+var _dec, _class;
+
+/** @jsx jsx */
+
+
+
+
+
+
+let ProduceChatView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class ProduceChatView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    this.textRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
+  }
+
+  handleSendClick() {
+    this.props.produce.addSay('[me]', this.textRef.current.value);
+    this.props.produce.dcPCs.forEach(dcpc => {
+      dcpc.send(this.textRef.current.value);
+    });
+  }
+
+  render() {
+    const ary = [...this.props.produce.says, ...this.props.produce.objects].sort((a, b) => a.time - b.time);
+    const children = ary.map((e, idx) => {
+      if (e.say) {
+        return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
+          key: idx
+        }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " : ", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.say));
+      } else {
+        console.log(e);
+
+        if (e.obj.type === 'image/jpeg') {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
+            key: idx
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+            className: "card",
+            css: {
+              padding: '22px'
+            }
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("img", {
+            src: URL.createObjectURL(e.obj),
+            className: "rounded mx-auto d-block"
+          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+            href: URL.createObjectURL(e.obj),
+            download: "file"
+          }, "download")));
+        } else if (e.obj.type === 'application/pdf') {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
+            key: idx
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+            className: "card",
+            css: {
+              padding: '22px'
+            }
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_PdfView__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            tgt: e
+          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+            href: URL.createObjectURL(e.obj),
+            download: "file"
+          }, "download")));
+        } else {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
+            key: idx
+          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+            href: URL.createObjectURL(e.obj),
+            download: "file"
+          }, "download"));
+        }
+      }
+    }).reverse();
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col-md-6"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      css: {
+        padding: '8px 0px'
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
+      type: "text",
+      ref: this.textRef,
+      placeholder: "message",
+      className: "form-control"
+    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
+      onClick: () => {
+        this.handleSendClick();
+      },
+      className: "btn btn-primary btn-block"
+    }, "send message")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col-md-6"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_FileSelector__WEBPACK_IMPORTED_MODULE_4__["default"], null)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "w-100"
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, children)));
   }
 
 }) || _class) || _class);
@@ -75577,7 +75614,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _temp;
+var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _temp;
 
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
@@ -75615,6 +75652,8 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
     _initializerDefineProperty(this, "says", _descriptor11, this);
 
     _initializerDefineProperty(this, "objects", _descriptor12, this);
+
+    _initializerDefineProperty(this, "key", _descriptor13, this);
 
     this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeWebSocket"])({
       auth: 'consume@890',
@@ -75791,6 +75830,10 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
     });
   }
 
+  setKey(key) {
+    this.key = key;
+  }
+
 }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
@@ -75875,7 +75918,14 @@ let ConsumeStore = (_class = (_temp = class ConsumeStore {
   initializer: function () {
     return [];
   }
-}), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTrackToPc", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addTrackToPc"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPcOnTrackHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPcOnTrackHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcOnMessage", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcOnMessage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTarget", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTarget"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "unsetRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "unsetRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStreamSelf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStreamSelf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleRec", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleRec"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjcts", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjcts"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class);
+}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, "key", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return null;
+  }
+}), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTrackToPc", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addTrackToPc"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPcOnTrackHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPcOnTrackHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcOnMessage", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcOnMessage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTarget", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTarget"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "unsetRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "unsetRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStreamSelf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStreamSelf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleRec", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleRec"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjcts", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjcts"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setKey", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setKey"), _class.prototype)), _class);
 
 
 /***/ }),
@@ -75919,7 +75969,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _temp;
+var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _temp;
 
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
@@ -75953,6 +76003,10 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     _initializerDefineProperty(this, "says", _descriptor10, this);
 
     _initializerDefineProperty(this, "objects", _descriptor11, this);
+
+    _initializerDefineProperty(this, "setting", _descriptor12, this);
+
+    _initializerDefineProperty(this, "key", _descriptor13, this);
 
     this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_1__["makeWebSocket"])({
       auth: 'default@890',
@@ -76107,6 +76161,14 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
     });
   }
 
+  toggleSetting() {
+    this.setting = !this.setting;
+  }
+
+  setKey(key) {
+    this.key = key;
+  }
+
 }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
   configurable: true,
   enumerable: true,
@@ -76184,7 +76246,21 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
   initializer: function () {
     return [];
   }
-}), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "pcIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "pcIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removePeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removePeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPeerConnectionStatus", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPeerConnectionStatus"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removeConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removeConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "consumerIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "consumerIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTgt", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addTgt"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearTgts", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearTgts"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjects", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjects"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class);
+}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, "setting", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return false;
+  }
+}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, "key", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+  configurable: true,
+  enumerable: true,
+  writable: true,
+  initializer: function () {
+    return 'default';
+  }
+}), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "pcIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "pcIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removePeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removePeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPeerConnectionStatus", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPeerConnectionStatus"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removeConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removeConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "consumerIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "consumerIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTgt", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addTgt"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearTgts", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearTgts"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjects", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjects"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleSetting", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleSetting"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setKey", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setKey"), _class.prototype)), _class);
 
 
 /***/ }),
@@ -76255,7 +76331,7 @@ class MyDataChPeerConnection {
     this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_0__();
     this.ws = webSocket;
     this.conn = new RTCPeerConnection({
-      iceServers: _iceServers__WEBPACK_IMPORTED_MODULE_1__
+      iceServers: _iceServers__WEBPACK_IMPORTED_MODULE_1__["iceServers"]
     });
     this.conn.onnegotiationneeded = onNegotiationneeded;
     this.conn.onicecandidate = onIcecandidate;
@@ -76375,7 +76451,7 @@ class MyPeerConnection {
     this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_0__();
     this.ws = webSocket;
     this.conn = new RTCPeerConnection({
-      iceServers: _iceServers__WEBPACK_IMPORTED_MODULE_1__
+      iceServers: _iceServers__WEBPACK_IMPORTED_MODULE_1__["iceServers"]
     });
     this.conn.onnegotiationneeded = onNegotiationneeded;
     this.conn.onicecandidate = onIcecandidate;
@@ -76488,6 +76564,7 @@ const iceServers = [{
   "urls": "stun:stun.l.google.com:19302"
 }];
 
+
 /***/ }),
 
 /***/ "./src/util/index.js":
@@ -76551,7 +76628,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return makeConsumeDataChPC; });
 /* harmony import */ var _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MyDataChPeerConnection */ "./src/util/MyDataChPeerConnection.js");
 
-function makeConsumeDataChPC(id, ws, remake = false) {
+function makeConsumeDataChPC(id, ws, key, remake = false) {
   console.log('remake:' + remake);
 
   const _pc = new _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__["default"](ws, {
@@ -76578,7 +76655,8 @@ function makeConsumeDataChPC(id, ws, remake = false) {
           to,
           type,
           sdp,
-          uuid
+          uuid,
+          key
         };
         let count = 0;
         const iid = setInterval(function () {
@@ -76612,7 +76690,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return makeConsumePC; });
 /* harmony import */ var _MyPeerConnection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MyPeerConnection */ "./src/util/MyPeerConnection.js");
 
-function makeConsumePC(id, ws, remake = false) {
+function makeConsumePC(id, ws, key, remake = false) {
   console.log('remake:' + remake);
 
   const _pc = new _MyPeerConnection__WEBPACK_IMPORTED_MODULE_0__["default"](ws, {
@@ -76639,7 +76717,8 @@ function makeConsumePC(id, ws, remake = false) {
           to,
           type,
           sdp,
-          uuid
+          uuid,
+          key
         };
         let count = 0;
         const iid = setInterval(function () {

@@ -1,5 +1,5 @@
 import * as uuidv1 from 'uuid/v1';
-import * as iceServers from './iceServers';
+import {iceServers} from './iceServers';
 
 export default class MyPeerConnection {
     constructor(webSocket, {

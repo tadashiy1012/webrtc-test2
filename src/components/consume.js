@@ -13,6 +13,9 @@ export default class Consume extends React.Component {
     constructor(props) {
         super(props);
         this.props.root.setMode('consume');
+        const params = (new URL(document.location)).searchParams;
+        const key = params.get('key') || 'default';
+        this.props.consume.setKey(key);
         this.props.consume.setWsOnMessageHandler((ev) => {
             console.log(ev);
             const json = JSON.parse(ev.data);
@@ -32,14 +35,15 @@ export default class Consume extends React.Component {
             }
         });
         this.props.consume.setPC(makeConsumePC(
-            this.props.consume.id, this.props.consume.ws));
+            this.props.consume.id, this.props.consume.ws, this.props.consume.key
+        ));
         this.props.consume.setPcOnTrackHandler((ev) => {
             console.log(ev);
             this.props.consume.setRecorder(ev.streams[0]);
             this.props.consume.target.srcObject = ev.streams[0];
         });
         this.props.consume.setDcPC(makeConsumeDataChPC(
-            this.props.consume.id, this.props.consume.ws
+            this.props.consume.id, this.props.consume.ws, this.props.consume.key
         ));
         this.props.consume.dcPc.createDataCh();
         this.props.consume.setDcOnMessage();

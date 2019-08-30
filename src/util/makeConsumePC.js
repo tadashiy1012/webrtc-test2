@@ -1,6 +1,6 @@
 import MyPeerConnection from "./MyPeerConnection";
 
-export default function makeConsumePC(id, ws, remake = false) {
+export default function makeConsumePC(id, ws, key, remake = false) {
     console.log('remake:' + remake);
     const _pc = new MyPeerConnection(ws, {
         onNegotiationneeded: (ev) => {
@@ -20,7 +20,7 @@ export default function makeConsumePC(id, ws, remake = false) {
                 const type = 'consume';
                 const sdp = _pc.conn.localDescription.sdp;
                 const uuid = id;
-                const json = { to, type, sdp, uuid };
+                const json = { to, type, sdp, uuid, key };
                 let count = 0;
                 const iid = setInterval(function() {
                     if (_pc.ws.readyState === WebSocket.OPEN) {

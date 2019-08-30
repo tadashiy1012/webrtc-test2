@@ -89,11 +89,31 @@ export default class ConsumerList extends React.Component {
                 this.onCloseClick(e.uuid);
             }} />
         });
-        return <div className='card'>
-            <div className='card-body'>
-                <h3 css={{fontSize:'18px'}}>consumer list</h3>
-                <ul css={{listStyleType:'none', paddingLeft:'0px'}}>{childs}</ul>
+        return <Fragment>
+            <div className='card' css={{display: this.props.produce.setting ? 'none':'block'}}>
+                <div className='card-body'>
+                    <h3 css={{fontSize:'18px'}}>consumers</h3>
+                    <ul css={{listStyleType:'none', paddingLeft:'0px'}}>{childs}</ul>
+                </div>
             </div>
-        </div>
+            <div className='card' css={{display: this.props.produce.setting ? 'block':'none'}}>
+                <div className='card-body'>
+                    <h3 css={{fontSize:'18px'}}>settings</h3>
+                    <label>
+                        <span>room key</span>
+                        <input type='text' className='form-control' onChange={(ev) => {
+                            this.props.produce.setKey(ev.target.value);
+                        }} value={this.props.produce.key} />
+                    </label>
+                </div>
+            </div>
+            <div css={{marginTop:'4px', display:'grid', justifyContent:'end'}}>
+                <button onClick={() => {
+                    this.props.produce.toggleSetting();
+                }} className='btn btn-secondary btn-sm'>
+                    {this.props.produce.setting ? 'consumers':'settings'}
+                </button>
+            </div>
+        </Fragment>
     }
 }

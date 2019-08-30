@@ -1,6 +1,6 @@
 import MyDataChPeerConnection from "./MyDataChPeerConnection";
 
-export default function makeConsumeDataChPC(id, ws, remake = false) {
+export default function makeConsumeDataChPC(id, ws, key, remake = false) {
     console.log('remake:' + remake);
     const _pc = new MyDataChPeerConnection(ws, {
         onNegotiationneeded: (ev) => {
@@ -20,7 +20,7 @@ export default function makeConsumeDataChPC(id, ws, remake = false) {
                 const type = 'consume_dc';
                 const sdp = _pc.conn.localDescription.sdp;
                 const uuid = id;
-                const json = {to, type, sdp, uuid};
+                const json = {to, type, sdp, uuid, key};
                 let count = 0;
                 const iid = setInterval(function() {
                     if (_pc.ws.readyState === WebSocket.OPEN) {

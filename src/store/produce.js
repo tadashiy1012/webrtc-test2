@@ -15,6 +15,8 @@ export default class ProduceStore {
     @observable tgts = [];
     @observable says = [];
     @observable objects = [];
+    @observable setting = false;
+    @observable key = 'default';
 
     constructor() {
         this.ws = makeWebSocket({
@@ -176,6 +178,16 @@ export default class ProduceStore {
             console.log(result);
             target.pdf = result;
         });
+    }
+
+    @action
+    toggleSetting() {
+        this.setting = !this.setting;
+    }
+
+    @action
+    setKey(key) {
+        this.key = key;
     }
 
 }

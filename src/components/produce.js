@@ -17,25 +17,27 @@ export default class Produce extends React.Component {
             console.log(ev);
             const json = JSON.parse(ev.data);
             console.log(json);
-            if (json.type === 'consume') {
-                this.props.produce.addConsumers(json);
-            } else if (json.type === 'consume_dc') {
-                const dcpc = makeProduceDataChPC(
-                    this.props.produce.id, this.props.produce.ws, json.uuid);
-                dcpc.setOnMessageHandler((ev) => {
-                    console.log(ev);
-                    const json = JSON.parse(ev.data);
-                    console.log(json);
-                    this.props.produce.addSay(json.id, json.message);
-                });
-                this.props.produce.addDataChPeerConnection(dcpc);
-                const offer = new RTCSessionDescription({
-                    type: 'offer', sdp: json.sdp
-                });
-                (async () => {
-                    await dcpc.setRemoteDesc(offer);
-                    await dcpc.setLocalDesc(await dcpc.createAnswer());
-                })();
+            if (json.key === this.props.produce.key) {
+                if (json.type === 'consume') {
+                    this.props.produce.addConsumers(json);
+                } else if (json.type === 'consume_dc') {
+                    const dcpc = makeProduceDataChPC(
+                        this.props.produce.id, this.props.produce.ws, json.uuid);
+                    dcpc.setOnMessageHandler((ev) => {
+                        console.log(ev);
+                        const json = JSON.parse(ev.data);
+                        console.log(json);
+                        this.props.produce.addSay(json.id, json.message);
+                    });
+                    this.props.produce.addDataChPeerConnection(dcpc);
+                    const offer = new RTCSessionDescription({
+                        type: 'offer', sdp: json.sdp
+                    });
+                    (async () => {
+                        await dcpc.setRemoteDesc(offer);
+                        await dcpc.setLocalDesc(await dcpc.createAnswer());
+                    })();
+                }
             }
         });
     }

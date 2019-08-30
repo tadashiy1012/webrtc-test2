@@ -1,5 +1,5 @@
 import * as uuidv1 from 'uuid/v1';
-import * as iceServers from './iceServers';
+import {iceServers} from './iceServers';
 import string2TypedArray from './string2TypedArray';
 
 export default class MyDataChPeerConnection {

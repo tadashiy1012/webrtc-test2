@@ -18,6 +18,7 @@ export default class ConsumeStore {
     @observable rec = false;
     @observable says = [];
     @observable objects = [];
+    @observable key = null;
 
     constructor() {
         this.ws = makeWebSocket({
@@ -197,5 +198,9 @@ export default class ConsumeStore {
         });
     }
 
+    @action
+    setKey(key) {
+        this.key = key;
+    }
 
 }
