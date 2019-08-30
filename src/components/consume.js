@@ -182,7 +182,7 @@ export default class Consume extends React.Component {
                         </div>
                     </div>
                     <div className='col-md-3 align-self-center'>
-                        <video ref={this.selfVideoRef} autoPlay webkit-playsinline playsinline 
+                        <video ref={this.selfVideoRef} autoPlay webkit-playsinline='true' playsInline 
                             className='mx-auto d-block' css={{width:'90%', height: '200px', backgroundColor:'black'}} />
                         <div css={{display:'grid', gridTemplateColumns:'repeat(100px)', justifyContent:'center'}}>
                             <label>
