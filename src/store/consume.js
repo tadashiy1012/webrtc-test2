@@ -1,8 +1,8 @@
 import {observable, action} from 'mobx';
 import {WebAssemblyRecorder} from 'recordrtc'
 import * as RecordRTC from 'recordrtc/RecordRTC';
-import {makeWebSocket, makeConsumePC, makeConsumeDataChPC, tArray2String, getDoc} from '../util';
 import * as uuid from 'uuid/v1';
+import {makeWebSocket, makeConsumePC, makeConsumeDataChPC, tArray2String, getDoc} from '../util';
 
 export default class ConsumeStore {
 
@@ -23,6 +23,11 @@ export default class ConsumeStore {
         this.ws = makeWebSocket({
             auth: 'consume@890', password: '0749637637'
         }, {});
+    }
+
+    @action
+    regenerateId() {
+        this.id = uuid();
     }
 
     @action
@@ -87,7 +92,6 @@ export default class ConsumeStore {
                     const type = header.slice(36);
                     const file = tary.slice(100);
                     const typeStr = tArray2String(type.slice(0, type.indexOf(0)));
-                    console.log(typeStr);
                     const blob = new Blob([file], {type: typeStr});
                     console.log(blob);
                     this.addObj(tArray2String(id), blob);
@@ -140,6 +144,11 @@ export default class ConsumeStore {
     }
 
     @action
+    unsetRecorder() {
+        this.recorder = null;
+    }
+
+    @action
     setStreamSelf(stream) {
         if (this.streamSelf !== null) {
             this.streamSelf.getTracks().forEach(track => {
@@ -172,6 +181,11 @@ export default class ConsumeStore {
         const time = Date.now();
         const tgt = {id, time, obj, pdf: null};
         this.objects.push(tgt);
+    }
+
+    @action
+    clearObjcts() {
+        this.objects = [];
     }
 
     @action

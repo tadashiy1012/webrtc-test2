@@ -1,0 +1,21 @@
+import getDoc from './getDoc';
+import getThumb from './getThumb';
+import makeConsumeDataChPC from './makeConsumeDataChPC';
+import makeConsumePC from './makeConsumePC';
+import makeProduceDataChPC from './makeProduceDataChPC';
+import makeProducePC from './makeProducePC';
+import makeWebSocket from './makeWebsocket';
+import string2TypedArray from './string2TypedArray';
+import tArray2String from './tArray2String';
+
+export {
+    getDoc,
+    getThumb,
+    makeConsumeDataChPC,
+    makeConsumePC,
+    makeProduceDataChPC,
+    makeProducePC,
+    makeWebSocket,
+    string2TypedArray,
+    tArray2String
+}

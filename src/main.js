@@ -6,9 +6,8 @@ import {Provider} from 'mobx-react';
 import {jsx, css} from '@emotion/core';
 import {RootStore, ProduceStore, ConsumeStore} from './store';
 import {Produce, Consume} from './components';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap';
 import pdfjs from 'pdfjs-dist';
+import 'bootstrap/dist/css/bootstrap.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.bundle.js';
 

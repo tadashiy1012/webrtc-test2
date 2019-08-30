@@ -23,6 +23,11 @@ export default class ProduceStore {
     }
 
     @action
+    regenerateId() {
+        this.id = uuid();
+    }
+
+    @action
     setWsOnMessageHandler(handler) {
         this.ws.onmessage = handler;
     }
@@ -137,6 +142,11 @@ export default class ProduceStore {
     }
 
     @action
+    clearTgts() {
+        this.tgts = [];
+    }
+
+    @action
     addSay(id, say) {
         const time = Date.now();
         this.says.push({id, time, say});
@@ -149,10 +159,14 @@ export default class ProduceStore {
 
     @action
     addObj(id, obj) {
-        console.log(obj);
         const time = Date.now();
         const tgt = {id, time, obj, pdf: null};
         this.objects.push(tgt);
+    }
+
+    @action
+    clearObjects() {
+        this.objects = [];
     }
 
     @action
