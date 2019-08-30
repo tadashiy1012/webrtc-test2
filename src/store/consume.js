@@ -12,6 +12,8 @@ export default class ConsumeStore {
     @observable dcPc = null;
     @observable target = null;
     @observable stream = null;
+    @observable streamSelf = null;
+    @observable micMode = false;
     @observable recorder = null;
     @observable rec = false;
     @observable says = [];
@@ -31,6 +33,18 @@ export default class ConsumeStore {
     @action
     setPC(pc) {
         this.pc = pc;
+    }
+
+    @action
+    addTrackToPc() {
+        const senders = this.pc.conn.getSenders();
+        this.streamSelf.getTracks().forEach(track => {
+            if (senders.length > 0) {
+                senders[0].replaceTrack(track);
+            } else {
+                this.pc.addTrack(track, this.streamSelf);
+            }
+        });
     }
     
     @action
@@ -123,6 +137,23 @@ export default class ConsumeStore {
             videoBitsPerSecond: 512000,
             frameInterval: 90,
         });
+    }
+
+    @action
+    setStreamSelf(stream) {
+        if (this.streamSelf !== null) {
+            this.streamSelf.getTracks().forEach(track => {
+                track.enabled = !track.enabled;
+                track.stop();
+                this.streamSelf.removeTrack(track);
+            });
+        }
+        this.streamSelf = stream;
+    }
+
+    @action
+    setMicMode(mode) {
+        this.micMode = mode;
     }
 
     @action

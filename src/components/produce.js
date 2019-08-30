@@ -4,21 +4,37 @@ import {observer, inject} from 'mobx-react';
 import {makeProducePC, makeProduceDataChPC} from '../util';
 import {jsx, css} from '@emotion/core';
 
-const Consumer = (props) => (
-    <li>
-        <div className='row align-items-center no-gutters'>
-            <div className='col-md-10'>
-                <span>{props.status ? '✔️':'✖️'} </span>
-                <a href='#' onClick={props.handleClick}>{props.uuid} </a>
+@inject('produce')
+@observer
+class Consumer extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        const tgtPc = this.props.produce.pcs.find((e) => e.destination === this.props.uuid);
+        const status = tgtPc ? tgtPc.status : false;
+        return <li>
+            <div className='row align-items-center no-gutters'>
+                <div className='col-md-3'>
+                    <video ref={(video) => {
+                        if (video) {
+                            this.props.produce.addTgt(video, this.props.uuid);
+                        }
+                    }} autoPlay className='img-fluid' css={{minHeight:'90px'}} />
+                </div>
+                <div className='col-md-7'>
+                    <span>{status ? '✔️':'✖️'} </span>
+                    <a href='#' onClick={this.props.handleClick}>{this.props.uuid} </a>
+                </div>
+                <div className='col-md-2'>
+                    <button onClick={this.props.handleCloseClick}
+                        disabled={status ? false:true} 
+                        className='btn btn-danger btn-sm'>close</button>
+                </div>
             </div>
-            <div className='col-md-2'>
-                <button onClick={props.handleCloseClick}
-                    disabled={props.status ? false:true} 
-                    className='btn btn-danger btn-sm'>close</button>
-            </div>
-        </div>
-    </li>
-);
+        </li>
+    }
+}
 
 @inject('produce')
 @observer
@@ -27,11 +43,14 @@ class ConsumerList extends React.Component {
         const pc = makeProducePC(
             this.props.produce.ws, dest
         );
+        pc.conn.ontrack = (ev) => {
+            const tgt = this.props.produce.tgts.find(e => e.destination === dest);
+            tgt.tgt.srcObject = ev.streams[0];
+        };
         this.props.produce.addPeerConnection(pc, dest);
         const tgt = this.props.produce.findPeerConnection(dest);
-        this.props.produce.setPeerConnectionStatus(
-            this.props.produce.pcIndexOf(tgt), true
-        );
+        const idx = this.props.produce.pcIndexOf(tgt);
+        this.props.produce.setPeerConnectionStatus(idx, true);
         this.props.produce.setPCsTrack();
         const offer = new RTCSessionDescription({
             type: 'offer', sdp
@@ -60,7 +79,7 @@ class ConsumerList extends React.Component {
         const childs = this.props.produce.consumers.map((e, idx) => {
             const tgtPc = this.props.produce.findPeerConnection(e.uuid);
             const status = tgtPc ? tgtPc.status : false;
-            return <Consumer key={idx} uuid={e.uuid} status={status} handleClick={(evt) => {
+            return <Consumer key={idx} uuid={e.uuid} handleClick={(evt) => {
                 evt.preventDefault();
                 if (!status) {
                     this.onConsumerClick(e.uuid, e.sdp);

@@ -21,17 +21,22 @@ const App = () => (
         <Router>
             <div className='container'>
                 <div className='row'>
-                    <div className='col'><h1>webrtc-test2</h1></div>
+                    <div className='col-md-4'>
+                        <h1 css={{margin:'0px'}}>webrtc-test2</h1>
+                    </div>
+                    <div className='col-sm-8' css={{paddingTop:'8px'}}>
+                        <Link to='/produce' className="btn btn-primary" role="button">produce</Link>
+                        <span> </span>
+                        <Link to='/consume' className="btn btn-primary" role="button">consume</Link>
+                    </div>
                 </div>
                 <div className='row'>
                     <div className='col'>
-                        <Link to='/produce' className="btn btn-primary" role="button">produce</Link>
                         <Route path='/produce/' component={Produce} />
                     </div>
                 </div>
                 <div className='row' css={{marginTop:'8px'}}>
                     <div className='col'>
-                        <Link to='/consume' className="btn btn-primary" role="button">consume</Link>
                         <Route path='/consume/' component={Consume} />
                     </div>
                 </div>

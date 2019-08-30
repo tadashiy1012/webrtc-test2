@@ -127,6 +127,7 @@ export default class Consume extends React.Component {
         ));
         this.props.consume.dcPc.createDataCh();
         this.props.consume.setDcOnMessage();
+        this.selfVideoRef = React.createRef();
     }
     componentWillUnmount() {
         console.log('consume component unmount');
@@ -148,23 +149,57 @@ export default class Consume extends React.Component {
         }
         this.props.consume.toggleRec();
     }
+    onSelfCamera() {
+        console.log(this.selfVideoRef);
+        (async () => {
+            this.props.consume.setStreamSelf(null);
+            const newStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'user'
+                }, audio: this.props.consume.micMode
+            });
+            this.props.consume.setStreamSelf(newStream);
+            this.props.consume.addTrackToPc();
+            this.selfVideoRef.current.srcObject = newStream;
+        })();
+    }
     render() {
         const icon = this.props.consume.rec ? '🔴':'⚫';
         return <Fragment>
             <div css={{marginTop:'12px'}}>
-                <video ref={(video) => {
-                    if (video) {
-                        this.props.consume.setTarget(video);
-                    }
-                }} autoPlay controls className='mx-auto d-block' css={{minWidth:'400px', width:'90%', minHeight:'300px'}} />
+                <div className='row no-gutters'>
+                    <div className='col-md-9 align-self-center'>
+                        <video ref={(video) => {
+                            if (video) {
+                                this.props.consume.setTarget(video);
+                            }
+                        }} autoPlay controls className='mx-auto d-block' css={{minWidth:'400px', width:'90%', minHeight:'300px'}} />
+                        <div css={{margin:'8px 0px'}}>
+                            <button onClick={() => {this.onClickRec()}} className='mx-auto d-block btn btn-outline-primary'>
+                                <span>{icon}</span>
+                                rec
+                            </button>
+                        </div>
+                    </div>
+                    <div className='col-md-3 align-self-center'>
+                        <video ref={this.selfVideoRef} autoPlay className='mx-auto d-block' css={{width:'90%', height: '200px', backgroundColor:'black'}} />
+                        <div css={{display:'grid', gridTemplateColumns:'repeat(100px)', justifyContent:'center'}}>
+                            <label>
+                                <input type='checkbox' name='micMode' checked={this.props.consume.micMode} onChange={() => {
+                                    this.props.consume.setMicMode(!this.props.consume.micMode);
+                                    this.onSelfCamera();
+                                }} />
+                                <span>mic</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div css={{margin:'8px 0px'}}>
-                <button onClick={() => {this.onClickRec()}} className='mx-auto d-block btn btn-outline-primary'>
-                    <span>{icon}</span>
-                    rec
-                </button>
-            </div>
+            
             <Chat />
         </Fragment>
+    }
+    componentDidMount() {
+        this.onSelfCamera();
     }
 }

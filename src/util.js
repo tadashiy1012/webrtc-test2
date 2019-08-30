@@ -76,8 +76,8 @@ function makeConsumePC(id, ws, remake = false) {
             }
         }
     });
-    _pc.conn.addTransceiver('video', {direction: 'recvonly'});
-    _pc.conn.addTransceiver('audio', {direction: 'recvonly'});
+    //_pc.conn.addTransceiver('video', {direction: 'recvonly'});
+    //_pc.conn.addTransceiver('audio', {direction: 'recvonly'});
     return _pc;
 }
 
@@ -214,7 +214,7 @@ class MyDataChPeerConnection {
                 self.dc.onmessage = handler;
                 clearInterval(id);
             }
-            if (count >= 10) { 
+            if (count >= 30) { 
                 clearInterval(id);
                 throw new Error('time out');
             }

@@ -12,6 +12,7 @@ export default class ProduceStore {
     @observable videoMode = 'camera';
     @observable micMode = false;
     @observable currentStream = null;
+    @observable tgts = [];
     @observable says = [];
     @observable objects = [];
 
@@ -28,7 +29,8 @@ export default class ProduceStore {
     
     @action 
     addPeerConnection(pc, destination) {
-        this.pcs.push({pc, destination, status: false});
+        const pcObj = {pc, destination, status: false};
+        this.pcs.push(pcObj);
     }
     
     @action
@@ -48,6 +50,7 @@ export default class ProduceStore {
 
     @action
     setPeerConnectionStatus(idx, status) {
+        console.log(idx, status);
         this.pcs[idx].status = status;
         this.pcs = Object.assign([], this.pcs);
     }
@@ -126,6 +129,11 @@ export default class ProduceStore {
             });
         }
         this.currentStream = stream;
+    }
+
+    @action
+    addTgt(tgt, destination) {
+        this.tgts.push({tgt, destination});
     }
 
     @action
