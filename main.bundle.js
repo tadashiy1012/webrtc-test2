@@ -92378,8 +92378,8 @@ let Consume = (_dec3 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("video", {
       ref: this.selfVideoRef,
       autoPlay: true,
-      "webkit-playsinline": true,
-      playsinline: true,
+      "webkit-playsinline": "true",
+      playsInline: true,
       className: "mx-auto d-block",
       css: {
         width: '90%',
