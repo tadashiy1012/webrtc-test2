@@ -7,21 +7,31 @@ const SimpleState = Base => class extends Base {
     @observable id = uuid();
     @observable ws = null;
     @observable videoMode = 'camera';
-    @observable micMode = false;
+    @observable micMode = true;
     @observable currentStream = null;
     @observable setting = false;
     @observable key = 'default';
 
-    constructor() {
-        super();
+    @action
+    regenerateId() {
+        this.id = uuid();
+    }
+
+    @action
+    createWebSocket() {
         this.ws = makeWebSocket({
             auth: 'default@890', password: '19861012'
         }, {});
     }
 
     @action
-    regenerateId() {
-        this.id = uuid();
+    setWebSocket(ws) {
+        this.ws = ws;
+    }
+
+    @action
+    unsetWebSocket() {
+        this.ws = null;
     }
 
     @action

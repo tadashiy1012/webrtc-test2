@@ -26,7 +26,7 @@ export default class SelfVideoView extends React.Component {
     }
     render() {
         return <Fragment>
-            <video ref={this.selfVideoRef} autoPlay webkit-playsinline='true' playsInline 
+            <video ref={this.selfVideoRef} autoPlay muted webkit-playsinline='true' playsInline 
                 className='mx-auto d-block' css={{width:'90%', height: '200px', backgroundColor:'black'}} />
             <div css={{display:'grid', gridTemplateColumns:'repeat(100px)', justifyContent:'center'}}>
                 <label>

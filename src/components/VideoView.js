@@ -72,7 +72,7 @@ export default class VideoView extends React.Component {
     render() {
         return <Fragment>
             <div>
-                <video width="100%" height="300" autoPlay ref={this.videoRef}></video>
+                <video width="100%" height="300" autoPlay muted ref={this.videoRef}></video>
             </div>
             <div css={{display:'grid', gridTemplateColumns:'repeat(auto-fit, 90px)', justifyContent:'center'}}>
                 <label>

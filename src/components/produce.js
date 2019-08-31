@@ -13,6 +13,7 @@ export default class Produce extends React.Component {
     constructor(props) {
         super(props);
         this.props.root.setMode('produce');
+        this.props.produce.createWebSocket();
         this.props.produce.setWsOnMessageHandler((ev) => {
             console.log(ev);
             const json = JSON.parse(ev.data);
@@ -45,6 +46,7 @@ export default class Produce extends React.Component {
         console.log('produce component unmount');
         this.props.produce.setCurrentStream(null);
         this.props.produce.setWsOnMessageHandler(() => {});
+        this.props.produce.unsetWebSocket();
         this.props.produce.clearPeerConnections();
         this.props.produce.clearDataChPeerConnections();
         this.props.produce.clearConsumers();

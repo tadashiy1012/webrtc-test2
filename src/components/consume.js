@@ -16,6 +16,7 @@ export default class Consume extends React.Component {
         const params = (new URL(document.location)).searchParams;
         const key = params.get('key') || 'default';
         this.props.consume.setKey(key);
+        this.props.consume.createWebSocket();
         this.props.consume.setWsOnMessageHandler((ev) => {
             console.log(ev);
             const json = JSON.parse(ev.data);
@@ -39,6 +40,7 @@ export default class Consume extends React.Component {
         ));
         this.props.consume.setPcOnTrackHandler((ev) => {
             console.log(ev);
+            console.log(ev.streams[0].getTracks());
             this.props.consume.setRecorder(ev.streams[0]);
             this.props.consume.target.srcObject = ev.streams[0];
         });
@@ -51,6 +53,7 @@ export default class Consume extends React.Component {
     componentWillUnmount() {
         console.log('consume component unmount');
         this.props.consume.setWsOnMessageHandler(() => {});
+        this.props.consume.unsetWebSocket();
         this.props.consume.setPC(null);
         this.props.consume.setDcPC(null);
         this.props.consume.setTarget(null);

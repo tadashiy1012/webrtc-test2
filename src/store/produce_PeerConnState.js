@@ -36,13 +36,33 @@ const PeerConnState = Base => class extends Base {
     setPCsTrack() {
         this.pcs.map(e => e.pc).forEach(pc => {
             const senders = pc.conn.getSenders();
+            console.log(senders, this.currentStream);
             this.currentStream.getTracks().forEach(track => {
+                console.log(track);
                 if (senders.length > 0) {
-                    senders[0].replaceTrack(track);
+                    if (track.kind === 'video') {
+                        const videoSender = senders.find(e => e.track.kind === 'video');
+                        console.log(videoSender);
+                        if (videoSender) {
+                            videoSender.replaceTrack(track);
+                        } else {
+                            pc.addTrack(track, this.currentStream);
+                        }
+                    } else if (track.kind === 'audio') {
+                        const audioSender = senders.find(e => e.track.kind === 'audio');
+                        console.log(audioSender);
+                        if (audioSender) {
+                            audioSender.replaceTrack(track);
+                        } else {
+                            pc.addTrack(track, this.currentStream);
+                        }
+                    }
                 } else {
                     pc.addTrack(track, this.currentStream);
                 }
             });
+            console.log(pc.conn.getSenders());
+            console.log(pc.conn.localDescription);
         });
     }
 
