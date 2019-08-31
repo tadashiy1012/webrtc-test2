@@ -1,40 +1,10 @@
 import {observable, action} from 'mobx';
-import {WebAssemblyRecorder} from 'recordrtc'
-import * as RecordRTC from 'recordrtc/RecordRTC';
-import * as uuid from 'uuid/v1';
-import {makeWebSocket, makeConsumePC, makeConsumeDataChPC, tArray2String, getDoc} from '../util';
+import {makeConsumePC, makeConsumeDataChPC, tArray2String} from '../util';
 
-export default class ConsumeStore {
-
-    @observable id = uuid();
-    @observable ws = null;
+const PeerConnState = Base => class extends Base {
+    
     @observable pc = null;
     @observable dcPc = null;
-    @observable target = null;
-    @observable stream = null;
-    @observable streamSelf = null;
-    @observable micMode = false;
-    @observable recorder = null;
-    @observable rec = false;
-    @observable says = [];
-    @observable objects = [];
-    @observable key = null;
-
-    constructor() {
-        this.ws = makeWebSocket({
-            auth: 'consume@890', password: '0749637637'
-        }, {});
-    }
-
-    @action
-    regenerateId() {
-        this.id = uuid();
-    }
-
-    @action
-    setWsOnMessageHandler(handler) {
-        this.ws.onmessage = handler;
-    }
 
     @action
     setPC(pc) {
@@ -106,7 +76,6 @@ export default class ConsumeStore {
         const recievedAnswer = new RTCSessionDescription({
             type: 'answer', sdp
         });
-        console.log(recievedAnswer);
         (async () => {
             if (this.dcPc.conn.remoteDescription !== null) {
                 if (this.dcPc.conn.remoteDescription !== recievedAnswer) {
@@ -121,86 +90,8 @@ export default class ConsumeStore {
         })();
     }
 
-    @action
-    setTarget(tgt) {
-        this.target = tgt;
-    }
-
-    @action
-    setStream(stream) {
-        this.stream = stream;
-    }
-    
-    @action
-    setRecorder(stream) {
-        this.recorder = new RecordRTC(stream, {
-            type: 'video',
-            mimeType: 'video/webm',
-            recorderType: WebAssemblyRecorder,
-            timeSlice: 1000,
-            checkForInactiveTracks: true,
-            videoBitsPerSecond: 512000,
-            frameInterval: 90,
-        });
-    }
-
-    @action
-    unsetRecorder() {
-        this.recorder = null;
-    }
-
-    @action
-    setStreamSelf(stream) {
-        if (this.streamSelf !== null) {
-            this.streamSelf.getTracks().forEach(track => {
-                track.enabled = !track.enabled;
-                track.stop();
-                this.streamSelf.removeTrack(track);
-            });
-        }
-        this.streamSelf = stream;
-    }
-
-    @action
-    setMicMode(mode) {
-        this.micMode = mode;
-    }
-
-    @action
-    toggleRec() {
-        this.rec = !this.rec;
-    }
-
-    @action
-    addSay(id, say) {
-        const time = Date.now();
-        this.says.push({id, time, say});
-    }
-
-    @action
-    addObj(id, obj) {
-        const time = Date.now();
-        const tgt = {id, time, obj, pdf: null};
-        this.objects.push(tgt);
-    }
-
-    @action
-    clearObjcts() {
-        this.objects = [];
-    }
-
-    @action
-    readPdf(object) {
-        const target = this.objects.find(e => e.time === object.time);
-        getDoc(object.obj).then((result) => {
-            console.log(result);
-            target.pdf = result;
-        });
-    }
-
-    @action
-    setKey(key) {
-        this.key = key;
-    }
-
 }
+
+export {
+    PeerConnState
+};

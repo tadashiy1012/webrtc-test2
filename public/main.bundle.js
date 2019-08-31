@@ -75598,24 +75598,296 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(Object(_emotion_core__WE
 
 /***/ }),
 
-/***/ "./src/store/consume.js":
-/*!******************************!*\
-  !*** ./src/store/consume.js ***!
-  \******************************/
+/***/ "./src/store/ConsumeStore.js":
+/*!***********************************!*\
+  !*** ./src/store/ConsumeStore.js ***!
+  \***********************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ConsumeStore; });
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
+/* harmony import */ var _consume_SimpleState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./consume_SimpleState */ "./src/store/consume_SimpleState.js");
+/* harmony import */ var _consume_ListState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./consume_ListState */ "./src/store/consume_ListState.js");
+/* harmony import */ var _consume_PeerConnState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./consume_PeerConnState */ "./src/store/consume_PeerConnState.js");
+
+
+
+
+class ConsumeStore extends Object(_consume_SimpleState__WEBPACK_IMPORTED_MODULE_1__["SimpleState"])(Object(_consume_ListState__WEBPACK_IMPORTED_MODULE_2__["ListState"])(Object(_consume_PeerConnState__WEBPACK_IMPORTED_MODULE_3__["PeerConnState"])(_util__WEBPACK_IMPORTED_MODULE_0__["Bowl"]))) {}
+
+/***/ }),
+
+/***/ "./src/store/ProduceStore.js":
+/*!***********************************!*\
+  !*** ./src/store/ProduceStore.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProduceStore; });
+/* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
+/* harmony import */ var _produce_SimpleState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./produce_SimpleState */ "./src/store/produce_SimpleState.js");
+/* harmony import */ var _produce_ListState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./produce_ListState */ "./src/store/produce_ListState.js");
+/* harmony import */ var _produce_PeerConnState__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./produce_PeerConnState */ "./src/store/produce_PeerConnState.js");
+
+
+
+
+
+class ProduceStore extends Object(_produce_SimpleState__WEBPACK_IMPORTED_MODULE_2__["SimpleState"])(Object(_produce_ListState__WEBPACK_IMPORTED_MODULE_3__["ListState"])(Object(_produce_PeerConnState__WEBPACK_IMPORTED_MODULE_4__["PeerConnState"])(_util__WEBPACK_IMPORTED_MODULE_1__["Bowl"]))) {}
+
+/***/ }),
+
+/***/ "./src/store/consume_ListState.js":
+/*!****************************************!*\
+  !*** ./src/store/consume_ListState.js ***!
+  \****************************************/
+/*! exports provided: ListState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ListState", function() { return ListState; });
+/* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
+function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
+
+function _initializerWarningHelper(descriptor, context) { throw new Error('Decorating class property failed. Please ensure that ' + 'proposal-class-properties is enabled and set to use loose mode. ' + 'To use proposal-class-properties in spec mode with decorators, wait for ' + 'the next major version of decorators in stage 2.'); }
+
+
+
+
+const ListState = Base => {
+  var _class, _descriptor, _descriptor2, _temp;
+
+  return _class = (_temp = class _class extends Base {
+    constructor(...args) {
+      super(...args);
+
+      _initializerDefineProperty(this, "says", _descriptor, this);
+
+      _initializerDefineProperty(this, "objects", _descriptor2, this);
+    }
+
+    addSay(id, say) {
+      const time = Date.now();
+      this.says.push({
+        id,
+        time,
+        say
+      });
+    }
+
+    clearSay() {
+      this.says = [];
+    }
+
+    addObj(id, obj) {
+      const time = Date.now();
+      const tgt = {
+        id,
+        time,
+        obj,
+        pdf: null
+      };
+      this.objects.push(tgt);
+    }
+
+    clearObjects() {
+      this.objects = [];
+    }
+
+    readPdf(object) {
+      const tgt = this.objects.find(e => e.time === object.time);
+      Object(_util__WEBPACK_IMPORTED_MODULE_1__["getDoc"])(object.obj).then(result => {
+        console.log(result);
+        tgt.pdf = result;
+      });
+    }
+
+  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "says", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "objects", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjects", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjects"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class;
+};
+
+
+
+/***/ }),
+
+/***/ "./src/store/consume_PeerConnState.js":
+/*!********************************************!*\
+  !*** ./src/store/consume_PeerConnState.js ***!
+  \********************************************/
+/*! exports provided: PeerConnState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PeerConnState", function() { return PeerConnState; });
+/* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
+function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
+
+function _initializerWarningHelper(descriptor, context) { throw new Error('Decorating class property failed. Please ensure that ' + 'proposal-class-properties is enabled and set to use loose mode. ' + 'To use proposal-class-properties in spec mode with decorators, wait for ' + 'the next major version of decorators in stage 2.'); }
+
+
+
+
+const PeerConnState = Base => {
+  var _class, _descriptor, _descriptor2, _temp;
+
+  return _class = (_temp = class _class extends Base {
+    constructor(...args) {
+      super(...args);
+
+      _initializerDefineProperty(this, "pc", _descriptor, this);
+
+      _initializerDefineProperty(this, "dcPc", _descriptor2, this);
+    }
+
+    setPC(pc) {
+      this.pc = pc;
+    }
+
+    addTrackToPc() {
+      const senders = this.pc.conn.getSenders();
+      this.streamSelf.getTracks().forEach(track => {
+        if (senders.length > 0) {
+          senders[0].replaceTrack(track);
+        } else {
+          this.pc.addTrack(track, this.streamSelf);
+        }
+      });
+    }
+
+    setRecievedAnswer(sdp) {
+      const recievedAnswer = new RTCSessionDescription({
+        type: 'answer',
+        sdp
+      });
+
+      (async () => {
+        if (this.pc.conn.remoteDescription !== null && this.pc.conn.remoteDescription !== recievedAnswer) {
+          this.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_1__["makeConsumePC"])(this.id, this.ws, true));
+          await this.pc.setLocalDesc((await this.pc.createOffer()));
+        }
+
+        await this.pc.setRemoteDesc(recievedAnswer);
+      })();
+    }
+
+    setPcOnTrackHandler(handler) {
+      this.pc.conn.ontrack = handler;
+    }
+
+    setDcPC(dcPc) {
+      this.dcPc = dcPc;
+    }
+
+    setDcOnMessage() {
+      this.dcPc.setOnMessageHandler(ev => {
+        console.log(ev);
+
+        if (typeof ev.data === 'string') {
+          const json = JSON.parse(ev.data);
+          this.addSay(json.id, json.message);
+        } else {
+          if (ev.data instanceof ArrayBuffer) {
+            const tary = new Uint16Array(ev.data);
+            const header = tary.slice(0, 100);
+            const id = header.slice(0, 36);
+            const type = header.slice(36);
+            const file = tary.slice(100);
+            const typeStr = Object(_util__WEBPACK_IMPORTED_MODULE_1__["tArray2String"])(type.slice(0, type.indexOf(0)));
+            const blob = new Blob([file], {
+              type: typeStr
+            });
+            console.log(blob);
+            this.addObj(Object(_util__WEBPACK_IMPORTED_MODULE_1__["tArray2String"])(id), blob);
+          }
+        }
+      });
+    }
+
+    setDcRecievedAnswer(sdp) {
+      const recievedAnswer = new RTCSessionDescription({
+        type: 'answer',
+        sdp
+      });
+
+      (async () => {
+        if (this.dcPc.conn.remoteDescription !== null) {
+          if (this.dcPc.conn.remoteDescription !== recievedAnswer) {
+            this.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_1__["makeConsumeDataChPC"])(this.id, this.ws, true));
+            this.setDcOnMessage();
+            await this.dcPc.setLocalDesc((await this.dcPc.createOffer()));
+            await this.dcPc.setRemoteDesc(recievedAnswer);
+          }
+        } else {
+          await this.dcPc.setRemoteDesc(recievedAnswer);
+        }
+      })();
+    }
+
+  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "pc", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "dcPc", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "setPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTrackToPc", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addTrackToPc"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPcOnTrackHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPcOnTrackHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcOnMessage", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcOnMessage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcRecievedAnswer"), _class.prototype)), _class;
+};
+
+
+
+/***/ }),
+
+/***/ "./src/store/consume_SimpleState.js":
+/*!******************************************!*\
+  !*** ./src/store/consume_SimpleState.js ***!
+  \******************************************/
+/*! exports provided: SimpleState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SimpleState", function() { return SimpleState; });
 /* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
 /* harmony import */ var recordrtc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! recordrtc */ "./node_modules/recordrtc/RecordRTC.js");
 /* harmony import */ var recordrtc__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(recordrtc__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _temp;
-
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
@@ -75627,305 +75899,160 @@ function _initializerWarningHelper(descriptor, context) { throw new Error('Decor
 
 
 
-let ConsumeStore = (_class = (_temp = class ConsumeStore {
-  constructor() {
-    _initializerDefineProperty(this, "id", _descriptor, this);
 
-    _initializerDefineProperty(this, "ws", _descriptor2, this);
+const SimpleState = Base => {
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _temp;
 
-    _initializerDefineProperty(this, "pc", _descriptor3, this);
+  return _class = (_temp = class _class extends Base {
+    constructor() {
+      super();
 
-    _initializerDefineProperty(this, "dcPc", _descriptor4, this);
+      _initializerDefineProperty(this, "id", _descriptor, this);
 
-    _initializerDefineProperty(this, "target", _descriptor5, this);
+      _initializerDefineProperty(this, "ws", _descriptor2, this);
 
-    _initializerDefineProperty(this, "stream", _descriptor6, this);
+      _initializerDefineProperty(this, "target", _descriptor3, this);
 
-    _initializerDefineProperty(this, "streamSelf", _descriptor7, this);
+      _initializerDefineProperty(this, "stream", _descriptor4, this);
 
-    _initializerDefineProperty(this, "micMode", _descriptor8, this);
+      _initializerDefineProperty(this, "streamSelf", _descriptor5, this);
 
-    _initializerDefineProperty(this, "recorder", _descriptor9, this);
+      _initializerDefineProperty(this, "micMode", _descriptor6, this);
 
-    _initializerDefineProperty(this, "rec", _descriptor10, this);
+      _initializerDefineProperty(this, "recorder", _descriptor7, this);
 
-    _initializerDefineProperty(this, "says", _descriptor11, this);
+      _initializerDefineProperty(this, "rec", _descriptor8, this);
 
-    _initializerDefineProperty(this, "objects", _descriptor12, this);
+      _initializerDefineProperty(this, "key", _descriptor9, this);
 
-    _initializerDefineProperty(this, "key", _descriptor13, this);
+      this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeWebSocket"])({
+        auth: 'consume@890',
+        password: '0749637637'
+      }, {});
+    }
 
-    this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeWebSocket"])({
-      auth: 'consume@890',
-      password: '0749637637'
-    }, {});
-  }
+    regenerateId() {
+      this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
+    }
 
-  regenerateId() {
-    this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
-  }
+    setWsOnMessageHandler(handler) {
+      this.ws.onmessage = handler;
+    }
 
-  setWsOnMessageHandler(handler) {
-    this.ws.onmessage = handler;
-  }
+    setTarget(tgt) {
+      this.target = tgt;
+    }
 
-  setPC(pc) {
-    this.pc = pc;
-  }
+    setStream(stream) {
+      this.stream = stream;
+    }
 
-  addTrackToPc() {
-    const senders = this.pc.conn.getSenders();
-    this.streamSelf.getTracks().forEach(track => {
-      if (senders.length > 0) {
-        senders[0].replaceTrack(track);
-      } else {
-        this.pc.addTrack(track, this.streamSelf);
-      }
-    });
-  }
-
-  setRecievedAnswer(sdp) {
-    const recievedAnswer = new RTCSessionDescription({
-      type: 'answer',
-      sdp
-    });
-
-    (async () => {
-      if (this.pc.conn.remoteDescription !== null && this.pc.conn.remoteDescription !== recievedAnswer) {
-        this.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeConsumePC"])(this.id, this.ws, true));
-        await this.pc.setLocalDesc((await this.pc.createOffer()));
-      }
-
-      await this.pc.setRemoteDesc(recievedAnswer);
-    })();
-  }
-
-  setPcOnTrackHandler(handler) {
-    this.pc.conn.ontrack = handler;
-  }
-
-  setDcPC(dcPc) {
-    this.dcPc = dcPc;
-  }
-
-  setDcOnMessage() {
-    this.dcPc.setOnMessageHandler(ev => {
-      console.log(ev);
-
-      if (typeof ev.data === 'string') {
-        const json = JSON.parse(ev.data);
-        this.addSay(json.id, json.message);
-      } else {
-        if (ev.data instanceof ArrayBuffer) {
-          const tary = new Uint16Array(ev.data);
-          const header = tary.slice(0, 100);
-          const id = header.slice(0, 36);
-          const type = header.slice(36);
-          const file = tary.slice(100);
-          const typeStr = Object(_util__WEBPACK_IMPORTED_MODULE_3__["tArray2String"])(type.slice(0, type.indexOf(0)));
-          const blob = new Blob([file], {
-            type: typeStr
-          });
-          console.log(blob);
-          this.addObj(Object(_util__WEBPACK_IMPORTED_MODULE_3__["tArray2String"])(id), blob);
-        }
-      }
-    });
-  }
-
-  setDcRecievedAnswer(sdp) {
-    const recievedAnswer = new RTCSessionDescription({
-      type: 'answer',
-      sdp
-    });
-    console.log(recievedAnswer);
-
-    (async () => {
-      if (this.dcPc.conn.remoteDescription !== null) {
-        if (this.dcPc.conn.remoteDescription !== recievedAnswer) {
-          this.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeConsumeDataChPC"])(this.id, this.ws, true));
-          this.setDcOnMessage();
-          await this.dcPc.setLocalDesc((await this.dcPc.createOffer()));
-          await this.dcPc.setRemoteDesc(recievedAnswer);
-        }
-      } else {
-        await this.dcPc.setRemoteDesc(recievedAnswer);
-      }
-    })();
-  }
-
-  setTarget(tgt) {
-    this.target = tgt;
-  }
-
-  setStream(stream) {
-    this.stream = stream;
-  }
-
-  setRecorder(stream) {
-    this.recorder = new recordrtc__WEBPACK_IMPORTED_MODULE_1__(stream, {
-      type: 'video',
-      mimeType: 'video/webm',
-      recorderType: recordrtc__WEBPACK_IMPORTED_MODULE_1__["WebAssemblyRecorder"],
-      timeSlice: 1000,
-      checkForInactiveTracks: true,
-      videoBitsPerSecond: 512000,
-      frameInterval: 90
-    });
-  }
-
-  unsetRecorder() {
-    this.recorder = null;
-  }
-
-  setStreamSelf(stream) {
-    if (this.streamSelf !== null) {
-      this.streamSelf.getTracks().forEach(track => {
-        track.enabled = !track.enabled;
-        track.stop();
-        this.streamSelf.removeTrack(track);
+    setRecorder(stream) {
+      this.recorder = new recordrtc__WEBPACK_IMPORTED_MODULE_1__(stream, {
+        type: 'video',
+        mimeType: 'video/webm',
+        recorderType: recordrtc__WEBPACK_IMPORTED_MODULE_1__["WebAssemblyRecorder"],
+        timeSlice: 1000,
+        checkForInactiveTracks: true,
+        videoBitsPerSecond: 512000,
+        frameInterval: 90
       });
     }
 
-    this.streamSelf = stream;
-  }
+    unsetRecorder() {
+      this.recorder = null;
+    }
 
-  setMicMode(mode) {
-    this.micMode = mode;
-  }
+    setStreamSelf(stream) {
+      if (this.streamSelf !== null) {
+        this.streamSelf.getTracks().forEach(track => {
+          track.enabled = !track.enabled;
+          track.stop();
+          this.streamSelf.removeTrack(track);
+        });
+      }
 
-  toggleRec() {
-    this.rec = !this.rec;
-  }
+      this.streamSelf = stream;
+    }
 
-  addSay(id, say) {
-    const time = Date.now();
-    this.says.push({
-      id,
-      time,
-      say
-    });
-  }
+    setMicMode(mode) {
+      this.micMode = mode;
+    }
 
-  addObj(id, obj) {
-    const time = Date.now();
-    const tgt = {
-      id,
-      time,
-      obj,
-      pdf: null
-    };
-    this.objects.push(tgt);
-  }
+    toggleRec() {
+      this.rec = !this.rec;
+    }
 
-  clearObjcts() {
-    this.objects = [];
-  }
+    setKey(key) {
+      this.key = key;
+    }
 
-  readPdf(object) {
-    const target = this.objects.find(e => e.time === object.time);
-    Object(_util__WEBPACK_IMPORTED_MODULE_3__["getDoc"])(object.obj).then(result => {
-      console.log(result);
-      target.pdf = result;
-    });
-  }
+  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
+    }
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "ws", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "target", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "stream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "streamSelf", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "micMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "recorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "rec", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "key", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTarget", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTarget"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "unsetRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "unsetRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStreamSelf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStreamSelf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleRec", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleRec"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setKey", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setKey"), _class.prototype)), _class;
+};
 
-  setKey(key) {
-    this.key = key;
-  }
-
-}, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
-  }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "ws", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "pc", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "dcPc", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "target", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "stream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "streamSelf", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "micMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return false;
-  }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "recorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "rec", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return false;
-  }
-}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, "says", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return [];
-  }
-}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, "objects", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return [];
-  }
-}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, "key", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTrackToPc", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addTrackToPc"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPcOnTrackHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPcOnTrackHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcPC", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcPC"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcOnMessage", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcOnMessage"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setDcRecievedAnswer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setDcRecievedAnswer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTarget", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTarget"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "unsetRecorder", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "unsetRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStreamSelf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStreamSelf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleRec", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleRec"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjcts", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjcts"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setKey", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setKey"), _class.prototype)), _class);
 
 
 /***/ }),
@@ -75942,11 +76069,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _root__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./root */ "./src/store/root.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RootStore", function() { return _root__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _produce__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./produce */ "./src/store/produce.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ProduceStore", function() { return _produce__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+/* harmony import */ var _ProduceStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProduceStore */ "./src/store/ProduceStore.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ProduceStore", function() { return _ProduceStore__WEBPACK_IMPORTED_MODULE_1__["default"]; });
 
-/* harmony import */ var _consume__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./consume */ "./src/store/consume.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsumeStore", function() { return _consume__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+/* harmony import */ var _ConsumeStore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ConsumeStore */ "./src/store/ConsumeStore.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsumeStore", function() { return _ConsumeStore__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
 
 
@@ -75955,22 +76082,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/store/produce.js":
-/*!******************************!*\
-  !*** ./src/store/produce.js ***!
-  \******************************/
-/*! exports provided: default */
+/***/ "./src/store/produce_ListState.js":
+/*!****************************************!*\
+  !*** ./src/store/produce_ListState.js ***!
+  \****************************************/
+/*! exports provided: ListState */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ProduceStore; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ListState", function() { return ListState; });
 /* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
-/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
-/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
-var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _descriptor11, _descriptor12, _descriptor13, _temp;
-
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
@@ -75980,287 +76103,366 @@ function _initializerWarningHelper(descriptor, context) { throw new Error('Decor
 
 
 
-let ProduceStore = (_class = (_temp = class ProduceStore {
-  constructor() {
-    _initializerDefineProperty(this, "id", _descriptor, this);
+const ListState = Base => {
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _temp;
 
-    _initializerDefineProperty(this, "ws", _descriptor2, this);
+  return _class = (_temp = class _class extends Base {
+    constructor(...args) {
+      super(...args);
 
-    _initializerDefineProperty(this, "pcs", _descriptor3, this);
+      _initializerDefineProperty(this, "consumers", _descriptor, this);
 
-    _initializerDefineProperty(this, "dcPCs", _descriptor4, this);
+      _initializerDefineProperty(this, "tgts", _descriptor2, this);
 
-    _initializerDefineProperty(this, "consumers", _descriptor5, this);
+      _initializerDefineProperty(this, "says", _descriptor3, this);
 
-    _initializerDefineProperty(this, "videoMode", _descriptor6, this);
+      _initializerDefineProperty(this, "objects", _descriptor4, this);
+    }
 
-    _initializerDefineProperty(this, "micMode", _descriptor7, this);
+    addConsumers(consumer) {
+      this.consumers.push(consumer);
+    }
 
-    _initializerDefineProperty(this, "currentStream", _descriptor8, this);
+    removeConsumer(idx) {
+      this.consumers.splice(idx, 1);
+    }
 
-    _initializerDefineProperty(this, "tgts", _descriptor9, this);
+    clearConsumers() {
+      this.consumers = [];
+    }
 
-    _initializerDefineProperty(this, "says", _descriptor10, this);
+    findConsumer(uuid) {
+      return this.consumers.find(e => e.uuid === uuid);
+    }
 
-    _initializerDefineProperty(this, "objects", _descriptor11, this);
+    consumerIndexOf(tgt) {
+      return this.consumers.indexOf(tgt);
+    }
 
-    _initializerDefineProperty(this, "setting", _descriptor12, this);
-
-    _initializerDefineProperty(this, "key", _descriptor13, this);
-
-    this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_1__["makeWebSocket"])({
-      auth: 'default@890',
-      password: '19861012'
-    }, {});
-  }
-
-  regenerateId() {
-    this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
-  }
-
-  setWsOnMessageHandler(handler) {
-    this.ws.onmessage = handler;
-  }
-
-  addPeerConnection(pc, destination) {
-    const pcObj = {
-      pc,
-      destination,
-      status: false
-    };
-    this.pcs.push(pcObj);
-  }
-
-  findPeerConnection(destination) {
-    return this.pcs.find(e => e.destination === destination);
-  }
-
-  pcIndexOf(tgt) {
-    return this.pcs.indexOf(tgt);
-  }
-
-  removePeerConnection(idx) {
-    this.pcs.splice(idx, 1);
-  }
-
-  setPeerConnectionStatus(idx, status) {
-    console.log(idx, status);
-    this.pcs[idx].status = status;
-    this.pcs = Object.assign([], this.pcs);
-  }
-
-  clearPeerConnections() {
-    this.pcs = [];
-  }
-
-  addDataChPeerConnection(dcpc) {
-    this.dcPCs.push(dcpc);
-  }
-
-  clearDataChPeerConnections() {
-    this.dcPCs = [];
-  }
-
-  setPCsTrack() {
-    this.pcs.map(e => e.pc).forEach(pc => {
-      const senders = pc.conn.getSenders();
-      this.currentStream.getTracks().forEach(track => {
-        if (senders.length > 0) {
-          senders[0].replaceTrack(track);
-        } else {
-          pc.addTrack(track, this.currentStream);
-        }
-      });
-    });
-  }
-
-  addConsumers(consumer) {
-    this.consumers.push(consumer);
-  }
-
-  removeConsumer(idx) {
-    this.consumers.splice(idx, 1);
-  }
-
-  clearConsumers() {
-    this.consumers = [];
-  }
-
-  findConsumer(uuid) {
-    return this.consumers.find(e => e.uuid === uuid);
-  }
-
-  consumerIndexOf(tgt) {
-    return this.consumers.indexOf(tgt);
-  }
-
-  setVideoMode(videoMode) {
-    this.videoMode = videoMode;
-  }
-
-  setMicMode(mode) {
-    this.micMode = mode;
-  }
-
-  setCurrentStream(stream) {
-    if (this.currentStream !== null) {
-      this.currentStream.getTracks().forEach(track => {
-        track.enabled = !track.enabled;
-        track.stop();
-        this.currentStream.removeTrack(track);
+    addTgt(tgt, destination) {
+      this.tgts.push({
+        tgt,
+        destination
       });
     }
 
-    this.currentStream = stream;
-  }
+    clearTgts() {
+      this.tgts = [];
+    }
 
-  addTgt(tgt, destination) {
-    this.tgts.push({
-      tgt,
-      destination
-    });
-  }
+    addSay(id, say) {
+      const time = Date.now();
+      this.says.push({
+        id,
+        time,
+        say
+      });
+    }
 
-  clearTgts() {
-    this.tgts = [];
-  }
+    clearSays() {
+      this.says = [];
+    }
 
-  addSay(id, say) {
-    const time = Date.now();
-    this.says.push({
-      id,
-      time,
-      say
-    });
-  }
+    addObj(id, obj) {
+      const time = Date.now();
+      const tgt = {
+        id,
+        time,
+        obj,
+        pdf: null
+      };
+      this.objects.push(tgt);
+    }
 
-  clearSays() {
-    this.says = [];
-  }
+    clearObjects() {
+      this.objects = [];
+    }
 
-  addObj(id, obj) {
-    const time = Date.now();
-    const tgt = {
-      id,
-      time,
-      obj,
-      pdf: null
-    };
-    this.objects.push(tgt);
-  }
+    readPdf(object) {
+      const target = this.objects.find(e => e.time === object.time);
+      Object(_util__WEBPACK_IMPORTED_MODULE_1__["getDoc"])(object.obj).then(result => {
+        console.log(result);
+        target.pdf = result;
+      });
+    }
 
-  clearObjects() {
-    this.objects = [];
-  }
+  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "consumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "tgts", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "says", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "objects", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removeConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removeConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "consumerIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "consumerIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTgt", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addTgt"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearTgts", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearTgts"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjects", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjects"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class;
+};
 
-  readPdf(object) {
-    const target = this.objects.find(e => e.time === object.time);
-    Object(_util__WEBPACK_IMPORTED_MODULE_1__["getDoc"])(object.obj).then(result => {
-      console.log(result);
-      target.pdf = result;
-    });
-  }
 
-  toggleSetting() {
-    this.setting = !this.setting;
-  }
 
-  setKey(key) {
-    this.key = key;
-  }
+/***/ }),
 
-}, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
-  }
-}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "ws", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "pcs", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return [];
-  }
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "dcPCs", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return [];
-  }
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "consumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return [];
-  }
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "videoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return 'camera';
-  }
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "micMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return false;
-  }
-}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "currentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return null;
-  }
-}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "tgts", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return [];
-  }
-}), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "says", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return [];
-  }
-}), _descriptor11 = _applyDecoratedDescriptor(_class.prototype, "objects", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return [];
-  }
-}), _descriptor12 = _applyDecoratedDescriptor(_class.prototype, "setting", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return false;
-  }
-}), _descriptor13 = _applyDecoratedDescriptor(_class.prototype, "key", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return 'default';
-  }
-}), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "pcIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "pcIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removePeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removePeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPeerConnectionStatus", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPeerConnectionStatus"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removeConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removeConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearConsumers", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearConsumers"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findConsumer", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findConsumer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "consumerIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "consumerIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTgt", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addTgt"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearTgts", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearTgts"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjects", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjects"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleSetting", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleSetting"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setKey", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setKey"), _class.prototype)), _class);
+/***/ "./src/store/produce_PeerConnState.js":
+/*!********************************************!*\
+  !*** ./src/store/produce_PeerConnState.js ***!
+  \********************************************/
+/*! exports provided: PeerConnState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PeerConnState", function() { return PeerConnState; });
+/* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
+function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
+
+function _initializerWarningHelper(descriptor, context) { throw new Error('Decorating class property failed. Please ensure that ' + 'proposal-class-properties is enabled and set to use loose mode. ' + 'To use proposal-class-properties in spec mode with decorators, wait for ' + 'the next major version of decorators in stage 2.'); }
+
+
+
+const PeerConnState = Base => {
+  var _class, _descriptor, _descriptor2, _temp;
+
+  return _class = (_temp = class _class extends Base {
+    constructor(...args) {
+      super(...args);
+
+      _initializerDefineProperty(this, "pcs", _descriptor, this);
+
+      _initializerDefineProperty(this, "dcPCs", _descriptor2, this);
+    }
+
+    addPeerConnection(pc, destination) {
+      const pcObj = {
+        pc,
+        destination,
+        status: false
+      };
+      this.pcs.push(pcObj);
+    }
+
+    findPeerConnection(destination) {
+      return this.pcs.find(e => e.destination === destination);
+    }
+
+    pcIndexOf(tgt) {
+      return this.pcs.indexOf(tgt);
+    }
+
+    removePeerConnection(idx) {
+      this.pcs.splice(idx, 1);
+    }
+
+    setPeerConnectionStatus(idx, status) {
+      this.pcs[idx].status = status;
+      this.pcs = Object.assign([], this.pcs);
+    }
+
+    setPCsTrack() {
+      this.pcs.map(e => e.pc).forEach(pc => {
+        const senders = pc.conn.getSenders();
+        this.currentStream.getTracks().forEach(track => {
+          if (senders.length > 0) {
+            senders[0].replaceTrack(track);
+          } else {
+            pc.addTrack(track, this.currentStream);
+          }
+        });
+      });
+    }
+
+    clearPeerConnections() {
+      this.pcs = [];
+    }
+
+    addDataChPeerConnection(dcpc) {
+      this.dcPCs.push(dcpc);
+    }
+
+    clearDataChPeerConnections() {
+      this.dcPCs = [];
+    }
+
+  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "pcs", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "dcPCs", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return [];
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "addPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "findPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "findPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "pcIndexOf", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "pcIndexOf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "removePeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "removePeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPeerConnectionStatus", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPeerConnectionStatus"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setPCsTrack", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setPCsTrack"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearPeerConnections"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addDataChPeerConnection", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addDataChPeerConnection"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearDataChPeerConnections", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearDataChPeerConnections"), _class.prototype)), _class;
+};
+
+
+
+/***/ }),
+
+/***/ "./src/store/produce_SimpleState.js":
+/*!******************************************!*\
+  !*** ./src/store/produce_SimpleState.js ***!
+  \******************************************/
+/*! exports provided: SimpleState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SimpleState", function() { return SimpleState; });
+/* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
+function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
+
+function _initializerWarningHelper(descriptor, context) { throw new Error('Decorating class property failed. Please ensure that ' + 'proposal-class-properties is enabled and set to use loose mode. ' + 'To use proposal-class-properties in spec mode with decorators, wait for ' + 'the next major version of decorators in stage 2.'); }
+
+
+
+
+
+const SimpleState = Base => {
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _temp;
+
+  return _class = (_temp = class _class extends Base {
+    constructor() {
+      super();
+
+      _initializerDefineProperty(this, "id", _descriptor, this);
+
+      _initializerDefineProperty(this, "ws", _descriptor2, this);
+
+      _initializerDefineProperty(this, "videoMode", _descriptor3, this);
+
+      _initializerDefineProperty(this, "micMode", _descriptor4, this);
+
+      _initializerDefineProperty(this, "currentStream", _descriptor5, this);
+
+      _initializerDefineProperty(this, "setting", _descriptor6, this);
+
+      _initializerDefineProperty(this, "key", _descriptor7, this);
+
+      this.ws = Object(_util__WEBPACK_IMPORTED_MODULE_1__["makeWebSocket"])({
+        auth: 'default@890',
+        password: '19861012'
+      }, {});
+    }
+
+    regenerateId() {
+      this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
+    }
+
+    setWsOnMessageHandler(handler) {
+      this.ws.onmessage = handler;
+    }
+
+    setVideoMode(videoMode) {
+      this.videoMode = videoMode;
+    }
+
+    setMicMode(mode) {
+      this.micMode = mode;
+    }
+
+    setCurrentStream(stream) {
+      if (this.currentStream !== null) {
+        this.currentStream.getTracks().forEach(track => {
+          track.enabled = !track.enabled;
+          track.stop();
+          this.currentStream.removeTrack(track);
+        });
+      }
+
+      this.currentStream = stream;
+    }
+
+    toggleSetting() {
+      this.setting = !this.setting;
+    }
+
+    setKey(key) {
+      this.key = key;
+    }
+
+  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "id", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
+    }
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "ws", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "videoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return 'camera';
+    }
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "micMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "currentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "setting", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return false;
+    }
+  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "key", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return 'default';
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setVideoMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setVideoMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setCurrentStream", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setCurrentStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleSetting", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleSetting"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setKey", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setKey"), _class.prototype)), _class;
+};
+
 
 
 /***/ }),
@@ -76276,8 +76478,7 @@ let ProduceStore = (_class = (_temp = class ProduceStore {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RootStore; });
 /* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
-var _class, _descriptor, _temp;
-
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
@@ -76285,24 +76486,47 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
 function _initializerWarningHelper(descriptor, context) { throw new Error('Decorating class property failed. Please ensure that ' + 'proposal-class-properties is enabled and set to use loose mode. ' + 'To use proposal-class-properties in spec mode with decorators, wait for ' + 'the next major version of decorators in stage 2.'); }
 
 
-let RootStore = (_class = (_temp = class RootStore {
-  constructor() {
-    _initializerDefineProperty(this, "mode", _descriptor, this);
-  }
 
-  setMode(mode) {
-    this.mode = mode;
-  }
 
-}, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "mode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
-  configurable: true,
-  enumerable: true,
-  writable: true,
-  initializer: function () {
-    return 'none';
-  }
-}), _applyDecoratedDescriptor(_class.prototype, "setMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMode"), _class.prototype)), _class);
+const ModeState = Base => {
+  var _class, _descriptor, _temp;
 
+  return _class = (_temp = class _class extends Base {
+    constructor(...args) {
+      super(...args);
+
+      _initializerDefineProperty(this, "mode", _descriptor, this);
+    }
+
+    setMode(mode) {
+      this.mode = mode;
+    }
+
+  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "mode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return 'none';
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "setMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMode"), _class.prototype)), _class;
+};
+
+class RootStore extends ModeState(_util__WEBPACK_IMPORTED_MODULE_1__["Bowl"]) {}
+
+/***/ }),
+
+/***/ "./src/util/Bowl.js":
+/*!**************************!*\
+  !*** ./src/util/Bowl.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Bowl; });
+class Bowl {}
 
 /***/ }),
 
@@ -76571,7 +76795,7 @@ const iceServers = [{
 /*!***************************!*\
   !*** ./src/util/index.js ***!
   \***************************/
-/*! exports provided: getDoc, getThumb, makeConsumeDataChPC, makeConsumePC, makeProduceDataChPC, makeProducePC, makeWebSocket, string2TypedArray, tArray2String */
+/*! exports provided: getDoc, getThumb, makeConsumeDataChPC, makeConsumePC, makeProduceDataChPC, makeProducePC, makeWebSocket, string2TypedArray, tArray2String, Bowl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -76602,6 +76826,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _tArray2String__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./tArray2String */ "./src/util/tArray2String.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "tArray2String", function() { return _tArray2String__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+
+/* harmony import */ var _Bowl__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Bowl */ "./src/util/Bowl.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Bowl", function() { return _Bowl__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+
 
 
 

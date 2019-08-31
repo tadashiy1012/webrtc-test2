@@ -7,6 +7,7 @@ import makeProducePC from './makeProducePC';
 import makeWebSocket from './makeWebsocket';
 import string2TypedArray from './string2TypedArray';
 import tArray2String from './tArray2String';
+import Bowl from './Bowl';
 
 export {
     getDoc,
@@ -17,5 +18,6 @@ export {
     makeProducePC,
     makeWebSocket,
     string2TypedArray,
-    tArray2String
+    tArray2String,
+    Bowl
 }
