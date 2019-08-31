@@ -57,6 +57,7 @@ export default class Consume extends React.Component {
         this.props.consume.setStream(null);
         this.props.consume.setStreamSelf(null);
         this.props.consume.unsetRecorder();
+        this.props.consume.clearSays();
         this.props.consume.clearObjects();
         this.props.consume.regenerateId();
     }

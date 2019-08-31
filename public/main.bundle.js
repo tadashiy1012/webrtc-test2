@@ -74526,6 +74526,7 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
     this.props.consume.setStream(null);
     this.props.consume.setStreamSelf(null);
     this.props.consume.unsetRecorder();
+    this.props.consume.clearSays();
     this.props.consume.clearObjects();
     this.props.consume.regenerateId();
   }
