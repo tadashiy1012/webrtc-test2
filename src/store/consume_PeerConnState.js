@@ -14,9 +14,22 @@ const PeerConnState = Base => class extends Base {
     @action
     addTrackToPc() {
         const senders = this.pc.conn.getSenders();
+        console.log(senders, this.streamSelf);
         this.streamSelf.getTracks().forEach(track => {
-            if (senders.length > 0) {
-                senders[0].replaceTrack(track);
+            if (senders.length > 0 && track.kind === 'video') {
+                const videoSender = senders.find(e => e.track.kind === 'video');
+                if (videoSender) {
+                    videoSender.replaceTrack(track);
+                } else {
+                    this.pc.addTrack(track, this.streamSelf);
+                }
+            } else if (senders.length > 0 && track.kind === 'audio') {
+                const audioSender = senders.find(e => e.track.kind === 'audio');
+                if (audioSender) {
+                    audioSender.replaceTrack(track);
+                } else {
+                    this.pc.addTrack(track, this.streamSelf);
+                }
             } else {
                 this.pc.addTrack(track, this.streamSelf);
             }

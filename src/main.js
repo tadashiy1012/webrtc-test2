@@ -11,9 +11,11 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.bundle.js';
 
+const rootStore = new RootStore();
+
 const App = () => (
     <Provider 
-        root={new RootStore()} 
+        root={rootStore} 
         produce={new ProduceStore()} 
         consume={new ConsumeStore()}
     >
@@ -45,3 +47,7 @@ const App = () => (
 );
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+window.onunload = () => {
+    rootStore.audioCtx.close();
+};

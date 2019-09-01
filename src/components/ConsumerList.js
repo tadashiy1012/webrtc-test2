@@ -44,6 +44,8 @@ export default class ConsumerList extends React.Component {
             this.props.produce.ws, dest
         );
         pc.conn.ontrack = (ev) => {
+            console.log(ev);
+            console.log(ev.streams[0].getTracks());
             const tgt = this.props.produce.tgts.find(e => e.destination === dest);
             tgt.tgt.srcObject = ev.streams[0];
         };

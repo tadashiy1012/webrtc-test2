@@ -11,7 +11,7 @@ const SimpleState = Base => class extends Base {
     @observable target = null;
     @observable stream = null;
     @observable streamSelf = null;
-    @observable micMode = true;
+    @observable micMode = false;
     @observable recorder = null;
     @observable rec = false;
     @observable key = null;

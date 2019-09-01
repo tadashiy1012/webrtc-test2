@@ -7,7 +7,7 @@ const SimpleState = Base => class extends Base {
     @observable id = uuid();
     @observable ws = null;
     @observable videoMode = 'camera';
-    @observable micMode = true;
+    @observable micMode = false;
     @observable currentStream = null;
     @observable setting = false;
     @observable key = 'default';

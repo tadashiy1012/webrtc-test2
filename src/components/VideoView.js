@@ -1,15 +1,28 @@
 /** @jsx jsx */
 import React, {Fragment} from 'react';
 import {observer, inject} from 'mobx-react';
-import {} from '../util';
+import {makeFakeStream} from '../util';
 import {jsx, css} from '@emotion/core';
 
-@inject('produce')
+@inject('produce', 'root')
 @observer
 export default class VideoView extends React.Component {
     constructor(props) {
         super(props);
+        this.callCamera = false;
         this.videoRef = React.createRef();
+    }
+    onFake(video) {
+        this.props.produce.setCurrentStream(null);
+        const newStream = makeFakeStream(this.props.root.audioCtx);
+        this.props.produce.setCurrentStream(newStream);
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: 'user'
+            }, audio: this.props.produce.micMode
+        }).then((stream) => {
+            video.srcObject = stream;
+        });
     }
     onCamera(video) {
         (async () => {
@@ -57,6 +70,9 @@ export default class VideoView extends React.Component {
         } else if (value === 'display') {
             this.onDisplay(this.videoRef.current);
         }
+        if (this.props.produce.pcs.length > 0) {
+            this.callCamera = true;
+        }
     }
     onMicModeChange() {
         this.props.produce.setMicMode(!this.props.produce.micMode);
@@ -68,8 +84,21 @@ export default class VideoView extends React.Component {
         } else if (videoMode === 'display') {
             this.onDisplay(this.videoRef.current);
         }
+        if (this.props.produce.pcs.length > 0) {
+            this.callCamera = true;
+        }
     }
     render() {
+        if (this.props.produce.pcs.length > 0 && !this.callCamera) {
+            const videoMode = this.props.produce.videoMode;
+            if (videoMode === 'camera') {
+                this.onCamera(this.videoRef.current);
+            } else if (videoMode === 'camera2') {
+                this.onCamera2(this.videoRef.current);
+            } else if (videoMode === 'display') {
+                this.onDisplay(this.videoRef.current);
+            }
+        }
         return <Fragment>
             <div>
                 <video width="100%" height="300" autoPlay muted ref={this.videoRef}></video>
@@ -103,6 +132,6 @@ export default class VideoView extends React.Component {
         </Fragment> 
     }
     componentDidMount() {
-        this.onCamera(this.videoRef.current);
+        this.onFake(this.videoRef.current);
     }
 }
