@@ -46,6 +46,7 @@ export default class ConsumeChatView extends React.Component {
     render() {
         const ary = [...this.props.consume.says, ...this.props.consume.objects].sort((a, b) => a.time - b.time);
         const children = ary.map((e, idx) => {
+            console.log(e);
             if (e.say) {
                 return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
             } else {

@@ -61,20 +61,7 @@ export default class MyDataChPeerConnection {
         this.dc.send(JSON.stringify(json));
     }
     sendBlob(blob) {
-        const fr = new FileReader();
-        fr.onload = (ev) => {
-            console.log(ev);
-            const file = new Uint16Array(fr.result);
-            const id = string2TypedArray(this.id);
-            const type = string2TypedArray(blob.type);
-            const header = new Uint16Array(100);
-            header.set(id);
-            header.set(type, id.length);
-            let tary = new Uint16Array(header.length + file.length);
-            tary.set(header);
-            tary.set(file, header.length);
-            this.dc.send(tary);
-        };
-        fr.readAsArrayBuffer(blob);
+        console.log(blob);
+        this.dc.send(blob);
     }
 }

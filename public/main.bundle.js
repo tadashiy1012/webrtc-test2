@@ -77644,6 +77644,8 @@ let ConsumeChatView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["i
   render() {
     const ary = [...this.props.consume.says, ...this.props.consume.objects].sort((a, b) => a.time - b.time);
     const children = ary.map((e, idx) => {
+      console.log(e);
+
       if (e.say) {
         return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
           key: idx
@@ -77893,11 +77895,18 @@ let ConsumerList = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return FileSelector; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
-/* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
+/* harmony import */ var core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array-buffer.slice */ "./node_modules/core-js/modules/es.array-buffer.slice.js");
+/* harmony import */ var core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es_typed_array_uint16_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.typed-array.uint16-array */ "./node_modules/core-js/modules/es.typed-array.uint16-array.js");
+/* harmony import */ var core_js_modules_es_typed_array_uint16_array__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_typed_array_uint16_array__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
+/* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
+
+
+
 var _dec, _class;
 
 /** @jsx jsx */
@@ -77905,31 +77914,47 @@ var _dec, _class;
 
 
 
-let FileSelector = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class FileSelector extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+let FileSelector = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["observer"])(_class = class FileSelector extends react__WEBPACK_IMPORTED_MODULE_2___default.a.Component {
   constructor(props) {
     super(props);
-    this.fileRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
+    this.fileRef = react__WEBPACK_IMPORTED_MODULE_2___default.a.createRef();
   }
 
   handleSendClick() {
     console.log(this.fileRef.current.files);
     this.props.produce.addObj('[me]', this.fileRef.current.files[0]);
-    this.props.produce.dcPCs.forEach(dcpc => {
-      dcpc.sendBlob(this.fileRef.current.files[0]);
-    });
+    const fr = new FileReader();
+
+    fr.onload = () => {
+      console.log(fr.result);
+      const file = new Uint16Array(fr.result);
+      const type = Object(_util__WEBPACK_IMPORTED_MODULE_4__["string2TypedArray"])(this.fileRef.current.files[0].type);
+      this.props.produce.dcPCs.forEach(dcpc => {
+        const id = Object(_util__WEBPACK_IMPORTED_MODULE_4__["string2TypedArray"])(dcpc.id);
+        const header = new Uint16Array(100);
+        header.set(id);
+        header.set(type, id.length);
+        let tary = new Uint16Array(header.length + file.length);
+        tary.set(header);
+        tary.set(file, header.length);
+        dcpc.sendBlob(tary);
+      });
+    };
+
+    fr.readAsArrayBuffer(this.fileRef.current.files[0]);
   }
 
   render() {
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_5__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_5__["jsx"])("div", {
       css: {
         padding: '12px 0px;'
       }
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_5__["jsx"])("input", {
       type: "file",
       ref: this.fileRef,
       accept: ".jpg,.png,.pdf",
       className: "form-control-file"
-    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
+    })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_5__["jsx"])("button", {
       onClick: () => {
         this.handleSendClick();
       },
@@ -79721,16 +79746,10 @@ class Bowl {}
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MyDataChPeerConnection; });
-/* harmony import */ var core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array-buffer.slice */ "./node_modules/core-js/modules/es.array-buffer.slice.js");
-/* harmony import */ var core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es_typed_array_uint16_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.typed-array.uint16-array */ "./node_modules/core-js/modules/es.typed-array.uint16-array.js");
-/* harmony import */ var core_js_modules_es_typed_array_uint16_array__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_typed_array_uint16_array__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
-/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _iceServers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./iceServers */ "./src/util/iceServers.js");
-/* harmony import */ var _string2TypedArray__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./string2TypedArray */ "./src/util/string2TypedArray.js");
-
-
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _iceServers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iceServers */ "./src/util/iceServers.js");
+/* harmony import */ var _string2TypedArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./string2TypedArray */ "./src/util/string2TypedArray.js");
 
 
 
@@ -79739,10 +79758,10 @@ class MyDataChPeerConnection {
     onNegotiationneeded = ev => console.log(ev),
     onIcecandidate = ev => console.log(ev)
   }) {
-    this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
+    this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_0__();
     this.ws = webSocket;
     this.conn = new RTCPeerConnection({
-      iceServers: _iceServers__WEBPACK_IMPORTED_MODULE_3__["iceServers"]
+      iceServers: _iceServers__WEBPACK_IMPORTED_MODULE_1__["iceServers"]
     });
     this.conn.onnegotiationneeded = onNegotiationneeded;
     this.conn.onicecandidate = onIcecandidate;
@@ -79815,23 +79834,8 @@ class MyDataChPeerConnection {
   }
 
   sendBlob(blob) {
-    const fr = new FileReader();
-
-    fr.onload = ev => {
-      console.log(ev);
-      const file = new Uint16Array(fr.result);
-      const id = Object(_string2TypedArray__WEBPACK_IMPORTED_MODULE_4__["default"])(this.id);
-      const type = Object(_string2TypedArray__WEBPACK_IMPORTED_MODULE_4__["default"])(blob.type);
-      const header = new Uint16Array(100);
-      header.set(id);
-      header.set(type, id.length);
-      let tary = new Uint16Array(header.length + file.length);
-      tary.set(header);
-      tary.set(file, header.length);
-      this.dc.send(tary);
-    };
-
-    fr.readAsArrayBuffer(blob);
+    console.log(blob);
+    this.dc.send(blob);
   }
 
 }
