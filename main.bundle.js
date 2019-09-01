@@ -77777,6 +77777,8 @@ let ConsumerList = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
     const pc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProducePC"])(this.props.produce.ws, dest);
 
     pc.conn.ontrack = ev => {
+      console.log(ev);
+      console.log(ev.streams[0].getTracks());
       const tgt = this.props.produce.tgts.find(e => e.destination === dest);
       tgt.tgt.srcObject = ev.streams[0];
     };
@@ -78327,10 +78329,17 @@ var _dec, _class;
 
 
 
-let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('consume'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class SelfVideoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('consume', 'root'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class SelfVideoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.selfVideoRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
+  }
+
+  onFake() {
+    this.props.consume.setStreamSelf(null);
+    const newStream = Object(_util__WEBPACK_IMPORTED_MODULE_3__["makeFakeStream"])(this.props.root.audioCtx);
+    this.props.consume.setStreamSelf(newStream);
+    this.props.consume.addTrackToPc();
   }
 
   onSelfCamera() {
@@ -78379,6 +78388,7 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
   }
 
   componentDidMount() {
+    this.onFake();
     this.onSelfCamera();
   }
 
@@ -78409,10 +78419,25 @@ var _dec, _class;
 
 
 
-let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class VideoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce', 'root'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class VideoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
+    this.callCamera = false;
     this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
+  }
+
+  onFake(video) {
+    this.props.produce.setCurrentStream(null);
+    const newStream = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeFakeStream"])(this.props.root.audioCtx);
+    this.props.produce.setCurrentStream(newStream);
+    navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: 'user'
+      },
+      audio: this.props.produce.micMode
+    }).then(stream => {
+      video.srcObject = stream;
+    });
   }
 
   onCamera(video) {
@@ -78467,6 +78492,10 @@ let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"]
     } else if (value === 'display') {
       this.onDisplay(this.videoRef.current);
     }
+
+    if (this.props.produce.pcs.length > 0) {
+      this.callCamera = true;
+    }
   }
 
   onMicModeChange() {
@@ -78480,9 +78509,25 @@ let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"]
     } else if (videoMode === 'display') {
       this.onDisplay(this.videoRef.current);
     }
+
+    if (this.props.produce.pcs.length > 0) {
+      this.callCamera = true;
+    }
   }
 
   render() {
+    if (this.props.produce.pcs.length > 0 && !this.callCamera) {
+      const videoMode = this.props.produce.videoMode;
+
+      if (videoMode === 'camera') {
+        this.onCamera(this.videoRef.current);
+      } else if (videoMode === 'camera2') {
+        this.onCamera2(this.videoRef.current);
+      } else if (videoMode === 'display') {
+        this.onDisplay(this.videoRef.current);
+      }
+    }
+
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("video", {
       width: "100%",
       height: "300",
@@ -78522,7 +78567,7 @@ let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"]
   }
 
   componentDidMount() {
-    this.onCamera(this.videoRef.current);
+    this.onFake(this.videoRef.current);
   }
 
 }) || _class) || _class);
@@ -78584,9 +78629,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 pdfjs_dist__WEBPACK_IMPORTED_MODULE_7___default.a.GlobalWorkerOptions.workerSrc = 'pdf.worker.bundle.js';
+const rootStore = new _store__WEBPACK_IMPORTED_MODULE_5__["RootStore"]();
 
 const App = () => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(mobx_react__WEBPACK_IMPORTED_MODULE_3__["Provider"], {
-  root: new _store__WEBPACK_IMPORTED_MODULE_5__["RootStore"](),
+  root: rootStore,
   produce: new _store__WEBPACK_IMPORTED_MODULE_5__["ProduceStore"](),
   consume: new _store__WEBPACK_IMPORTED_MODULE_5__["ConsumeStore"]()
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["HashRouter"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
@@ -78632,6 +78678,10 @@ const App = () => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(mobx
 }))))));
 
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(App, null), document.getElementById('app'));
+
+window.onunload = () => {
+  rootStore.audioCtx.close();
+};
 
 /***/ }),
 
@@ -78824,9 +78874,24 @@ const PeerConnState = Base => {
 
     addTrackToPc() {
       const senders = this.pc.conn.getSenders();
+      console.log(senders, this.streamSelf);
       this.streamSelf.getTracks().forEach(track => {
-        if (senders.length > 0) {
-          senders[0].replaceTrack(track);
+        if (senders.length > 0 && track.kind === 'video') {
+          const videoSender = senders.find(e => e.track.kind === 'video');
+
+          if (videoSender) {
+            videoSender.replaceTrack(track);
+          } else {
+            this.pc.addTrack(track, this.streamSelf);
+          }
+        } else if (senders.length > 0 && track.kind === 'audio') {
+          const audioSender = senders.find(e => e.track.kind === 'audio');
+
+          if (audioSender) {
+            audioSender.replaceTrack(track);
+          } else {
+            this.pc.addTrack(track, this.streamSelf);
+          }
         } else {
           this.pc.addTrack(track, this.streamSelf);
         }
@@ -79092,7 +79157,7 @@ const SimpleState = Base => {
     enumerable: true,
     writable: true,
     initializer: function () {
-      return true;
+      return false;
     }
   }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "recorder", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
     configurable: true,
@@ -79354,36 +79419,31 @@ const PeerConnState = Base => {
     setPCsTrack() {
       this.pcs.map(e => e.pc).forEach(pc => {
         const senders = pc.conn.getSenders();
-        console.log(senders, this.currentStream);
+        console.log(senders);
         this.currentStream.getTracks().forEach(track => {
           console.log(track);
 
-          if (senders.length > 0) {
-            if (track.kind === 'video') {
-              const videoSender = senders.find(e => e.track.kind === 'video');
-              console.log(videoSender);
+          if (senders.length > 0 && track.kind === 'video') {
+            const videoSender = senders.find(e => e.track.kind === 'video');
 
-              if (videoSender) {
-                videoSender.replaceTrack(track);
-              } else {
-                pc.addTrack(track, this.currentStream);
-              }
-            } else if (track.kind === 'audio') {
-              const audioSender = senders.find(e => e.track.kind === 'audio');
-              console.log(audioSender);
+            if (videoSender) {
+              videoSender.replaceTrack(track);
+            } else {
+              pc.addTrack(track, this.currentStream);
+            }
+          } else if (senders.length > 0 && track.kind === 'audio') {
+            const audioSender = senders.find(e => e.track.kind === 'audio');
 
-              if (audioSender) {
-                audioSender.replaceTrack(track);
-              } else {
-                pc.addTrack(track, this.currentStream);
-              }
+            if (audioSender) {
+              audioSender.replaceTrack(track);
+            } else {
+              pc.addTrack(track, this.currentStream);
             }
           } else {
             pc.addTrack(track, this.currentStream);
           }
         });
         console.log(pc.conn.getSenders());
-        console.log(pc.conn.localDescription);
       });
     }
 
@@ -79547,7 +79607,7 @@ const SimpleState = Base => {
     enumerable: true,
     writable: true,
     initializer: function () {
-      return true;
+      return false;
     }
   }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "currentStream", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
     configurable: true,
@@ -79587,12 +79647,8 @@ const SimpleState = Base => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RootStore; });
-/* harmony import */ var core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator */ "./node_modules/core-js/modules/web.dom-collections.iterator.js");
-/* harmony import */ var core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
-
-
+/* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
 function _initializerDefineProperty(target, property, descriptor, context) { if (!descriptor) return; Object.defineProperty(target, property, { enumerable: descriptor.enumerable, configurable: descriptor.configurable, writable: descriptor.writable, value: descriptor.initializer ? descriptor.initializer.call(context) : void 0 }); }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
@@ -79603,30 +79659,41 @@ function _initializerWarningHelper(descriptor, context) { throw new Error('Decor
 
 
 const ModeState = Base => {
-  var _class, _descriptor, _temp;
+  var _class, _descriptor, _descriptor2, _temp;
 
   return _class = (_temp = class _class extends Base {
-    constructor(...args) {
-      super(...args);
+    constructor() {
+      super();
 
       _initializerDefineProperty(this, "mode", _descriptor, this);
+
+      _initializerDefineProperty(this, "audioCtx", _descriptor2, this);
+
+      this.audioCtx = new AudioContext();
     }
 
     setMode(mode) {
       this.mode = mode;
     }
 
-  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "mode", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
+  }, _temp), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "mode", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return 'none';
     }
-  }), _applyDecoratedDescriptor(_class.prototype, "setMode", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMode"), _class.prototype)), _class;
+  }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "audioCtx", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _applyDecoratedDescriptor(_class.prototype, "setMode", [mobx__WEBPACK_IMPORTED_MODULE_0__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMode"), _class.prototype)), _class;
 };
 
-class RootStore extends ModeState(_util__WEBPACK_IMPORTED_MODULE_2__["Bowl"]) {}
+class RootStore extends ModeState(_util__WEBPACK_IMPORTED_MODULE_1__["Bowl"]) {}
 
 /***/ }),
 
@@ -79921,7 +79988,7 @@ const iceServers = [{
 /*!***************************!*\
   !*** ./src/util/index.js ***!
   \***************************/
-/*! exports provided: getDoc, getThumb, makeConsumeDataChPC, makeConsumePC, makeProduceDataChPC, makeProducePC, makeWebSocket, string2TypedArray, tArray2String, Bowl */
+/*! exports provided: getDoc, getThumb, makeConsumeDataChPC, makeConsumePC, makeProduceDataChPC, makeProducePC, makeWebSocket, makeFakeStream, string2TypedArray, tArray2String, Bowl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -79947,14 +80014,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _makeWebsocket__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./makeWebsocket */ "./src/util/makeWebsocket.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "makeWebSocket", function() { return _makeWebsocket__WEBPACK_IMPORTED_MODULE_6__["default"]; });
 
-/* harmony import */ var _string2TypedArray__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./string2TypedArray */ "./src/util/string2TypedArray.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "string2TypedArray", function() { return _string2TypedArray__WEBPACK_IMPORTED_MODULE_7__["default"]; });
+/* harmony import */ var _makeFakeStream__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./makeFakeStream */ "./src/util/makeFakeStream.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "makeFakeStream", function() { return _makeFakeStream__WEBPACK_IMPORTED_MODULE_7__["default"]; });
 
-/* harmony import */ var _tArray2String__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./tArray2String */ "./src/util/tArray2String.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "tArray2String", function() { return _tArray2String__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+/* harmony import */ var _string2TypedArray__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./string2TypedArray */ "./src/util/string2TypedArray.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "string2TypedArray", function() { return _string2TypedArray__WEBPACK_IMPORTED_MODULE_8__["default"]; });
 
-/* harmony import */ var _Bowl__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Bowl */ "./src/util/Bowl.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Bowl", function() { return _Bowl__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+/* harmony import */ var _tArray2String__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./tArray2String */ "./src/util/tArray2String.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "tArray2String", function() { return _tArray2String__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+
+/* harmony import */ var _Bowl__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Bowl */ "./src/util/Bowl.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Bowl", function() { return _Bowl__WEBPACK_IMPORTED_MODULE_10__["default"]; });
+
 
 
 
@@ -80096,6 +80167,32 @@ function makeConsumePC(id, ws, key, remake = false) {
 
 
   return _pc;
+}
+
+/***/ }),
+
+/***/ "./src/util/makeFakeStream.js":
+/*!************************************!*\
+  !*** ./src/util/makeFakeStream.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return makeFakeStream; });
+/* harmony import */ var core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator */ "./node_modules/core-js/modules/web.dom-collections.iterator.js");
+/* harmony import */ var core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_0__);
+
+function makeFakeStream(audioCtx) {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1;
+  canvas.getContext('2d');
+  const vStream = canvas.captureStream();
+  const aStream = audioCtx.createMediaStreamDestination().stream;
+  const [vTrack] = vStream.getVideoTracks();
+  const [aTrack] = aStream.getAudioTracks();
+  return new MediaStream([vTrack, aTrack]);
 }
 
 /***/ }),
