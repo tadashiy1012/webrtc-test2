@@ -68,15 +68,14 @@ export default class Consume extends React.Component {
         return <Fragment>
             <div css={{marginTop:'12px'}}>
                 <div className='row no-gutters'>
-                    <div className='col-md-9 align-self-center'>
+                    <div className='col-md-9'>
                         <RemoteVideoView />
                     </div>
-                    <div className='col-md-3 align-self-center'>
+                    <div className='col-md-3'>
                         <SelfVideoView />
                     </div>
                 </div>
             </div>
-            <ConsumeChatView />
         </Fragment>
     }
 }

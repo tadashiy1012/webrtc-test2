@@ -65014,7 +65014,7 @@ if (false) {} else {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext */
+/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext, BrowserRouter, HashRouter, Link, NavLink */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77559,10 +77559,10 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])(
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])("div", {
       className: "row no-gutters"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])("div", {
-      className: "col-md-9 align-self-center"
+      className: "col-md-9"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(_RemoteVideoView__WEBPACK_IMPORTED_MODULE_7__["default"], null)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])("div", {
-      className: "col-md-3 align-self-center"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(_SelfVideoView__WEBPACK_IMPORTED_MODULE_6__["default"], null)))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(_ConsumeChatView__WEBPACK_IMPORTED_MODULE_5__["default"], null));
+      className: "col-md-3"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(_SelfVideoView__WEBPACK_IMPORTED_MODULE_6__["default"], null)))));
   }
 
 }) || _class) || _class);
@@ -78311,9 +78311,9 @@ let RemoteVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["in
       controls: true,
       className: "mx-auto d-block",
       css: {
-        minWidth: '400px',
         width: '90%',
-        minHeight: '300px'
+        minHeight: '220px',
+        backgroundColor: 'black'
       }
     }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       css: {
@@ -78383,7 +78383,11 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
   }
 
   render() {
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("video", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
+      className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
+      className: "col-md-12 col-5"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("video", {
       ref: this.selfVideoRef,
       autoPlay: true,
       muted: true,
@@ -78391,8 +78395,8 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
       playsInline: true,
       className: "mx-auto d-block",
       css: {
-        width: '90%',
-        height: '200px',
+        width: '80%',
+        minHeight: '140px',
         backgroundColor: 'black'
       }
     }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
@@ -78409,7 +78413,13 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
         this.props.consume.setMicMode(!this.props.consume.micMode);
         this.onSelfCamera();
       }
-    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, "mic"))));
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, "mic")))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
+      className: "col-md-12 col-7"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("h4", {
+      css: {
+        fontSize: '18px'
+      }
+    }, "chat log"))));
   }
 
   componentDidMount() {

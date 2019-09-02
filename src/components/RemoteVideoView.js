@@ -32,7 +32,8 @@ export default class RemoteVideoView extends React.Component {
                 if (video) {
                     this.props.consume.setTarget(video);
                 }
-            }} autoPlay webkit-playsinline='true' playsInline controls className='mx-auto d-block' css={{minWidth:'400px', width:'90%', minHeight:'300px'}} />
+            }} autoPlay webkit-playsinline='true' playsInline controls 
+                className='mx-auto d-block' css={{width:'90%', minHeight:'220px', backgroundColor:'black'}} />
             <div css={{margin:'8px 0px'}}>
                 <button onClick={() => {this.onClickRec()}} className='mx-auto d-block btn btn-outline-primary'>
                     <span>{icon}</span>
