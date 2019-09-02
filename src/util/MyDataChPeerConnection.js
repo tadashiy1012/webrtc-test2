@@ -49,7 +49,7 @@ export default class MyDataChPeerConnection {
                 self.dc.onmessage = handler;
                 clearInterval(id);
             }
-            if (count >= 30) { 
+            if (count >= 60) { 
                 clearInterval(id);
                 console.warn('time out');
             }
