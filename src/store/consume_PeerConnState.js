@@ -93,9 +93,8 @@ const PeerConnState = Base => class extends Base {
             if (this.dcPc.conn.remoteDescription !== null) {
                 if (this.dcPc.conn.remoteDescription !== recievedAnswer) {
                     this.setDcPC(makeConsumeDataChPC(this.id, this.ws, true));
-                    this.setDcOnMessage();
                     await this.dcPc.setLocalDesc(await this.dcPc.createOffer());
-                    await this.dcPc.setRemoteDesc(recievedAnswer);
+                    this.setDcOnMessage();
                 }
             } else {
                 await this.dcPc.setRemoteDesc(recievedAnswer);

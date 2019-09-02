@@ -7,6 +7,7 @@ import {jsx, css} from '@emotion/core';
 import {RootStore, ProduceStore, ConsumeStore} from './store';
 import {Produce, Consume} from './components';
 import pdfjs from 'pdfjs-dist';
+import "@babel/polyfill";
 import 'bootstrap/dist/css/bootstrap.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.bundle.js';

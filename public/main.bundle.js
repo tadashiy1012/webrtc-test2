@@ -78982,9 +78982,8 @@ const PeerConnState = Base => {
         if (this.dcPc.conn.remoteDescription !== null) {
           if (this.dcPc.conn.remoteDescription !== recievedAnswer) {
             this.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_4__["makeConsumeDataChPC"])(this.id, this.ws, true));
-            this.setDcOnMessage();
             await this.dcPc.setLocalDesc((await this.dcPc.createOffer()));
-            await this.dcPc.setRemoteDesc(recievedAnswer);
+            this.setDcOnMessage();
           }
         } else {
           await this.dcPc.setRemoteDesc(recievedAnswer);
