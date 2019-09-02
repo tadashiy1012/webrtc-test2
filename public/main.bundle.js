@@ -65014,7 +65014,7 @@ if (false) {} else {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext, BrowserRouter, HashRouter, Link, NavLink */
+/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78802,7 +78802,7 @@ const ListState = Base => {
       });
     }
 
-    clearSay() {
+    clearSays() {
       this.says = [];
     }
 
@@ -78843,7 +78843,7 @@ const ListState = Base => {
     initializer: function () {
       return [];
     }
-  }), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSay", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjects", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjects"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class;
+  }), _applyDecoratedDescriptor(_class.prototype, "addSay", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addSay"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearSays", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearSays"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addObj", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "addObj"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearObjects", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "clearObjects"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "readPdf", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "readPdf"), _class.prototype)), _class;
 };
 
 

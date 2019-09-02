@@ -13,7 +13,7 @@ const ListState = Base => class extends Base {
     }
 
     @action
-    clearSay() {
+    clearSays() {
         this.says = [];
     }
 
