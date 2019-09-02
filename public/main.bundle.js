@@ -79694,6 +79694,7 @@ const ModeState = Base => {
 
       _initializerDefineProperty(this, "audioCtx", _descriptor2, this);
 
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioCtx = new AudioContext();
     }
 

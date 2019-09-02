@@ -8,6 +8,7 @@ const ModeState = Base => class extends Base {
 
     constructor() {
         super();
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
         this.audioCtx = new AudioContext();
     }
 
