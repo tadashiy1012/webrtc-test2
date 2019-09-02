@@ -79816,7 +79816,7 @@ class MyDataChPeerConnection {
         clearInterval(id);
       }
 
-      if (count >= 30) {
+      if (count >= 60) {
         clearInterval(id);
         console.warn('time out');
       }
