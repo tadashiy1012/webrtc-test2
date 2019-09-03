@@ -1,12 +1,11 @@
 import * as uuidv1 from 'uuid/v1';
 import {iceServers} from './iceServers';
-import string2TypedArray from './string2TypedArray';
 
 export default class MyDataChPeerConnection {
     constructor(webSocket, {
         onNegotiationneeded = (ev) => console.log(ev),
         onIcecandidate = (ev) => console.log(ev)
-    }) {
+    }, env = null) {
         this.id = uuidv1();
         this.ws = webSocket;
         this.conn = new RTCPeerConnection({ iceServers });
@@ -18,6 +17,7 @@ export default class MyDataChPeerConnection {
             }
         };
         this.dc = null;
+        this.env = env;
     }
     async createOffer() {
         return await this.conn.createOffer();
@@ -57,11 +57,15 @@ export default class MyDataChPeerConnection {
         }, 1000);
     }
     send(msg) {
-        const json = {id: this.id, message: msg};
+        const json = {id: this.id, type: 'plane', message: msg};
         this.dc.send(JSON.stringify(json));
     }
     sendBlob(blob) {
         console.log(blob);
         this.dc.send(blob);
+    }
+    sendBase64(b64) {
+        const json = {id: this.id, type: 'b64', message: b64};
+        this.dc.send(JSON.stringify(json));
     }
 }

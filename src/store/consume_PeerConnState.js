@@ -1,4 +1,5 @@
 import {observable, action} from 'mobx';
+import {decode} from 'base64-arraybuffer-es6';
 import {makeConsumePC, makeConsumeDataChPC, tArray2String} from '../util';
 
 const PeerConnState = Base => class extends Base {
@@ -67,7 +68,12 @@ const PeerConnState = Base => class extends Base {
             console.log(ev);
             if (typeof ev.data === 'string') {
                 const json = JSON.parse(ev.data);
-                this.addSay(json.id, json.message);
+                if (json.type === 'plane') {
+                    this.addSay(json.id, json.message);
+                } else if (json.type === 'b64') {
+                    const buf = decode(json.message);
+                    console.log(buf);
+                }
             } else {
                 if (ev.data instanceof ArrayBuffer) {
                     const tary = new Uint16Array(ev.data);
@@ -85,14 +91,14 @@ const PeerConnState = Base => class extends Base {
     }
 
     @action
-    setDcRecievedAnswer(sdp) {
+    setDcRecievedAnswer(sdp, key, env) {
         const recievedAnswer = new RTCSessionDescription({
             type: 'answer', sdp
         });
         (async () => {
             if (this.dcPc.conn.remoteDescription !== null) {
                 if (this.dcPc.conn.remoteDescription !== recievedAnswer) {
-                    this.setDcPC(makeConsumeDataChPC(this.id, this.ws, true));
+                    this.setDcPC(makeConsumeDataChPC(this.id, this.ws, key, env, true));
                     await this.dcPc.setLocalDesc(await this.dcPc.createOffer());
                     this.setDcOnMessage();
                 }

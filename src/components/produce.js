@@ -23,7 +23,9 @@ export default class Produce extends React.Component {
                     this.props.produce.addConsumers(json);
                 } else if (json.type === 'consume_dc') {
                     const dcpc = makeProduceDataChPC(
-                        this.props.produce.id, this.props.produce.ws, json.uuid);
+                        this.props.produce.id, 
+                        this.props.produce.ws, 
+                        json.uuid, json.env);
                     dcpc.setOnMessageHandler((ev) => {
                         console.log(ev);
                         const json = JSON.parse(ev.data);

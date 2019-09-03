@@ -31,7 +31,11 @@ export default class Consume extends React.Component {
                 if (this.props.consume.dcPc !== null
                         && this.props.consume.id === json.destination) {
                     console.log('message to me (dcPc)');
-                    this.props.consume.setDcRecievedAnswer(json.sdp);
+                    this.props.consume.setDcRecievedAnswer(
+                        json.sdp,
+                        this.props.consume.key,
+                        this.props.root.env
+                    );
                 }
             }
         });
@@ -45,7 +49,8 @@ export default class Consume extends React.Component {
             this.props.consume.target.srcObject = ev.streams[0];
         });
         this.props.consume.setDcPC(makeConsumeDataChPC(
-            this.props.consume.id, this.props.consume.ws, this.props.consume.key
+            this.props.consume.id, this.props.consume.ws,
+            this.props.consume.key, this.props.root.env
         ));
         this.props.consume.dcPc.createDataCh();
         this.props.consume.setDcOnMessage();

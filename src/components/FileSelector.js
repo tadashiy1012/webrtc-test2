@@ -3,8 +3,9 @@ import React from 'react';
 import {observer, inject} from 'mobx-react';
 import {string2TypedArray} from '../util';
 import {jsx, css} from '@emotion/core';
+import {encode} from 'base64-arraybuffer-es6';
 
-@inject('produce')
+@inject('produce', 'root')
 @observer
 export default class FileSelector extends React.Component {
     constructor(props) {
@@ -17,18 +18,24 @@ export default class FileSelector extends React.Component {
         const fr = new FileReader();
         fr.onload = () => {
             console.log(fr.result);
-            const file = new Uint16Array(fr.result);
-            const type = string2TypedArray(this.fileRef.current.files[0].type);
-            this.props.produce.dcPCs.forEach((dcpc) => {
-                const id = string2TypedArray(dcpc.id);
-                const header = new Uint16Array(100);
-                header.set(id);
-                header.set(type, id.length);
-                let tary = new Uint16Array(header.length + file.length);
-                tary.set(header);
-                tary.set(file, header.length);
-                dcpc.sendBlob(tary);
-            });
+                const file = new Uint16Array(fr.result);
+                const type = string2TypedArray(this.fileRef.current.files[0].type);
+                this.props.produce.dcPCs.forEach((dcpc) => {
+                    const id = string2TypedArray(dcpc.id);
+                    const header = new Uint16Array(100);
+                    header.set(id);
+                    header.set(type, id.length);
+                    let tary = new Uint16Array(header.length + file.length);
+                    tary.set(header);
+                    tary.set(file, header.length);
+                    console.log(tary);
+                    if (dcpc.env !== 'chrome') {
+                        const b64 = encode(tary.buffer, 0, tary.length);
+                        dcpc.sendBase64(b64);
+                    } else {
+                        dcpc.sendBlob(tary);
+                    }
+                });
         };
         fr.readAsArrayBuffer(this.fileRef.current.files[0]);
     }
