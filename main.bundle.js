@@ -77552,6 +77552,7 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])(
   }
 
   render() {
+    const mq = [375, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(react__WEBPACK_IMPORTED_MODULE_3__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])("div", {
       css: {
         marginTop: '12px'
@@ -77561,8 +77562,16 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])(
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])("div", {
       className: "col-md-9"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(_RemoteVideoView__WEBPACK_IMPORTED_MODULE_7__["default"], null)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])("div", {
-      className: "col-md-3"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(_SelfVideoView__WEBPACK_IMPORTED_MODULE_6__["default"], null)))));
+      className: "col-md-3",
+      css: {
+        [mq[0]]: {
+          position: 'absolute'
+        },
+        [mq[2]]: {
+          position: 'static'
+        }
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(_SelfVideoView__WEBPACK_IMPORTED_MODULE_6__["default"], null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(_ConsumeChatView__WEBPACK_IMPORTED_MODULE_5__["default"], null)));
   }
 
 }) || _class) || _class);
@@ -77692,21 +77701,29 @@ let ConsumeChatView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["i
     }).reverse();
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", {
+      className: "overflow-auto",
+      css: {
+        height: '100px',
+        width: '100%'
+      }
+    }, children)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "row"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "col-md-9"
+      className: "col-12 col-md-9"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
       type: "text",
       ref: this.textRef,
       placeholder: "message",
       className: "form-control"
     })), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "col-md-3"
+      className: "col-12 col-md-3"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
       onClick: () => {
         this.handleSendClick();
       },
       className: "btn btn-primary btn-block"
-    }, "send message"))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", null, children));
+    }, "send message"))));
   }
 
 }) || _class2) || _class2);
@@ -78298,6 +78315,7 @@ let RemoteVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["in
   }
 
   render() {
+    const mq = [375, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
     const icon = this.props.consume.rec ? '🔴' : '⚫';
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("video", {
       ref: video => {
@@ -78317,14 +78335,54 @@ let RemoteVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["in
       }
     }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       css: {
-        margin: '8px 0px'
+        margin: '8px 0px',
+        display: 'grid',
+        [mq[0]]: {
+          gridTemplateColumns: 'repeat(2, 100px)'
+        },
+        [mq[2]]: {
+          gridTemplateColumns: '100px'
+        },
+        justifyContent: 'space-around'
       }
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
       onClick: () => {
         this.onClickRec();
       },
-      className: "mx-auto d-block btn btn-outline-primary"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, icon), "rec")));
+      className: "btn btn-outline-primary"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, icon), "rec"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "form-check",
+      css: {
+        [mq[0]]: {
+          display: 'inline'
+        },
+        [mq[2]]: {
+          display: 'none'
+        }
+      }
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("input", {
+      type: "checkbox",
+      id: "micMode",
+      name: "micMode",
+      checked: this.props.consume.micMode,
+      onChange: async () => {
+        this.props.consume.setMicMode(!this.props.consume.micMode);
+        this.props.consume.setStreamSelf(null);
+        const newStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: 'user'
+          },
+          audio: this.props.consume.micMode
+        });
+        this.props.consume.setStreamSelf(newStream);
+        this.props.consume.addTrackToPc();
+        this.props.consume.targetSelf.srcObject = newStream;
+      },
+      className: "form-check-input"
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("label", {
+      htmlFor: "micMode",
+      className: "form-check-label"
+    }, "mic"))));
   }
 
 }) || _class) || _class);
@@ -78383,25 +78441,38 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
   }
 
   render() {
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
-      className: "row"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
-      className: "col-md-12 col-5"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("video", {
+    const mq = [375, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("video", {
       ref: this.selfVideoRef,
       autoPlay: true,
       muted: true,
       "webkit-playsinline": "true",
       playsInline: true,
-      className: "mx-auto d-block",
       css: {
-        width: '80%',
-        minHeight: '140px',
+        [mq[0]]: {
+          width: '82px',
+          height: '62px',
+          position: 'absolute',
+          right: '14%',
+          top: '4px'
+        },
+        [mq[2]]: {
+          width: '77%',
+          height: '44%',
+          position: 'static',
+          display: 'block',
+          margin: '0px auto'
+        },
         backgroundColor: 'black'
       }
     }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
       css: {
-        display: 'grid',
+        [mq[0]]: {
+          display: 'none'
+        },
+        [mq[2]]: {
+          display: 'grid'
+        },
         gridTemplateColumns: 'repeat(100px)',
         justifyContent: 'center'
       }
@@ -78413,17 +78484,12 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
         this.props.consume.setMicMode(!this.props.consume.micMode);
         this.onSelfCamera();
       }
-    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, "mic")))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("div", {
-      className: "col-md-12 col-7"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("h4", {
-      css: {
-        fontSize: '18px'
-      }
-    }, "chat log"))));
+    }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("span", null, "mic"))));
   }
 
   componentDidMount() {
     this.onFake();
+    this.props.consume.setTargetSelf(this.selfVideoRef.current);
     this.onSelfCamera();
   }
 
@@ -79055,7 +79121,7 @@ function _initializerWarningHelper(descriptor, context) { throw new Error('Decor
 
 
 const SimpleState = Base => {
-  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _temp;
+  var _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9, _descriptor10, _temp;
 
   return _class = (_temp = class _class extends Base {
     constructor(...args) {
@@ -79067,17 +79133,19 @@ const SimpleState = Base => {
 
       _initializerDefineProperty(this, "target", _descriptor3, this);
 
-      _initializerDefineProperty(this, "stream", _descriptor4, this);
+      _initializerDefineProperty(this, "targetSelf", _descriptor4, this);
 
-      _initializerDefineProperty(this, "streamSelf", _descriptor5, this);
+      _initializerDefineProperty(this, "stream", _descriptor5, this);
 
-      _initializerDefineProperty(this, "micMode", _descriptor6, this);
+      _initializerDefineProperty(this, "streamSelf", _descriptor6, this);
 
-      _initializerDefineProperty(this, "recorder", _descriptor7, this);
+      _initializerDefineProperty(this, "micMode", _descriptor7, this);
 
-      _initializerDefineProperty(this, "rec", _descriptor8, this);
+      _initializerDefineProperty(this, "recorder", _descriptor8, this);
 
-      _initializerDefineProperty(this, "key", _descriptor9, this);
+      _initializerDefineProperty(this, "rec", _descriptor9, this);
+
+      _initializerDefineProperty(this, "key", _descriptor10, this);
     }
 
     regenerateId() {
@@ -79105,6 +79173,10 @@ const SimpleState = Base => {
 
     setTarget(tgt) {
       this.target = tgt;
+    }
+
+    setTargetSelf(tgt) {
+      this.targetSelf = tgt;
     }
 
     setStream(stream) {
@@ -79172,49 +79244,56 @@ const SimpleState = Base => {
     initializer: function () {
       return null;
     }
-  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "stream", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
+  }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "targetSelf", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "streamSelf", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
+  }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "stream", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "micMode", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
+  }), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "streamSelf", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "micMode", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return false;
     }
-  }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "recorder", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
+  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "recorder", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "rec", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
+  }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "rec", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return false;
     }
-  }), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, "key", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
+  }), _descriptor10 = _applyDecoratedDescriptor(_class.prototype, "key", [mobx__WEBPACK_IMPORTED_MODULE_1__["observable"]], {
     configurable: true,
     enumerable: true,
     writable: true,
     initializer: function () {
       return null;
     }
-  }), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createWebSocket", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "createWebSocket"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWebSocket", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWebSocket"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "unsetWebSocket", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "unsetWebSocket"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTarget", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTarget"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStream", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecorder", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "unsetRecorder", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "unsetRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStreamSelf", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStreamSelf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleRec", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleRec"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setKey", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setKey"), _class.prototype)), _class;
+  }), _applyDecoratedDescriptor(_class.prototype, "regenerateId", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "regenerateId"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "createWebSocket", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "createWebSocket"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWebSocket", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWebSocket"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "unsetWebSocket", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "unsetWebSocket"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setWsOnMessageHandler", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setWsOnMessageHandler"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTarget", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTarget"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setTargetSelf", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setTargetSelf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStream", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStream"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setRecorder", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "unsetRecorder", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "unsetRecorder"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setStreamSelf", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setStreamSelf"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setMicMode", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setMicMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleRec", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "toggleRec"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setKey", [mobx__WEBPACK_IMPORTED_MODULE_1__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, "setKey"), _class.prototype)), _class;
 };
 
 
