@@ -77552,7 +77552,7 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])(
   }
 
   render() {
-    const mq = [375, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
+    const mq = [360, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])(react__WEBPACK_IMPORTED_MODULE_3__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_1__["jsx"])("div", {
       css: {
         marginTop: '12px'
@@ -78315,7 +78315,7 @@ let RemoteVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["in
   }
 
   render() {
-    const mq = [375, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
+    const mq = [360, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
     const icon = this.props.consume.rec ? '🔴' : '⚫';
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("video", {
       ref: video => {
@@ -78329,7 +78329,7 @@ let RemoteVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["in
       controls: true,
       className: "mx-auto d-block",
       css: {
-        width: '90%',
+        width: '96%',
         minHeight: '220px',
         backgroundColor: 'black'
       }
@@ -78370,7 +78370,9 @@ let RemoteVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["in
         this.props.consume.setStreamSelf(null);
         const newStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            facingMode: 'user'
+            facingMode: 'user',
+            width: 320,
+            height: 240
           },
           audio: this.props.consume.micMode
         });
@@ -78430,7 +78432,9 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
       this.props.consume.setStreamSelf(null);
       const newStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: 'user'
+          facingMode: 'user',
+          width: 320,
+          height: 240
         },
         audio: this.props.consume.micMode
       });
@@ -78441,7 +78445,7 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
   }
 
   render() {
-    const mq = [375, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
+    const mq = [360, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_2__["jsx"])("video", {
       ref: this.selfVideoRef,
       autoPlay: true,
@@ -78453,7 +78457,7 @@ let SelfVideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
           width: '82px',
           height: '62px',
           position: 'absolute',
-          right: '14%',
+          right: '11%',
           top: '4px'
         },
         [mq[2]]: {
