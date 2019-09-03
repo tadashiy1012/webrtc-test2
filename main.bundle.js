@@ -2244,6 +2244,92 @@ var weakMemoize = function weakMemoize(func) {
 
 /***/ }),
 
+/***/ "./node_modules/base64-arraybuffer-es6/dist/base64-arraybuffer-es.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/base64-arraybuffer-es6/dist/base64-arraybuffer-es.js ***!
+  \***************************************************************************/
+/*! exports provided: decode, encode */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decode", function() { return decode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "encode", function() { return encode; });
+/*
+ * base64-arraybuffer
+ * https://github.com/niklasvh/base64-arraybuffer
+ *
+ * Copyright (c) 2017 Brett Zamir, 2012 Niklas von Hertzen
+ * Licensed under the MIT license.
+ */
+var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'; // Use a lookup table to find the index.
+
+var lookup = new Uint8Array(256);
+
+for (var i = 0; i < chars.length; i++) {
+  lookup[chars.charCodeAt(i)] = i;
+}
+
+var encode = function encode(arraybuffer, byteOffset, length) {
+  if (length === null || length === undefined) {
+    length = arraybuffer.byteLength; // Needed for Safari
+  }
+
+  var bytes = new Uint8Array(arraybuffer, byteOffset || 0, // Default needed for Safari
+  length);
+  var len = bytes.length;
+  var base64 = '';
+
+  for (var _i = 0; _i < len; _i += 3) {
+    base64 += chars[bytes[_i] >> 2];
+    base64 += chars[(bytes[_i] & 3) << 4 | bytes[_i + 1] >> 4];
+    base64 += chars[(bytes[_i + 1] & 15) << 2 | bytes[_i + 2] >> 6];
+    base64 += chars[bytes[_i + 2] & 63];
+  }
+
+  if (len % 3 === 2) {
+    base64 = base64.substring(0, base64.length - 1) + '=';
+  } else if (len % 3 === 1) {
+    base64 = base64.substring(0, base64.length - 2) + '==';
+  }
+
+  return base64;
+};
+var decode = function decode(base64) {
+  var len = base64.length;
+  var bufferLength = base64.length * 0.75;
+  var p = 0;
+  var encoded1, encoded2, encoded3, encoded4;
+
+  if (base64[base64.length - 1] === '=') {
+    bufferLength--;
+
+    if (base64[base64.length - 2] === '=') {
+      bufferLength--;
+    }
+  }
+
+  var arraybuffer = new ArrayBuffer(bufferLength),
+      bytes = new Uint8Array(arraybuffer);
+
+  for (var _i2 = 0; _i2 < len; _i2 += 4) {
+    encoded1 = lookup[base64.charCodeAt(_i2)];
+    encoded2 = lookup[base64.charCodeAt(_i2 + 1)];
+    encoded3 = lookup[base64.charCodeAt(_i2 + 2)];
+    encoded4 = lookup[base64.charCodeAt(_i2 + 3)];
+    bytes[p++] = encoded1 << 2 | encoded2 >> 4;
+    bytes[p++] = (encoded2 & 15) << 4 | encoded3 >> 2;
+    bytes[p++] = (encoded3 & 3) << 6 | encoded4 & 63;
+  }
+
+  return arraybuffer;
+};
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/base64-js/index.js":
 /*!*****************************************!*\
   !*** ./node_modules/base64-js/index.js ***!
@@ -77520,7 +77606,7 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])(
       } else if (json.type === 'produce_dc') {
         if (this.props.consume.dcPc !== null && this.props.consume.id === json.destination) {
           console.log('message to me (dcPc)');
-          this.props.consume.setDcRecievedAnswer(json.sdp);
+          this.props.consume.setDcRecievedAnswer(json.sdp, this.props.consume.key, this.props.root.env);
         }
       }
     });
@@ -77531,7 +77617,7 @@ let Consume = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])(
       this.props.consume.setRecorder(ev.streams[0]);
       this.props.consume.target.srcObject = ev.streams[0];
     });
-    this.props.consume.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_4__["makeConsumeDataChPC"])(this.props.consume.id, this.props.consume.ws, this.props.consume.key));
+    this.props.consume.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_4__["makeConsumeDataChPC"])(this.props.consume.id, this.props.consume.ws, this.props.consume.key, this.props.root.env));
     this.props.consume.dcPc.createDataCh();
     this.props.consume.setDcOnMessage();
   }
@@ -77934,6 +78020,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
 /* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
+/* harmony import */ var base64_arraybuffer_es6__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! base64-arraybuffer-es6 */ "./node_modules/base64-arraybuffer-es6/dist/base64-arraybuffer-es.js");
 
 
 
@@ -77944,7 +78031,8 @@ var _dec, _class;
 
 
 
-let FileSelector = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["observer"])(_class = class FileSelector extends react__WEBPACK_IMPORTED_MODULE_2___default.a.Component {
+
+let FileSelector = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["inject"])('produce', 'root'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["observer"])(_class = class FileSelector extends react__WEBPACK_IMPORTED_MODULE_2___default.a.Component {
   constructor(props) {
     super(props);
     this.fileRef = react__WEBPACK_IMPORTED_MODULE_2___default.a.createRef();
@@ -77967,7 +78055,14 @@ let FileSelector = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["injec
         let tary = new Uint16Array(header.length + file.length);
         tary.set(header);
         tary.set(file, header.length);
-        dcpc.sendBlob(tary);
+        console.log(tary);
+
+        if (dcpc.env !== 'chrome') {
+          const b64 = Object(base64_arraybuffer_es6__WEBPACK_IMPORTED_MODULE_6__["encode"])(tary.buffer, 0, tary.length);
+          dcpc.sendBase64(b64);
+        } else {
+          dcpc.sendBlob(tary);
+        }
       });
     };
 
@@ -78099,7 +78194,7 @@ let Produce = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
         if (json.type === 'consume') {
           this.props.produce.addConsumers(json);
         } else if (json.type === 'consume_dc') {
-          const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.id, this.props.produce.ws, json.uuid);
+          const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.id, this.props.produce.ws, json.uuid, json.env);
           dcpc.setOnMessageHandler(ev => {
             console.log(ev);
             const json = JSON.parse(ev.data);
@@ -78960,7 +79055,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/web.dom-collections.iterator */ "./node_modules/core-js/modules/web.dom-collections.iterator.js");
 /* harmony import */ var core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_iterator__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var mobx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
+/* harmony import */ var base64_arraybuffer_es6__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! base64-arraybuffer-es6 */ "./node_modules/base64-arraybuffer-es6/dist/base64-arraybuffer-es.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
 
 
 
@@ -78970,6 +79066,7 @@ function _initializerDefineProperty(target, property, descriptor, context) { if 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) { var desc = {}; Object.keys(descriptor).forEach(function (key) { desc[key] = descriptor[key]; }); desc.enumerable = !!desc.enumerable; desc.configurable = !!desc.configurable; if ('value' in desc || desc.initializer) { desc.writable = true; } desc = decorators.slice().reverse().reduce(function (desc, decorator) { return decorator(target, property, desc) || desc; }, desc); if (context && desc.initializer !== void 0) { desc.value = desc.initializer ? desc.initializer.call(context) : void 0; desc.initializer = undefined; } if (desc.initializer === void 0) { Object.defineProperty(target, property, desc); desc = null; } return desc; }
 
 function _initializerWarningHelper(descriptor, context) { throw new Error('Decorating class property failed. Please ensure that ' + 'proposal-class-properties is enabled and set to use loose mode. ' + 'To use proposal-class-properties in spec mode with decorators, wait for ' + 'the next major version of decorators in stage 2.'); }
+
 
 
 
@@ -79024,7 +79121,7 @@ const PeerConnState = Base => {
 
       (async () => {
         if (this.pc.conn.remoteDescription !== null && this.pc.conn.remoteDescription !== recievedAnswer) {
-          this.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_4__["makeConsumePC"])(this.id, this.ws, true));
+          this.setPC(Object(_util__WEBPACK_IMPORTED_MODULE_5__["makeConsumePC"])(this.id, this.ws, true));
           await this.pc.setLocalDesc((await this.pc.createOffer()));
         }
 
@@ -79046,7 +79143,13 @@ const PeerConnState = Base => {
 
         if (typeof ev.data === 'string') {
           const json = JSON.parse(ev.data);
-          this.addSay(json.id, json.message);
+
+          if (json.type === 'plane') {
+            this.addSay(json.id, json.message);
+          } else if (json.type === 'b64') {
+            const buf = Object(base64_arraybuffer_es6__WEBPACK_IMPORTED_MODULE_4__["decode"])(json.message);
+            console.log(buf);
+          }
         } else {
           if (ev.data instanceof ArrayBuffer) {
             const tary = new Uint16Array(ev.data);
@@ -79054,18 +79157,18 @@ const PeerConnState = Base => {
             const id = header.slice(0, 36);
             const type = header.slice(36);
             const file = tary.slice(100);
-            const typeStr = Object(_util__WEBPACK_IMPORTED_MODULE_4__["tArray2String"])(type.slice(0, type.indexOf(0)));
+            const typeStr = Object(_util__WEBPACK_IMPORTED_MODULE_5__["tArray2String"])(type.slice(0, type.indexOf(0)));
             const blob = new Blob([file], {
               type: typeStr
             });
             console.log(blob);
-            this.addObj(Object(_util__WEBPACK_IMPORTED_MODULE_4__["tArray2String"])(id), blob);
+            this.addObj(Object(_util__WEBPACK_IMPORTED_MODULE_5__["tArray2String"])(id), blob);
           }
         }
       });
     }
 
-    setDcRecievedAnswer(sdp) {
+    setDcRecievedAnswer(sdp, key, env) {
       const recievedAnswer = new RTCSessionDescription({
         type: 'answer',
         sdp
@@ -79074,7 +79177,7 @@ const PeerConnState = Base => {
       (async () => {
         if (this.dcPc.conn.remoteDescription !== null) {
           if (this.dcPc.conn.remoteDescription !== recievedAnswer) {
-            this.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_4__["makeConsumeDataChPC"])(this.id, this.ws, true));
+            this.setDcPC(Object(_util__WEBPACK_IMPORTED_MODULE_5__["makeConsumeDataChPC"])(this.id, this.ws, key, env, true));
             await this.dcPc.setLocalDesc((await this.dcPc.createOffer()));
             this.setDcOnMessage();
           }
@@ -79789,7 +79892,7 @@ function _initializerWarningHelper(descriptor, context) { throw new Error('Decor
 
 
 const ModeState = Base => {
-  var _class, _descriptor, _descriptor2, _temp;
+  var _class, _descriptor, _descriptor2, _descriptor3, _temp;
 
   return _class = (_temp = class _class extends Base {
     constructor() {
@@ -79799,8 +79902,25 @@ const ModeState = Base => {
 
       _initializerDefineProperty(this, "audioCtx", _descriptor2, this);
 
+      _initializerDefineProperty(this, "env", _descriptor3, this);
+
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioCtx = new AudioContext();
+      const userAgent = window.navigator.userAgent.toLowerCase();
+
+      if (userAgent.indexOf('msie') !== -1 || userAgent.indexOf('trident') !== -1) {
+        this.env = 'ie';
+      } else if (userAgent.indexOf('edge') !== -1) {
+        this.evn = 'edge';
+      } else if (userAgent.indexOf('chrome') !== -1) {
+        this.env = 'chrome';
+      } else if (userAgent.indexOf('safari') !== -1) {
+        this.env = 'safari';
+      } else if (userAgent.indexOf('firefox') !== -1) {
+        this.env = 'firefox';
+      } else {
+        this.env = 'unknown';
+      }
     }
 
     setMode(mode) {
@@ -79815,6 +79935,13 @@ const ModeState = Base => {
       return 'none';
     }
   }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "audioCtx", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    initializer: function () {
+      return null;
+    }
+  }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "env", [mobx__WEBPACK_IMPORTED_MODULE_0__["observable"]], {
     configurable: true,
     enumerable: true,
     writable: true,
@@ -79855,15 +79982,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
 /* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _iceServers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iceServers */ "./src/util/iceServers.js");
-/* harmony import */ var _string2TypedArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./string2TypedArray */ "./src/util/string2TypedArray.js");
-
 
 
 class MyDataChPeerConnection {
   constructor(webSocket, {
     onNegotiationneeded = ev => console.log(ev),
     onIcecandidate = ev => console.log(ev)
-  }) {
+  }, env = null) {
     this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_0__();
     this.ws = webSocket;
     this.conn = new RTCPeerConnection({
@@ -79879,6 +80004,7 @@ class MyDataChPeerConnection {
     };
 
     this.dc = null;
+    this.env = env;
   }
 
   async createOffer() {
@@ -79934,6 +80060,7 @@ class MyDataChPeerConnection {
   send(msg) {
     const json = {
       id: this.id,
+      type: 'plane',
       message: msg
     };
     this.dc.send(JSON.stringify(json));
@@ -79942,6 +80069,15 @@ class MyDataChPeerConnection {
   sendBlob(blob) {
     console.log(blob);
     this.dc.send(blob);
+  }
+
+  sendBase64(b64) {
+    const json = {
+      id: this.id,
+      type: 'b64',
+      message: b64
+    };
+    this.dc.send(JSON.stringify(json));
   }
 
 }
@@ -80169,7 +80305,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return makeConsumeDataChPC; });
 /* harmony import */ var _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MyDataChPeerConnection */ "./src/util/MyDataChPeerConnection.js");
 
-function makeConsumeDataChPC(id, ws, key, remake = false) {
+function makeConsumeDataChPC(id, ws, key, env, remake = false) {
   console.log('remake:' + remake);
 
   const _pc = new _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__["default"](ws, {
@@ -80197,8 +80333,10 @@ function makeConsumeDataChPC(id, ws, key, remake = false) {
           type,
           sdp,
           uuid,
-          key
+          key,
+          env
         };
+        console.log(json);
         let count = 0;
         const iid = setInterval(function () {
           if (_pc.ws.readyState === WebSocket.OPEN) {
@@ -80325,7 +80463,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return makeProduceDataChPC; });
 /* harmony import */ var _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MyDataChPeerConnection */ "./src/util/MyDataChPeerConnection.js");
 
-function makeProduceDataChPC(id, ws, destination) {
+function makeProduceDataChPC(id, ws, destination, env) {
   const _pc = new _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__["default"](ws, {
     onIcecandidate: ev => {
       console.log(ev);
@@ -80347,7 +80485,7 @@ function makeProduceDataChPC(id, ws, destination) {
         }
       }
     }
-  });
+  }, env);
 
   _pc.overriteId(id);
 
