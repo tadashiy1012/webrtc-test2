@@ -65,7 +65,7 @@ export default class Consume extends React.Component {
         this.props.consume.regenerateId();
     }
     render() {
-        const mq = [375, 576, 800].map(
+        const mq = [360, 576, 800].map(
             bp => `@media (min-width: ${bp}px)`
         );
         return <Fragment>

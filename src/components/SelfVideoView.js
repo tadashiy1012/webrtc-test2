@@ -22,7 +22,9 @@ export default class SelfVideoView extends React.Component {
             this.props.consume.setStreamSelf(null);
             const newStream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    facingMode: 'user'
+                    facingMode: 'user',
+                    width: 320,
+                    height: 240
                 }, audio: this.props.consume.micMode
             });
             this.props.consume.setStreamSelf(newStream);
@@ -31,13 +33,13 @@ export default class SelfVideoView extends React.Component {
         })();
     }
     render() {
-        const mq = [375, 576, 800].map(
+        const mq = [360, 576, 800].map(
             bp => `@media (min-width: ${bp}px)`
         );
         return <Fragment>
             <video ref={this.selfVideoRef} 
                 autoPlay muted webkit-playsinline='true' playsInline 
-                css={{[mq[0]]: {width:'82px', height:'62px', position:'absolute', right:'14%', top:'4px'},
+                css={{[mq[0]]: {width:'82px', height:'62px', position:'absolute', right:'11%', top:'4px'},
                      [mq[2]]: {width:'77%', height:'44%', position:'static', display:'block', margin:'0px auto'}, backgroundColor:'black'}} />
             <div css={{[mq[0]]: {display:'none'}, [mq[2]]: {display:'grid'}, gridTemplateColumns:'repeat(100px)', justifyContent:'center'}}>
                 <label>

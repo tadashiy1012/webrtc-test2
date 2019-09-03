@@ -26,7 +26,7 @@ export default class RemoteVideoView extends React.Component {
         this.props.consume.toggleRec();
     }
     render() {
-        const mq = [375, 576, 800].map(
+        const mq = [360, 576, 800].map(
             bp => `@media (min-width: ${bp}px)`
         );
         const icon = this.props.consume.rec ? '🔴':'⚫';
@@ -36,7 +36,7 @@ export default class RemoteVideoView extends React.Component {
                     this.props.consume.setTarget(video);
                 }
             }} autoPlay webkit-playsinline='true' playsInline controls 
-                className='mx-auto d-block' css={{width:'90%', minHeight:'220px', backgroundColor:'black'}} />
+                className='mx-auto d-block' css={{width:'96%', minHeight:'220px', backgroundColor:'black'}} />
             <div css={{margin:'8px 0px', display:'grid', [mq[0]]:{gridTemplateColumns:'repeat(2, 100px)'},
                     [mq[2]]:{ gridTemplateColumns:'100px'}, justifyContent:'space-around'}}>
                 <button onClick={() => {this.onClickRec()}} className='btn btn-outline-primary'>
@@ -49,7 +49,9 @@ export default class RemoteVideoView extends React.Component {
                             this.props.consume.setStreamSelf(null);
                             const newStream = await navigator.mediaDevices.getUserMedia({
                                 video: {
-                                    facingMode: 'user'
+                                    facingMode: 'user',
+                                    width: 320,
+                                    height: 240
                                 }, audio: this.props.consume.micMode
                             });
                             this.props.consume.setStreamSelf(newStream);
