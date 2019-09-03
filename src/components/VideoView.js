@@ -17,12 +17,11 @@ export default class VideoView extends React.Component {
         const newStream = makeFakeStream(this.props.root.audioCtx);
         this.props.produce.setCurrentStream(newStream);
         navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: 'user'
-            }, audio: this.props.produce.micMode
+            video: true, 
+            audio: this.props.produce.micMode
         }).then((stream) => {
             video.srcObject = stream;
-        });
+        }).catch((err) => console.error(err));
     }
     onCamera(video) {
         (async () => {
