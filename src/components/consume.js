@@ -65,16 +65,20 @@ export default class Consume extends React.Component {
         this.props.consume.regenerateId();
     }
     render() {
+        const mq = [375, 576, 800].map(
+            bp => `@media (min-width: ${bp}px)`
+        );
         return <Fragment>
             <div css={{marginTop:'12px'}}>
                 <div className='row no-gutters'>
                     <div className='col-md-9'>
                         <RemoteVideoView />
                     </div>
-                    <div className='col-md-3'>
+                    <div className='col-md-3' css={{[mq[0]]: {position:'absolute'}, [mq[2]]: {position:'static'}}}>
                         <SelfVideoView />
                     </div>
                 </div>
+                <ConsumeChatView />
             </div>
         </Fragment>
     }

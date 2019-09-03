@@ -76,16 +76,18 @@ export default class ConsumeChatView extends React.Component {
         }).reverse();
         return <Fragment>
             <div className='row'>
-                <div className='col-md-9'>
+                <ul className='overflow-auto' css={{height:'100px', width:'100%'}}>
+                    {children}
+                </ul>
+            </div>
+            <div className='row'>
+                <div className='col-12 col-md-9'>
                     <input type='text' ref={this.textRef} placeholder='message' className='form-control' />
                 </div>
-                <div className='col-md-3'>
+                <div className='col-12 col-md-3'>
                     <button onClick={() => {this.handleSendClick()}} className='btn btn-primary btn-block'>send message</button>
                 </div>
             </div>
-            <ul>
-                {children}
-            </ul>
         </Fragment>
     }
 }

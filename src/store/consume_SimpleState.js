@@ -9,6 +9,7 @@ const SimpleState = Base => class extends Base {
     @observable id = uuid();
     @observable ws = null;
     @observable target = null;
+    @observable targetSelf = null;
     @observable stream = null;
     @observable streamSelf = null;
     @observable micMode = false;
@@ -46,6 +47,11 @@ const SimpleState = Base => class extends Base {
     @action
     setTarget(tgt) {
         this.target = tgt;
+    }
+
+    @action
+    setTargetSelf(tgt) {
+        this.targetSelf = tgt;
     }
 
     @action

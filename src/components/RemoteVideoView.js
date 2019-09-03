@@ -26,6 +26,9 @@ export default class RemoteVideoView extends React.Component {
         this.props.consume.toggleRec();
     }
     render() {
+        const mq = [375, 576, 800].map(
+            bp => `@media (min-width: ${bp}px)`
+        );
         const icon = this.props.consume.rec ? '🔴':'⚫';
         return <Fragment>
             <video ref={(video) => {
@@ -34,11 +37,27 @@ export default class RemoteVideoView extends React.Component {
                 }
             }} autoPlay webkit-playsinline='true' playsInline controls 
                 className='mx-auto d-block' css={{width:'90%', minHeight:'220px', backgroundColor:'black'}} />
-            <div css={{margin:'8px 0px'}}>
-                <button onClick={() => {this.onClickRec()}} className='mx-auto d-block btn btn-outline-primary'>
+            <div css={{margin:'8px 0px', display:'grid', [mq[0]]:{gridTemplateColumns:'repeat(2, 100px)'},
+                    [mq[2]]:{ gridTemplateColumns:'100px'}, justifyContent:'space-around'}}>
+                <button onClick={() => {this.onClickRec()}} className='btn btn-outline-primary'>
                     <span>{icon}</span>
                     rec
                 </button>
+                <div className='form-check' css={{[mq[0]]: {display:'inline'}, [mq[2]]: {display:'none'}}}>
+                    <input type='checkbox' id='micMode' name='micMode' checked={this.props.consume.micMode} onChange={async () => {
+                            this.props.consume.setMicMode(!this.props.consume.micMode);
+                            this.props.consume.setStreamSelf(null);
+                            const newStream = await navigator.mediaDevices.getUserMedia({
+                                video: {
+                                    facingMode: 'user'
+                                }, audio: this.props.consume.micMode
+                            });
+                            this.props.consume.setStreamSelf(newStream);
+                            this.props.consume.addTrackToPc();
+                            this.props.consume.targetSelf.srcObject = newStream;
+                        }} className='form-check-input' />
+                    <label htmlFor='micMode' className='form-check-label'>mic</label>
+                </div>
             </div>
         </Fragment>
     }
