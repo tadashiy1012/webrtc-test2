@@ -8,7 +8,7 @@ import PDFView from './PdfView';
 
 @inject('produce')
 @observer
-export default class ProduceChatView extends React.Component {
+export default class ChatView extends React.Component {
     constructor(props) {
         super(props);
         this.textRef = React.createRef();

@@ -3,7 +3,7 @@ import React from 'react';
 import {observer, inject} from 'mobx-react';
 import {makeProduceDataChPC} from '../util';
 import {jsx, css} from '@emotion/core';
-import ProduceChatView from './ProduceChatVIew';
+import ChatView from './ChatView';
 import ConsumerList from './ConsumerList';
 import VideoView from './VideoView';
 
@@ -67,7 +67,7 @@ export default class Produce extends React.Component {
                     <ConsumerList />
                 </div>
             </div>
-            <div className='row'><ProduceChatView /></div>
+            <div className='row'><ChatView /></div>
         </div>
     }
 }
