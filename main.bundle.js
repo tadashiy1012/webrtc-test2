@@ -77651,6 +77651,7 @@ let ConsumeChatView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["i
   }
 
   render() {
+    const mq = [360, 576, 800].map(bp => "@media (min-width: ".concat(bp, "px)"));
     const ary = [...this.props.consume.says, ...this.props.consume.objects].sort((a, b) => a.time - b.time);
     const children = ary.map((e, idx) => {
       console.log(e);
@@ -77664,14 +77665,21 @@ let ConsumeChatView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["i
           return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", {
             key: idx
           }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-            className: "card",
             css: {
-              padding: '22px'
+              padding: '2px'
             }
           }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("img", {
             src: URL.createObjectURL(e.obj),
-            className: "rounded mx-auto d-block"
-          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
+            css: {
+              [mq[0]]: {
+                width: '30%'
+              },
+              [mq[2]]: {
+                width: '30%'
+              },
+              border: 'solid 1px #ccc'
+            }
+          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("br", null), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("a", {
             href: URL.createObjectURL(e.obj),
             download: "file"
           }, "download")));
@@ -77704,7 +77712,12 @@ let ConsumeChatView = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["i
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", {
       className: "overflow-auto",
       css: {
-        height: '100px',
+        [mq[0]]: {
+          height: '100px'
+        },
+        [mq[2]]: {
+          height: '300px'
+        },
         width: '100%'
       }
     }, children)), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
@@ -80074,9 +80087,15 @@ function getThumb(doc) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "iceServers", function() { return iceServers; });
-const iceServers = [{
+let iceServers = [{
   "urls": "stun:stun.l.google.com:19302"
 }];
+
+if (document.location.host === 'localhost:8080') {
+  iceServers = [];
+}
+
+console.log(iceServers);
 
 
 /***/ }),
