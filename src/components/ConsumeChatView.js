@@ -44,6 +44,9 @@ export default class ConsumeChatView extends React.Component {
         this.props.consume.dcPc.send(this.textRef.current.value);
     }
     render() {
+        const mq = [360, 576, 800].map(
+            bp => `@media (min-width: ${bp}px)`
+        );
         const ary = [...this.props.consume.says, ...this.props.consume.objects].sort((a, b) => a.time - b.time);
         const children = ary.map((e, idx) => {
             console.log(e);
@@ -53,8 +56,11 @@ export default class ConsumeChatView extends React.Component {
                 if (e.obj.type === 'image/jpeg') {
                     return <li key={idx}>
                         <span>{e.id.substring(0, 5)}</span> : 
-                        <div className='card' css={{padding:'22px'}}>
-                            <img src={URL.createObjectURL(e.obj)} className='rounded mx-auto d-block' />
+                        <div css={{padding:'2px'}}>
+                            <img src={URL.createObjectURL(e.obj)} css={{
+                                [mq[0]]: {width:'30%'}, [mq[2]]: {width:'30%'}, border:'solid 1px #ccc'
+                            }} />
+                            <br />
                             <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
                         </div>
                     </li>
@@ -76,7 +82,7 @@ export default class ConsumeChatView extends React.Component {
         }).reverse();
         return <Fragment>
             <div className='row'>
-                <ul className='overflow-auto' css={{height:'100px', width:'100%'}}>
+                <ul className='overflow-auto' css={{[mq[0]]:{height:'100px'}, [mq[2]]:{height:'300px'}, width:'100%'}}>
                     {children}
                 </ul>
             </div>
