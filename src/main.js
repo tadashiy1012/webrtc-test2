@@ -15,7 +15,7 @@ const rootStore = new RootStore();
 
 const App = () => (
     <Provider root={rootStore} produce={new ProduceStore()}>
-        <div className='container'>
+        <div className='container-fluid'>
             <div className='row'>
                 <div className='col-md-4'>
                     <h1 css={{margin:'0px'}}>webrtc-test2</h1>

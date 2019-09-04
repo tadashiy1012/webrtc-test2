@@ -58,7 +58,7 @@ export default class Produce extends React.Component {
         this.props.produce.regenerateId();
     }
     render() {
-        return <div className='container'>
+        return <div className='container-fluid'>
             <div className='row' css={{paddingTop:'8px'}}>
                 <div className='col-md-7'>
                     <VideoView />
