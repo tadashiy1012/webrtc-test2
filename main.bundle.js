@@ -67563,6 +67563,7 @@ var _dec, _class, _dec2, _class2;
 let Consumer = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class Consumer extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
+    this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
   }
 
   render() {
@@ -67573,11 +67574,7 @@ let Consumer = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "col-md-3"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("video", {
-      ref: video => {
-        if (video) {
-          this.props.produce.addTgt(video, this.props.uuid);
-        }
-      },
+      ref: this.videoRef,
       autoPlay: true,
       className: "img-fluid",
       css: {
@@ -67597,6 +67594,10 @@ let Consumer = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
     }, "close"))));
   }
 
+  componentDidMount() {
+    this.props.produce.addTgt(this.videoRef.current, this.props.uuid);
+  }
+
 }) || _class) || _class);
 let ConsumerList = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce'), _dec2(_class2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class2 = class ConsumerList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   onConsumerClick(dest, sdp) {
@@ -67604,7 +67605,6 @@ let ConsumerList = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
 
     pc.conn.ontrack = ev => {
       console.log(ev);
-      console.log(ev.streams[0].getTracks());
       const tgt = this.props.produce.tgts.find(e => e.destination === dest);
       tgt.tgt.srcObject = ev.streams[0];
     };
@@ -67641,7 +67641,7 @@ let ConsumerList = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
       const tgtPc = this.props.produce.findPeerConnection(e.uuid);
       const status = tgtPc ? tgtPc.status : false;
       return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Consumer, {
-        key: idx,
+        key: e.uuid,
         uuid: e.uuid,
         handleClick: evt => {
           evt.preventDefault();
@@ -67663,16 +67663,31 @@ let ConsumerList = (_dec2 = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inje
       }
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "card-body"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col-6"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h3", {
       css: {
         fontSize: '18px'
       }
-    }, "consumers"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", {
+    }, "consumers")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col-6 d-flex justify-content-end"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
+      className: "btn btn-danger btn-sm",
+      onClick: () => {
+        this.props.produce.clearConsumers(true);
+      }
+    }, "list clear"))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("ul", {
       css: {
         listStyleType: 'none',
         paddingLeft: '0px'
       }
-    }, childs))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+    }, childs))))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "card",
       css: {
         display: this.props.produce.setting ? 'block' : 'none'
@@ -67937,7 +67952,7 @@ let Produce = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
 
   render() {
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "container"
+      className: "container-fluid"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "row",
       css: {
@@ -68190,7 +68205,7 @@ const App = () => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(mobx
   root: rootStore,
   produce: new _store__WEBPACK_IMPORTED_MODULE_4__["ProduceStore"]()
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-  className: "container"
+  className: "container-fluid"
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
   className: "row"
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
@@ -68262,8 +68277,17 @@ const ListState = Base => {
       this.consumers.splice(idx, 1);
     }
 
-    clearConsumers() {
-      this.consumers = [];
+    clearConsumers(flg = false) {
+      if (flg) {
+        const filtered = this.consumers.filter(e => {
+          return this.pcs.filter(ee => {
+            return ee.destination === e.uuid;
+          }).length > 0;
+        });
+        this.consumers = filtered;
+      } else {
+        this.consumers = [];
+      }
     }
 
     findConsumer(uuid) {
