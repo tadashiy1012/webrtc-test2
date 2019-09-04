@@ -15,15 +15,15 @@ class Consumer extends React.Component {
         const tgtPc = this.props.produce.pcs.find((e) => e.destination === this.props.uuid);
         const status = tgtPc ? tgtPc.status : false;
         return <li>
-            <div className='row align-items-center no-gutters'>
-                <div className='col-md-3'>
+            <div className='row align-items-center'>
+                <div className='col-md-3 d-flex justify-content-center'>
                     <video ref={this.videoRef} autoPlay className='img-fluid' css={{minHeight:'90px'}} />
                 </div>
                 <div className='col-md-7'>
                     <span>{status ? '✔️':'✖️'} </span>
                     <a href='#' onClick={this.props.handleClick}>{this.props.uuid} </a>
                 </div>
-                <div className='col-md-2'>
+                <div className='col-md-2 d-flex justify-content-center'>
                     <button onClick={this.props.handleCloseClick}
                         disabled={status ? false:true} 
                         className='btn btn-danger btn-sm'>close</button>

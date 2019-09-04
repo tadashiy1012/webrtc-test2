@@ -67570,9 +67570,9 @@ let Consumer = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
     const tgtPc = this.props.produce.pcs.find(e => e.destination === this.props.uuid);
     const status = tgtPc ? tgtPc.status : false;
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "row align-items-center no-gutters"
+      className: "row align-items-center"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "col-md-3"
+      className: "col-md-3 d-flex justify-content-center"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("video", {
       ref: this.videoRef,
       autoPlay: true,
@@ -67586,7 +67586,7 @@ let Consumer = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])
       href: "#",
       onClick: this.props.handleClick
     }, this.props.uuid, " ")), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-      className: "col-md-2"
+      className: "col-md-2 d-flex justify-content-center"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("button", {
       onClick: this.props.handleCloseClick,
       disabled: status ? false : true,
