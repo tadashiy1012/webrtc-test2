@@ -19,8 +19,17 @@ const ListState = Base => class extends Base {
     }
 
     @action
-    clearConsumers() {
-        this.consumers = [];
+    clearConsumers(flg = false) {
+        if (flg) {
+            const filtered = this.consumers.filter((e) => {
+                return this.pcs.filter((ee) => {
+                    return ee.destination === e.uuid
+                }).length > 0;
+            });
+            this.consumers = filtered;
+        } else {
+            this.consumers = [];
+        }
     }
 
     @action

@@ -93,8 +93,21 @@ export default class ConsumerList extends React.Component {
         return <Fragment>
             <div className='card' css={{display: this.props.produce.setting ? 'none':'block'}}>
                 <div className='card-body'>
-                    <h3 css={{fontSize:'18px'}}>consumers</h3>
-                    <ul css={{listStyleType:'none', paddingLeft:'0px'}}>{childs}</ul>
+                    <div className='row'>
+                        <div className='col-6'>
+                            <h3 css={{fontSize:'18px'}}>consumers</h3>
+                        </div>
+                        <div className='col-6 d-flex justify-content-end'>
+                            <button className='btn btn-danger btn-sm' onClick={() => {
+                                this.props.produce.clearConsumers(true);
+                            }}>list clear</button>
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col'>
+                            <ul css={{listStyleType:'none', paddingLeft:'0px'}}>{childs}</ul>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className='card' css={{display: this.props.produce.setting ? 'block':'none'}}>
