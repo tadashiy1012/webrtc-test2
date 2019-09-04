@@ -12,7 +12,7 @@ export default class VideoView extends React.Component {
         this.callCamera = false;
         this.videoRef = React.createRef();
     }
-    onFake(video) {
+    onFake() {
         this.props.produce.setCurrentStream(null);
         const newStream = makeFakeStream(this.props.root.audioCtx);
         this.props.produce.setCurrentStream(newStream);
@@ -20,10 +20,10 @@ export default class VideoView extends React.Component {
             video: true, 
             audio: this.props.produce.micMode
         }).then((stream) => {
-            video.srcObject = stream;
+            this.videoRef.current.srcObject = stream;
         }).catch((err) => console.error(err));
     }
-    onCamera(video) {
+    onCamera() {
         (async () => {
             this.props.produce.setCurrentStream(null);
             const newStream = await navigator.mediaDevices.getUserMedia({
@@ -33,10 +33,10 @@ export default class VideoView extends React.Component {
             });
             this.props.produce.setCurrentStream(newStream);
             this.props.produce.setPCsTrack();
-            video.srcObject = newStream;
+            this.videoRef.current.srcObject = newStream;
         })();
     }
-    onCamera2(video) {
+    onCamera2() {
         (async () => {
             this.props.produce.setCurrentStream(null);
             const newStream = await navigator.mediaDevices.getUserMedia({
@@ -46,10 +46,10 @@ export default class VideoView extends React.Component {
             });
             this.props.produce.setCurrentStream(newStream);
             this.props.produce.setPCsTrack();
-            video.srcObject = newStream;
+            this.videoRef.current.srcObject = newStream;
         })();
     }
-    onDisplay(video) {
+    onDisplay() {
         (async () => {
             this.props.produce.setCurrentStream(null);
             const newStream = await navigator.mediaDevices.getDisplayMedia({
@@ -57,17 +57,17 @@ export default class VideoView extends React.Component {
             });
             this.props.produce.setCurrentStream(newStream);
             this.props.produce.setPCsTrack();
-            video.srcObject = newStream;
+            this.videoRef.current.srcObject = newStream;
         })();
     }
     onVideoModeChange(value) {
         this.props.produce.setVideoMode(value);
         if (value === 'camera') {
-            this.onCamera(this.videoRef.current);
+            this.onCamera();
         } else if (value === 'camera2') {
-            this.onCamera2(this.videoRef.current);
+            this.onCamera2();
         } else if (value === 'display') {
-            this.onDisplay(this.videoRef.current);
+            this.onDisplay();
         }
         if (this.props.produce.pcs.length > 0) {
             this.callCamera = true;
@@ -77,11 +77,11 @@ export default class VideoView extends React.Component {
         this.props.produce.setMicMode(!this.props.produce.micMode);
         const videoMode = this.props.produce.videoMode;
         if (videoMode === 'camera') {
-            this.onCamera(this.videoRef.current);
+            this.onCamera();
         } else if (videoMode === 'camera2') {
-            this.onCamera2(this.videoRef.current);
+            this.onCamera2();
         } else if (videoMode === 'display') {
-            this.onDisplay(this.videoRef.current);
+            this.onDisplay();
         }
         if (this.props.produce.pcs.length > 0) {
             this.callCamera = true;
@@ -91,16 +91,18 @@ export default class VideoView extends React.Component {
         if (this.props.produce.pcs.length > 0 && !this.callCamera) {
             const videoMode = this.props.produce.videoMode;
             if (videoMode === 'camera') {
-                this.onCamera(this.videoRef.current);
+                this.onCamera();
             } else if (videoMode === 'camera2') {
-                this.onCamera2(this.videoRef.current);
+                this.onCamera2();
             } else if (videoMode === 'display') {
-                this.onDisplay(this.videoRef.current);
+                this.onDisplay();
             }
         }
         return <Fragment>
             <div>
-                <video width="100%" height="300" autoPlay muted ref={this.videoRef}></video>
+                <video autoPlay muted ref={this.videoRef} css={{
+                    width:'100%', height:'300px', backgroundColor:'black'
+                }}></video>
             </div>
             <div css={{display:'grid', gridTemplateColumns:'repeat(auto-fit, 90px)', justifyContent:'center'}}>
                 <label>
@@ -131,6 +133,6 @@ export default class VideoView extends React.Component {
         </Fragment> 
     }
     componentDidMount() {
-        this.onFake(this.videoRef.current);
+        this.onFake();
     }
 }
