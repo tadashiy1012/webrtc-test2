@@ -9,6 +9,7 @@ import {jsx, css} from '@emotion/core';
 class Consumer extends React.Component {
     constructor(props) {
         super(props);
+        this.videoRef = React.createRef();
     }
     render() {
         const tgtPc = this.props.produce.pcs.find((e) => e.destination === this.props.uuid);
@@ -16,11 +17,7 @@ class Consumer extends React.Component {
         return <li>
             <div className='row align-items-center no-gutters'>
                 <div className='col-md-3'>
-                    <video ref={(video) => {
-                        if (video) {
-                            this.props.produce.addTgt(video, this.props.uuid);
-                        }
-                    }} autoPlay className='img-fluid' css={{minHeight:'90px'}} />
+                    <video ref={this.videoRef} autoPlay className='img-fluid' css={{minHeight:'90px'}} />
                 </div>
                 <div className='col-md-7'>
                     <span>{status ? '✔️':'✖️'} </span>
@@ -34,6 +31,9 @@ class Consumer extends React.Component {
             </div>
         </li>
     }
+    componentDidMount() {
+        this.props.produce.addTgt(this.videoRef.current, this.props.uuid);
+    }
 }
 
 @inject('produce')
@@ -45,7 +45,6 @@ export default class ConsumerList extends React.Component {
         );
         pc.conn.ontrack = (ev) => {
             console.log(ev);
-            console.log(ev.streams[0].getTracks());
             const tgt = this.props.produce.tgts.find(e => e.destination === dest);
             tgt.tgt.srcObject = ev.streams[0];
         };
@@ -81,7 +80,7 @@ export default class ConsumerList extends React.Component {
         const childs = this.props.produce.consumers.map((e, idx) => {
             const tgtPc = this.props.produce.findPeerConnection(e.uuid);
             const status = tgtPc ? tgtPc.status : false;
-            return <Consumer key={idx} uuid={e.uuid} handleClick={(evt) => {
+            return <Consumer key={e.uuid} uuid={e.uuid} handleClick={(evt) => {
                 evt.preventDefault();
                 if (!status) {
                     this.onConsumerClick(e.uuid, e.sdp);
