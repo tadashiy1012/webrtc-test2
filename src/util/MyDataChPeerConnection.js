@@ -60,9 +60,8 @@ export default class MyDataChPeerConnection {
         const json = {id: this.id, type: 'plane', message: msg};
         this.dc.send(JSON.stringify(json));
     }
-    sendBlob(blob) {
-        console.log(blob);
-        this.dc.send(blob);
+    sendBuf(buf) {
+        this.dc.send(buf);
     }
     sendBase64(b64) {
         const json = {id: this.id, type: 'b64', message: b64};

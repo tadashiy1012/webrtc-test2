@@ -6,7 +6,7 @@ import makeProduceDataChPC from './makeProduceDataChPC';
 import makeProducePC from './makeProducePC';
 import makeWebSocket from './makeWebsocket';
 import makeFakeStream from './makeFakeStream';
-import string2TypedArray from './string2TypedArray';
+import string2Uint8Array from './string2Uint8Array';
 import tArray2String from './tArray2String';
 import Bowl from './Bowl';
 
@@ -19,7 +19,7 @@ export {
     makeProducePC,
     makeWebSocket,
     makeFakeStream,
-    string2TypedArray,
+    string2Uint8Array,
     tArray2String,
     Bowl
 }
