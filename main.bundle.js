@@ -67767,6 +67767,7 @@ let FileSelector = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["injec
 
     fr.onload = () => {
       const file = new Uint8Array(fr.result);
+      console.log(fr.result, file);
       const type = Object(_util__WEBPACK_IMPORTED_MODULE_4__["string2Uint8Array"])(this.fileRef.current.files[0].type);
       this.props.produce.dcPCs.forEach(dcpc => {
         const id = Object(_util__WEBPACK_IMPORTED_MODULE_4__["string2Uint8Array"])(dcpc.id);
@@ -67776,13 +67777,13 @@ let FileSelector = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["injec
         let tary = new Uint8Array(header.length + file.length);
         tary.set(header);
         tary.set(file, header.length);
-
-        if (dcpc.env !== 'chrome') {
-          const b64 = Object(base64_arraybuffer_es6__WEBPACK_IMPORTED_MODULE_6__["encode"])(tary.buffer, 0, tary.length);
-          dcpc.sendBase64(b64);
+        dcpc.sendBuf(tary.buffer);
+        /*if (dcpc.env !== 'chrome') {
+            const b64 = encode(tary.buffer, 0, tary.length);
+            dcpc.sendBase64(b64);
         } else {
-          dcpc.sendBuf(tary.buffer);
-        }
+            dcpc.sendBuf(tary.buffer);
+        }*/
       });
     };
 
@@ -68816,20 +68817,27 @@ class Bowl {}
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MyDataChPeerConnection; });
-/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
-/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _iceServers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iceServers */ "./src/util/iceServers.js");
+/* harmony import */ var core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array-buffer.slice */ "./node_modules/core-js/modules/es.array-buffer.slice.js");
+/* harmony import */ var core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_buffer_slice__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es_typed_array_uint8_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.typed-array.uint8-array */ "./node_modules/core-js/modules/es.typed-array.uint8-array.js");
+/* harmony import */ var core_js_modules_es_typed_array_uint8_array__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_typed_array_uint8_array__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! uuid/v1 */ "./node_modules/uuid/v1.js");
+/* harmony import */ var uuid_v1__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(uuid_v1__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _iceServers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./iceServers */ "./src/util/iceServers.js");
 
 
+
+
+const MAX_BYTES = 64 * 1024;
 class MyDataChPeerConnection {
   constructor(webSocket, {
     onNegotiationneeded = ev => console.log(ev),
     onIcecandidate = ev => console.log(ev)
   }, env = null) {
-    this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_0__();
+    this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
     this.ws = webSocket;
     this.conn = new RTCPeerConnection({
-      iceServers: _iceServers__WEBPACK_IMPORTED_MODULE_1__["iceServers"]
+      iceServers: _iceServers__WEBPACK_IMPORTED_MODULE_3__["iceServers"]
     });
     this.conn.onnegotiationneeded = onNegotiationneeded;
     this.conn.onicecandidate = onIcecandidate;
@@ -68904,10 +68912,27 @@ class MyDataChPeerConnection {
   }
 
   sendBuf(buf) {
-    this.dc.send(buf);
+    console.log('send buf');
+    console.log(buf);
+    const size = buf.length;
+    let chunk = [];
+    let index = 0;
+
+    do {
+      chunk.push(buf.slice(index, MAX_BYTES));
+      index += MAX_BYTES;
+    } while (size > index);
+
+    chunk.push(buf.slice(index));
+    const end = new Uint8Array(1);
+    end.set([0]);
+    chunk.push(end.buffer);
+    console.log(chunk);
+    chunk.forEach(e => this.dc.send(e)); //this.dc.send(buf);
   }
 
   sendBase64(b64) {
+    console.log('send b64');
     const json = {
       id: this.id,
       type: 'b64',
