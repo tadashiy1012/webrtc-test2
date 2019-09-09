@@ -3,7 +3,6 @@ import React from 'react';
 import {observer, inject} from 'mobx-react';
 import {string2Uint8Array} from '../util';
 import {jsx, css} from '@emotion/core';
-import {encode} from 'base64-arraybuffer-es6';
 
 @inject('produce', 'root')
 @observer
@@ -28,12 +27,6 @@ export default class FileSelector extends React.Component {
                 tary.set(header);
                 tary.set(file, header.length);
                 dcpc.sendBuf(tary.buffer);
-                /*if (dcpc.env !== 'chrome') {
-                    const b64 = encode(tary.buffer, 0, tary.length);
-                    dcpc.sendBase64(b64);
-                } else {
-                    dcpc.sendBuf(tary.buffer);
-                }*/
             });
         };
         fr.readAsArrayBuffer(this.fileRef.current.files[0]);
