@@ -2169,92 +2169,6 @@ var weakMemoize = function weakMemoize(func) {
 
 /***/ }),
 
-/***/ "./node_modules/base64-arraybuffer-es6/dist/base64-arraybuffer-es.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/base64-arraybuffer-es6/dist/base64-arraybuffer-es.js ***!
-  \***************************************************************************/
-/*! exports provided: decode, encode */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decode", function() { return decode; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "encode", function() { return encode; });
-/*
- * base64-arraybuffer
- * https://github.com/niklasvh/base64-arraybuffer
- *
- * Copyright (c) 2017 Brett Zamir, 2012 Niklas von Hertzen
- * Licensed under the MIT license.
- */
-var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'; // Use a lookup table to find the index.
-
-var lookup = new Uint8Array(256);
-
-for (var i = 0; i < chars.length; i++) {
-  lookup[chars.charCodeAt(i)] = i;
-}
-
-var encode = function encode(arraybuffer, byteOffset, length) {
-  if (length === null || length === undefined) {
-    length = arraybuffer.byteLength; // Needed for Safari
-  }
-
-  var bytes = new Uint8Array(arraybuffer, byteOffset || 0, // Default needed for Safari
-  length);
-  var len = bytes.length;
-  var base64 = '';
-
-  for (var _i = 0; _i < len; _i += 3) {
-    base64 += chars[bytes[_i] >> 2];
-    base64 += chars[(bytes[_i] & 3) << 4 | bytes[_i + 1] >> 4];
-    base64 += chars[(bytes[_i + 1] & 15) << 2 | bytes[_i + 2] >> 6];
-    base64 += chars[bytes[_i + 2] & 63];
-  }
-
-  if (len % 3 === 2) {
-    base64 = base64.substring(0, base64.length - 1) + '=';
-  } else if (len % 3 === 1) {
-    base64 = base64.substring(0, base64.length - 2) + '==';
-  }
-
-  return base64;
-};
-var decode = function decode(base64) {
-  var len = base64.length;
-  var bufferLength = base64.length * 0.75;
-  var p = 0;
-  var encoded1, encoded2, encoded3, encoded4;
-
-  if (base64[base64.length - 1] === '=') {
-    bufferLength--;
-
-    if (base64[base64.length - 2] === '=') {
-      bufferLength--;
-    }
-  }
-
-  var arraybuffer = new ArrayBuffer(bufferLength),
-      bytes = new Uint8Array(arraybuffer);
-
-  for (var _i2 = 0; _i2 < len; _i2 += 4) {
-    encoded1 = lookup[base64.charCodeAt(_i2)];
-    encoded2 = lookup[base64.charCodeAt(_i2 + 1)];
-    encoded3 = lookup[base64.charCodeAt(_i2 + 2)];
-    encoded4 = lookup[base64.charCodeAt(_i2 + 3)];
-    bytes[p++] = encoded1 << 2 | encoded2 >> 4;
-    bytes[p++] = (encoded2 & 15) << 4 | encoded3 >> 2;
-    bytes[p++] = (encoded3 & 3) << 6 | encoded4 & 63;
-  }
-
-  return arraybuffer;
-};
-
-
-
-
-/***/ }),
-
 /***/ "./node_modules/base64-js/index.js":
 /*!*****************************************!*\
   !*** ./node_modules/base64-js/index.js ***!
@@ -67446,6 +67360,31 @@ var _dec, _class;
 
 
 
+
+const ImageSay = props => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("span", null, props.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
+  className: "card",
+  css: {
+    padding: '22px'
+  }
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("img", {
+  src: URL.createObjectURL(props.img),
+  className: "rounded mx-auto d-block"
+})));
+
+const PdfSay = props => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("span", null, props.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
+  className: "card",
+  css: {
+    padding: '22px'
+  }
+}, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_PdfView__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  tgt: props.tgt
+})));
+
+const ObjSay = props => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("li", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("span", null, props.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("a", {
+  href: URL.createObjectURL(props.obj),
+  download: "file"
+}, "download"));
+
 let ChatView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])('produce'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["observer"])(_class = class ChatView extends react__WEBPACK_IMPORTED_MODULE_1___default.a.Component {
   constructor(props) {
     super(props);
@@ -67467,48 +67406,30 @@ let ChatView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])
           key: idx
         }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("span", null, e.id.substring(0, 5)), " : ", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("span", null, e.say));
       } else {
-        console.log(e);
-
         if (e.obj.type === 'image/jpeg') {
-          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("li", {
-            key: idx
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
-            className: "card",
-            css: {
-              padding: '22px'
-            }
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("img", {
-            src: URL.createObjectURL(e.obj),
-            className: "rounded mx-auto d-block"
-          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("a", {
-            href: URL.createObjectURL(e.obj),
-            download: "file"
-          }, "download")));
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(ImageSay, {
+            key: idx,
+            id: e.id,
+            img: e.obj
+          });
         } else if (e.obj.type === 'application/pdf') {
-          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("li", {
-            key: idx
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
-            className: "card",
-            css: {
-              padding: '22px'
-            }
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_PdfView__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(PdfSay, {
+            key: idx,
+            id: e.id,
             tgt: e
-          }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("a", {
-            href: URL.createObjectURL(e.obj),
-            download: "file"
-          }, "download")));
+          });
         } else {
-          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("li", {
-            key: idx
-          }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("span", null, e.id.substring(0, 5)), " :", Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("a", {
-            href: URL.createObjectURL(e.obj),
-            download: "file"
-          }, "download"));
+          return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(ObjSay, {
+            key: idx,
+            id: e.id,
+            obj: e.obj
+          });
         }
       }
     }).reverse();
-    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react__WEBPACK_IMPORTED_MODULE_1__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
+    return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
+      className: "row"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
       className: "col-md-6"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
       css: {
@@ -67530,7 +67451,7 @@ let ChatView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_2__["inject"])
       className: "w-100"
     }), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("div", {
       className: "col"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("ul", null, children)));
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("h4", null, "chat log"), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_4__["jsx"])("ul", null, children)));
   }
 
 }) || _class) || _class);
@@ -67743,14 +67664,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mobx_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! mobx-react */ "./node_modules/mobx-react/dist/mobx-react.module.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util */ "./src/util/index.js");
 /* harmony import */ var _emotion_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @emotion/core */ "./node_modules/@emotion/core/dist/core.browser.esm.js");
-/* harmony import */ var base64_arraybuffer_es6__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! base64-arraybuffer-es6 */ "./node_modules/base64-arraybuffer-es6/dist/base64-arraybuffer-es.js");
 
 
 
 var _dec, _class;
 
 /** @jsx jsx */
-
 
 
 
@@ -67778,12 +67697,6 @@ let FileSelector = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_3__["injec
         tary.set(header);
         tary.set(file, header.length);
         dcpc.sendBuf(tary.buffer);
-        /*if (dcpc.env !== 'chrome') {
-            const b64 = encode(tary.buffer, 0, tary.length);
-            dcpc.sendBase64(b64);
-        } else {
-            dcpc.sendBuf(tary.buffer);
-        }*/
       });
     };
 
@@ -67965,7 +67878,9 @@ let Produce = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
       className: "col-md-5"
     }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_ConsumerList__WEBPACK_IMPORTED_MODULE_5__["default"], null))), Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
       className: "row"
-    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_ChatView__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
+      className: "col"
+    }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_ChatView__WEBPACK_IMPORTED_MODULE_4__["default"], null))));
   }
 
 }) || _class) || _class);
@@ -68177,7 +68092,7 @@ const App = () => Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(mobx
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
   className: "row"
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", {
-  className: "col-md-4"
+  className: "col"
 }, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("h1", {
   css: {
     margin: '0px'
