@@ -67998,20 +67998,7 @@ var _dec, _class;
 let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])('produce', 'root'), _dec(_class = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["observer"])(_class = class VideoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
-    this.callCamera = false;
     this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
-  }
-
-  onFake() {
-    this.props.produce.setCurrentStream(null);
-    const newStream = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeFakeStream"])(this.props.root.audioCtx);
-    this.props.produce.setCurrentStream(newStream);
-    navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: this.props.produce.micMode
-    }).then(stream => {
-      this.videoRef.current.srcObject = stream;
-    }).catch(err => console.error(err));
   }
 
   onCamera() {
@@ -68066,10 +68053,6 @@ let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"]
     } else if (value === 'display') {
       this.onDisplay();
     }
-
-    if (this.props.produce.pcs.length > 0) {
-      this.callCamera = true;
-    }
   }
 
   onMicModeChange() {
@@ -68083,25 +68066,9 @@ let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"]
     } else if (videoMode === 'display') {
       this.onDisplay();
     }
-
-    if (this.props.produce.pcs.length > 0) {
-      this.callCamera = true;
-    }
   }
 
   render() {
-    if (this.props.produce.pcs.length > 0 && !this.callCamera) {
-      const videoMode = this.props.produce.videoMode;
-
-      if (videoMode === 'camera') {
-        this.onCamera();
-      } else if (videoMode === 'camera2') {
-        this.onCamera2();
-      } else if (videoMode === 'display') {
-        this.onDisplay();
-      }
-    }
-
     return Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("div", null, Object(_emotion_core__WEBPACK_IMPORTED_MODULE_3__["jsx"])("video", {
       autoPlay: true,
       muted: true,
@@ -68144,7 +68111,7 @@ let VideoView = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"]
   }
 
   componentDidMount() {
-    this.onFake();
+    this.onCamera();
   }
 
 }) || _class) || _class);
@@ -68447,7 +68414,7 @@ const PeerConnState = Base => {
         const senders = pc.conn.getSenders();
         this.currentStream.getTracks().forEach(track => {
           if (senders.length > 0 && track.kind === 'video') {
-            const videoSender = senders.find(e => e.track.kind === 'video');
+            const videoSender = senders.filter(ee => ee.track !== null).find(ee => ee.track.kind === 'video');
 
             if (videoSender) {
               videoSender.replaceTrack(track);
@@ -68455,7 +68422,7 @@ const PeerConnState = Base => {
               pc.addTrack(track, this.currentStream);
             }
           } else if (senders.length > 0 && track.kind === 'audio') {
-            const audioSender = senders.find(e => e.track.kind === 'audio');
+            const audioSender = senders.filter(ee => ee.track !== null).find(ee => ee.track.kind === 'audio');
 
             if (audioSender) {
               audioSender.replaceTrack(track);

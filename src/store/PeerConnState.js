@@ -38,14 +38,18 @@ const PeerConnState = Base => class extends Base {
             const senders = pc.conn.getSenders();
             this.currentStream.getTracks().forEach(track => {
                 if (senders.length > 0 && track.kind === 'video') {
-                    const videoSender = senders.find(e => e.track.kind === 'video');
+                    const videoSender = senders
+                        .filter(ee => ee.track !== null)
+                        .find(ee => ee.track.kind === 'video');
                     if (videoSender) {
                         videoSender.replaceTrack(track);
                     } else {
                         pc.addTrack(track, this.currentStream);
                     }
                 } else if (senders.length > 0 && track.kind === 'audio') {
-                    const audioSender = senders.find(e => e.track.kind === 'audio');
+                    const audioSender = senders
+                        .filter(ee => ee.track !== null)
+                        .find(ee => ee.track.kind === 'audio');
                     if (audioSender) {
                         audioSender.replaceTrack(track);
                     } else {
