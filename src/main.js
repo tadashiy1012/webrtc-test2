@@ -17,7 +17,7 @@ const App = () => (
     <Provider root={rootStore} produce={new ProduceStore()}>
         <div className='container-fluid'>
             <div className='row'>
-                <div className='col-md-4'>
+                <div className='col'>
                     <h1 css={{margin:'0px'}}>webrtc-test2</h1>
                 </div>
             </div>

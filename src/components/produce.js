@@ -67,7 +67,11 @@ export default class Produce extends React.Component {
                     <ConsumerList />
                 </div>
             </div>
-            <div className='row'><ChatView /></div>
+            <div className='row'>
+                <div className="col">
+                    <ChatView />
+                </div>
+            </div>
         </div>
     }
 }

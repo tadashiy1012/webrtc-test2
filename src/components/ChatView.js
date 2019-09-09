@@ -6,6 +6,31 @@ import {jsx, css} from '@emotion/core';
 import FileSelector from './FileSelector';
 import PDFView from './PdfView';
 
+const ImageSay = (props) => (
+    <li>
+        <span>{props.id.substring(0, 5)}</span> : 
+        <div className='card' css={{padding:'22px'}}>
+            <img src={URL.createObjectURL(props.img)} className='rounded mx-auto d-block' />
+        </div>
+    </li>
+);
+
+const PdfSay = (props) => (
+    <li>
+        <span>{props.id.substring(0, 5)}</span> : 
+        <div className='card' css={{padding:'22px'}}>
+            <PDFView tgt={props.tgt} />
+        </div>
+    </li>
+);
+
+const ObjSay = (props) => (
+    <li>
+        <span>{props.id.substring(0, 5)}</span> : 
+        <a href={URL.createObjectURL(props.obj)} download='file'>download</a>
+    </li>
+);
+
 @inject('produce')
 @observer
 export default class ChatView extends React.Component {
@@ -25,32 +50,16 @@ export default class ChatView extends React.Component {
             if (e.say) {
                 return <li key={idx}><span>{e.id.substring(0, 5)}</span> : <span>{e.say}</span></li>
             } else {
-                console.log(e);
                 if (e.obj.type === 'image/jpeg') {
-                    return <li key={idx}>
-                        <span>{e.id.substring(0, 5)}</span> : 
-                        <div className='card' css={{padding:'22px'}}>
-                            <img src={URL.createObjectURL(e.obj)} className='rounded mx-auto d-block' />
-                            <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
-                        </div>
-                    </li>
+                    return <ImageSay key={idx} id={e.id} img={e.obj} />
                 } else if (e.obj.type === 'application/pdf') {
-                    return <li key={idx}>
-                        <span>{e.id.substring(0, 5)}</span> : 
-                        <div className='card' css={{padding:'22px'}}>
-                            <PDFView tgt={e} />
-                            <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
-                        </div>
-                    </li>
+                    return <PdfSay key={idx} id={e.id} tgt={e} />
                 } else {
-                    return <li key={idx}>
-                        <span>{e.id.substring(0, 5)}</span> : 
-                        <a href={URL.createObjectURL(e.obj)} download='file'>download</a>
-                    </li>
+                    return <ObjSay key={idx} id={e.id} obj={e.obj} />
                 }
             }
         }).reverse();
-        return <Fragment>
+        return <div className='row'>
             <div className='col-md-6'>
                 <div css={{padding:'8px 0px'}}>
                     <input type='text' ref={this.textRef} placeholder='message' className='form-control' />
@@ -62,10 +71,11 @@ export default class ChatView extends React.Component {
             </div>
             <div className="w-100"></div>
             <div className='col'>
+                <h4>chat log</h4>
                 <ul>
                     {children}
                 </ul>
             </div>
-        </Fragment>
+        </div>
     }
 }
