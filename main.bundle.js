@@ -68445,10 +68445,7 @@ const PeerConnState = Base => {
     setPCsTrack() {
       this.pcs.map(e => e.pc).forEach(pc => {
         const senders = pc.conn.getSenders();
-        console.log(senders);
         this.currentStream.getTracks().forEach(track => {
-          console.log(track);
-
           if (senders.length > 0 && track.kind === 'video') {
             const videoSender = senders.find(e => e.track.kind === 'video');
 
@@ -68469,7 +68466,6 @@ const PeerConnState = Base => {
             pc.addTrack(track, this.currentStream);
           }
         });
-        console.log(pc.conn.getSenders());
       });
     }
 
