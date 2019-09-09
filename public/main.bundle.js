@@ -68806,17 +68806,7 @@ class MyDataChPeerConnection {
     end.set([0]);
     chunk.push(end.buffer);
     console.log(chunk);
-    chunk.forEach(e => this.dc.send(e)); //this.dc.send(buf);
-  }
-
-  sendBase64(b64) {
-    console.log('send b64');
-    const json = {
-      id: this.id,
-      type: 'b64',
-      message: b64
-    };
-    this.dc.send(JSON.stringify(json));
+    chunk.forEach(e => this.dc.send(e));
   }
 
 }
