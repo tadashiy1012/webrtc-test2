@@ -68724,6 +68724,8 @@ class MyDataChPeerConnection {
     this.conn.onicecandidate = onIcecandidate;
 
     this.conn.ondatachannel = ev => {
+      console.log(ev);
+
       if (this.dc === null) {
         this.dc = ev.channel;
       }
