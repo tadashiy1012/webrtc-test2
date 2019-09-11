@@ -14,6 +14,7 @@ export default class MyDataChPeerConnection {
         this.conn.onnegotiationneeded = onNegotiationneeded;
         this.conn.onicecandidate = onIcecandidate;
         this.conn.ondatachannel = (ev) => {
+            console.log(ev);
             if (this.dc === null) {
                 this.dc = ev.channel;
             }
