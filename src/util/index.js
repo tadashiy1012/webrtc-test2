@@ -9,6 +9,7 @@ import makeFakeStream from './makeFakeStream';
 import string2Uint8Array from './string2Uint8Array';
 import tArray2String from './tArray2String';
 import Bowl from './Bowl';
+import DcpcBuilder from './dcpcBuilder';
 
 export {
     getDoc,
@@ -21,5 +22,6 @@ export {
     makeFakeStream,
     string2Uint8Array,
     tArray2String,
-    Bowl
+    Bowl,
+    DcpcBuilder
 }

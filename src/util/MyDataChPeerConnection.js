@@ -6,8 +6,9 @@ const MAX_BYTES = 64 * 1024;
 export default class MyDataChPeerConnection {
     constructor(webSocket, {
         onNegotiationneeded = (ev) => console.log(ev),
-        onIcecandidate = (ev) => console.log(ev)
-    }, env = null) {
+        onIcecandidate = (ev) => console.log(ev),
+        onDcMessageHandler = (ev) => console.log(ev)
+    }) {
         this.id = uuidv1();
         this.ws = webSocket;
         this.conn = new RTCPeerConnection({ iceServers });
@@ -17,10 +18,12 @@ export default class MyDataChPeerConnection {
             console.log(ev);
             if (this.dc === null) {
                 this.dc = ev.channel;
+                this.dc.onmessage = onDcMessageHandler;
+                this.isDcOpen = true;
             }
         };
         this.dc = null;
-        this.env = env;
+        this.isDcOpen = false;
     }
     async createOffer() {
         return await this.conn.createOffer();
@@ -40,28 +43,23 @@ export default class MyDataChPeerConnection {
     createDataCh() {
         this.dc = this.conn.createDataChannel('chat');
         this.dc.onmessage = (ev) => console.log(ev);
-        this.dc.onopen = (ev) => console.log(ev);
-        this.dc.onclose = (ev) => console.log(ev);
+        this.dc.onopen = (ev) => {
+            console.log(ev);
+            this.isDcOpen = true;
+        };
+        this.dc.onclose = (ev) => {
+            console.log(ev);
+            this.isDcOpen = false;
+        };
         this.dc.onerror = (err) => console.error(err);
-    }
-    setOnMessageHandler(handler = (ev) => console.log(ev)) {
-        const self = this;
-        let count = 0;
-        const id = setInterval(function() {
-            if (self.dc !== null) {
-                self.dc.onmessage = handler;
-                clearInterval(id);
-            }
-            if (count >= 60) { 
-                clearInterval(id);
-                console.warn('time out');
-            }
-            count += 1;
-        }, 1000);
     }
     send(msg) {
         const json = {id: this.id, type: 'plane', message: msg};
-        this.dc.send(JSON.stringify(json));
+        if (this.dc && this.isDcOpen) {
+            this.dc.send(JSON.stringify(json));
+        } else {
+            console.warn('data channel is not open!');
+        }
     }
     sendBuf(buf) {
         console.log('send buf');
@@ -78,6 +76,10 @@ export default class MyDataChPeerConnection {
         end.set([0]);
         chunk.push(end.buffer);
         console.log(chunk);
-        chunk.forEach(e => this.dc.send(e));
+        if (this.dc && this.isDcOpen) {
+            chunk.forEach(e => this.dc.send(e));
+        } else {
+            console.warn('data channel is not open!');
+        }
     }
 }

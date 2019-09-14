@@ -67832,13 +67832,12 @@ let Produce = (_dec = Object(mobx_react__WEBPACK_IMPORTED_MODULE_1__["inject"])(
       if (json.type === 'consume') {
         this.props.produce.addConsumers(json);
       } else if (json.type === 'consume_dc') {
-        const dcpc = Object(_util__WEBPACK_IMPORTED_MODULE_2__["makeProduceDataChPC"])(this.props.produce.id, this.props.produce.ws, json.uuid, json.env);
-        dcpc.setOnMessageHandler(ev => {
-          console.log(ev);
+        const builder = new _util__WEBPACK_IMPORTED_MODULE_2__["DcpcBuilder"]();
+        const dcpc = builder.setId(this.props.produce.id).setWs(this.props.produce.ws).setDest(json.uuid).setHandler(ev => {
           const json = JSON.parse(ev.data);
           console.log(json);
           this.props.produce.addSay(json.id, json.message);
-        });
+        }).build();
         this.props.produce.addDataChPeerConnection(dcpc);
         const offer = new RTCSessionDescription({
           type: 'offer',
@@ -68713,8 +68712,9 @@ const MAX_BYTES = 64 * 1024;
 class MyDataChPeerConnection {
   constructor(webSocket, {
     onNegotiationneeded = ev => console.log(ev),
-    onIcecandidate = ev => console.log(ev)
-  }, env = null) {
+    onIcecandidate = ev => console.log(ev),
+    onDcMessageHandler = ev => console.log(ev)
+  }) {
     this.id = uuid_v1__WEBPACK_IMPORTED_MODULE_2__();
     this.ws = webSocket;
     this.conn = new RTCPeerConnection({
@@ -68728,11 +68728,13 @@ class MyDataChPeerConnection {
 
       if (this.dc === null) {
         this.dc = ev.channel;
+        this.dc.onmessage = onDcMessageHandler;
+        this.isDcOpen = true;
       }
     };
 
     this.dc = null;
-    this.env = env;
+    this.isDcOpen = false;
   }
 
   async createOffer() {
@@ -68760,29 +68762,17 @@ class MyDataChPeerConnection {
 
     this.dc.onmessage = ev => console.log(ev);
 
-    this.dc.onopen = ev => console.log(ev);
+    this.dc.onopen = ev => {
+      console.log(ev);
+      this.isDcOpen = true;
+    };
 
-    this.dc.onclose = ev => console.log(ev);
+    this.dc.onclose = ev => {
+      console.log(ev);
+      this.isDcOpen = false;
+    };
 
     this.dc.onerror = err => console.error(err);
-  }
-
-  setOnMessageHandler(handler = ev => console.log(ev)) {
-    const self = this;
-    let count = 0;
-    const id = setInterval(function () {
-      if (self.dc !== null) {
-        self.dc.onmessage = handler;
-        clearInterval(id);
-      }
-
-      if (count >= 60) {
-        clearInterval(id);
-        console.warn('time out');
-      }
-
-      count += 1;
-    }, 1000);
   }
 
   send(msg) {
@@ -68791,7 +68781,12 @@ class MyDataChPeerConnection {
       type: 'plane',
       message: msg
     };
-    this.dc.send(JSON.stringify(json));
+
+    if (this.dc && this.isDcOpen) {
+      this.dc.send(JSON.stringify(json));
+    } else {
+      console.warn('data channel is not open!');
+    }
   }
 
   sendBuf(buf) {
@@ -68811,7 +68806,12 @@ class MyDataChPeerConnection {
     end.set([0]);
     chunk.push(end.buffer);
     console.log(chunk);
-    chunk.forEach(e => this.dc.send(e));
+
+    if (this.dc && this.isDcOpen) {
+      chunk.forEach(e => this.dc.send(e));
+    } else {
+      console.warn('data channel is not open!');
+    }
   }
 
 }
@@ -68867,6 +68867,90 @@ class MyPeerConnection {
 
   addTrack(track, stream) {
     return this.conn.addTrack(track, stream);
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/util/dcpcBuilder.js":
+/*!*********************************!*\
+  !*** ./src/util/dcpcBuilder.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DcpcBuilder; });
+/* harmony import */ var _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MyDataChPeerConnection */ "./src/util/MyDataChPeerConnection.js");
+
+class DcpcBuilder {
+  constructor() {
+    this.id = null;
+    this.ws = null;
+    this.destination = null;
+
+    this.handler = ev => console.log(ev);
+
+    this.pc = null;
+  }
+
+  setId(id) {
+    this.id = id;
+    return this;
+  }
+
+  setWs(ws) {
+    this.ws = ws;
+    return this;
+  }
+
+  setDest(destination) {
+    this.destination = destination;
+    return this;
+  }
+
+  setHandler(handler) {
+    this.handler = handler;
+    return this;
+  }
+
+  build() {
+    const id = this.id;
+    const destination = this.destination;
+    const handler = this.handler;
+
+    const _pc = new _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__["default"](this.ws, {
+      onIcecandidate: ev => {
+        console.log(ev);
+
+        if (ev.candidate === null) {
+          if (_pc.conn.remoteDescription !== null) {
+            console.log('send dc sdp');
+            const to = 'consume@890';
+            const type = 'produce_dc';
+            const sdp = _pc.conn.localDescription.sdp;
+            const json = {
+              to,
+              type,
+              sdp,
+              destination
+            };
+
+            _pc.ws.send(JSON.stringify(json));
+          }
+        }
+      },
+      onDcMessageHandler: ev => {
+        console.log(ev);
+        handler(ev);
+      }
+    });
+
+    _pc.overriteId(id);
+
+    return _pc;
   }
 
 }
@@ -68968,7 +69052,7 @@ let iceServers = [{
 /*!***************************!*\
   !*** ./src/util/index.js ***!
   \***************************/
-/*! exports provided: getDoc, getThumb, makeConsumeDataChPC, makeConsumePC, makeProduceDataChPC, makeProducePC, makeWebSocket, makeFakeStream, string2Uint8Array, tArray2String, Bowl */
+/*! exports provided: getDoc, getThumb, makeConsumeDataChPC, makeConsumePC, makeProduceDataChPC, makeProducePC, makeWebSocket, makeFakeStream, string2Uint8Array, tArray2String, Bowl, DcpcBuilder */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -69005,6 +69089,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _Bowl__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Bowl */ "./src/util/Bowl.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Bowl", function() { return _Bowl__WEBPACK_IMPORTED_MODULE_10__["default"]; });
+
+/* harmony import */ var _dcpcBuilder__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./dcpcBuilder */ "./src/util/dcpcBuilder.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DcpcBuilder", function() { return _dcpcBuilder__WEBPACK_IMPORTED_MODULE_11__["default"]; });
+
 
 
 
@@ -69191,7 +69279,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return makeProduceDataChPC; });
 /* harmony import */ var _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MyDataChPeerConnection */ "./src/util/MyDataChPeerConnection.js");
 
-function makeProduceDataChPC(id, ws, destination, env) {
+function makeProduceDataChPC(id, ws, destination, handler) {
   const _pc = new _MyDataChPeerConnection__WEBPACK_IMPORTED_MODULE_0__["default"](ws, {
     onIcecandidate: ev => {
       console.log(ev);
@@ -69212,8 +69300,12 @@ function makeProduceDataChPC(id, ws, destination, env) {
           _pc.ws.send(JSON.stringify(json));
         }
       }
+    },
+    onDcMessageHandler: ev => {
+      console.log(ev);
+      handler(ev);
     }
-  }, env);
+  });
 
   _pc.overriteId(id);
 

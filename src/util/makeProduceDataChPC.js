@@ -1,6 +1,6 @@
 import MyDataChPeerConnection from "./MyDataChPeerConnection";
 
-export default function makeProduceDataChPC(id, ws, destination, env) {
+export default function makeProduceDataChPC(id, ws, destination, handler) {
     const _pc = new MyDataChPeerConnection(ws, {
         onIcecandidate: (ev) => {
             console.log(ev);
@@ -14,8 +14,12 @@ export default function makeProduceDataChPC(id, ws, destination, env) {
                     _pc.ws.send(JSON.stringify(json));
                 }
             }
+        },
+        onDcMessageHandler: (ev) => {
+            console.log(ev);
+            handler(ev);
         }
-    }, env);
+    });
     _pc.overriteId(id);
     return _pc;
 }
