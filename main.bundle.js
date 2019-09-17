@@ -68797,16 +68797,14 @@ class MyDataChPeerConnection {
   sendBuf(buf) {
     console.log('send buf');
     console.log(buf);
-    const size = buf.length;
     let chunk = [];
-    let index = 0;
+    let fi = 0;
 
-    do {
-      chunk.push(buf.slice(index, MAX_BYTES));
-      index += MAX_BYTES;
-    } while (size > index);
+    while (fi * MAX_BYTES < buf.byteLength) {
+      chunk.push(buf.slice(fi * MAX_BYTES, (fi + 1) * MAX_BYTES));
+      fi += 1;
+    }
 
-    chunk.push(buf.slice(index));
     const end = new Uint8Array(1);
     end.set([0]);
     chunk.push(end.buffer);
