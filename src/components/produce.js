@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import {observer, inject} from 'mobx-react';
-import {makeProduceDataChPC} from '../util';
+import {makeProduceDataChPC, DcpcBuilder} from '../util';
 import {jsx, css} from '@emotion/core';
 import ChatView from './ChatView';
 import ConsumerList from './ConsumerList';
@@ -25,16 +25,15 @@ export default class Produce extends React.Component {
             if (json.type === 'consume') {
                 this.props.produce.addConsumers(json);
             } else if (json.type === 'consume_dc') {
-                const dcpc = makeProduceDataChPC(
-                    this.props.produce.id, 
-                    this.props.produce.ws, 
-                    json.uuid, json.env);
-                dcpc.setOnMessageHandler((ev) => {
-                    console.log(ev);
-                    const json = JSON.parse(ev.data);
-                    console.log(json);
-                    this.props.produce.addSay(json.id, json.message);
-                });
+                const builder = new DcpcBuilder();
+                const dcpc = builder.setId(this.props.produce.id)
+                    .setWs(this.props.produce.ws)
+                    .setDest(json.uuid)
+                    .setHandler((ev) => {
+                        const json = JSON.parse(ev.data);
+                        console.log(json);
+                        this.props.produce.addSay(json.id, json.message);
+                    }).build();
                 this.props.produce.addDataChPeerConnection(dcpc);
                 const offer = new RTCSessionDescription({
                     type: 'offer', sdp: json.sdp

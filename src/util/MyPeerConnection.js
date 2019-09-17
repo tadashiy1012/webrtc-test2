@@ -13,6 +13,16 @@ export default class MyPeerConnection {
         this.conn.onnegotiationneeded = onNegotiationneeded;
         this.conn.onicecandidate = onIcecandidate;
         this.conn.ontrack = onTrack;
+        this.conn.onicegatheringstatechange = (ev) => {
+            console.log(ev);
+            console.log(ev.target.iceGatheringState);
+            const label = 'time1';
+            if (ev.target.iceGatheringState === 'gathering') {
+                console.time(label);
+            } else if (ev.target.iceGatheringState === 'complete') {
+                console.timeEnd(label);
+            }
+        };
     }
     async createOffer() {
         return await this.conn.createOffer();
